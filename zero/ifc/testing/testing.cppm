@@ -1,4 +1,4 @@
 export module testing;
 
-export void say_hello();
+export import testing.core;
     

@@ -1,4 +1,4 @@
 export module zero;
 export import testing;
-export import testing2;
+// export import zero.testing2;
     
