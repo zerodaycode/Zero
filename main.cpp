@@ -1,5 +1,6 @@
 // import testing;
-import zero;
+// import zero;
+import testing.core;
 import <iostream>;
 
 using namespace zero;
