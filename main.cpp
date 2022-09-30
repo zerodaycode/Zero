@@ -1,8 +1,14 @@
 import zero;
 
+import <iostream>;
+
+using namespace zero;
+
 int main() {
-    say_hello();
-    zero::say_hello_2();
+    // Testing the collections
+    std::cout << collections_miu_greet() << std::endl;
+    
+    auto a = zero::collections::Array<int, 8>{};
 
     return 0;
 }
