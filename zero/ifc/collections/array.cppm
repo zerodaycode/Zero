@@ -10,10 +10,10 @@
 
 export module array;
 
-
+import typedefs;
 
 export namespace zero::collections {
-    template <typename T, unsigned long>
+    template <typename T, zero::size_t N>
     class Array {
         private:
             T array[];
