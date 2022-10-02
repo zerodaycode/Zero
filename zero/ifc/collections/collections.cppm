@@ -9,7 +9,6 @@
  */
 
 export module collections;
-
 export import array;
 
 export {
