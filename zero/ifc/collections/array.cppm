@@ -12,8 +12,12 @@ export module array;
 
 import typedefs;
 import <iostream>;
+import <optional>;
 import <stdexcept>;
 import <sstream>;
+
+using namespace zero;
+using namespace std;
 
 export namespace zero::collections {
     /**
@@ -24,7 +28,15 @@ export namespace zero::collections {
     template<typename T>
     class Array {
         public:
-            virtual T get(const zero::size_t idx) const = 0;
+            /**
+             * @brief Returns a reference to the element at specified location `idx`, with bounds checking.
+             * 
+             * @param idx a size_t value for specifiying the desired index
+             * @return optional<T> wrapping copy of the underlying value 
+             * if is within the range of the container, `std::nullopt` is 
+             * the index is out-of-bounds
+             */
+            virtual optional<T> get(const size_t idx) const = 0;
     };
 
     /**
@@ -54,13 +66,10 @@ export namespace zero::collections {
                     std::cout << "Value[" << i << "]: " << array[i] << std::endl;
             }
 
-            T get(const zero::size_t idx) const override {
-                if (idx >= sizeof(array) / sizeof(T)) {
-                    std::ostringstream msg;
-                    msg << "Index {" << idx << "} is out-of-bounds";
-                    throw std::out_of_range(msg.str());
-                }
-                return array[idx];
+            optional<T> get(const size_t idx) const override {
+                if (idx >= sizeof(array) / sizeof(T))
+                    return std::nullopt;
+                return make_optional<T>(array[idx]);
             }
     };
 }
