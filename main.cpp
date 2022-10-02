@@ -8,7 +8,7 @@ int main() {
     // Testing the collections
     std::cout << collections_miu_greet() << std::endl;
     
-    auto a = zero::collections::Array<int, 8>{};
+    auto a = collections::Array<int, 5>{1, 2, 3, 4, 5};
 
     return 0;
 }

@@ -11,11 +11,20 @@
 export module array;
 
 import typedefs;
+import <iostream>;
 
 export namespace zero::collections {
     template <typename T, zero::size_t N>
     class Array {
         private:
-            T array[];
+            T array[N];
+        public:
+            template <typename... InitValues>
+            Array(const InitValues&&... init_values) 
+                : array{ init_values... }
+            {
+                for (size_t i = 0; i < N; i++)
+                    std::cout << "Value[" << i << "]: " << array[i] << std::endl;
+            }
     };
 }
