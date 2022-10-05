@@ -3,6 +3,7 @@ import zero;
 import <iostream>;
 import <optional>;
 
+
 using namespace zero;
 
 int main() {
@@ -14,6 +15,11 @@ int main() {
     // .get(6) terminating with uncaught exception of type std::bad_optional_access: bad_optional_access
     std::cout << "Getting an element: " << a.get(6).value_or(-1) << std::endl;
     std::cout << "Getting an element 2: " << a.get(2).value() << std::endl;
+
+    // mutating the content of index 3
+    a.mut_ref_at(3) = 10;
+    // static_assert(a.get(3) == 10);
+    std::cout << a.get(3).value() << std::endl;
 
     return 0;
 }

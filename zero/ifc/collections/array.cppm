@@ -21,22 +21,34 @@ using namespace std;
 
 export namespace zero::collections {
     /**
-     * @brief Interface for dealing with the different types of arrays provided by Zero
+     * @brief Interface for dealing with the different types of containers provided by Zero
      * 
      * @tparam T the type of the elements which will be stored in the container
      */
     template<typename T>
-    class Array {
+    class Container {
         public:
             /**
-             * @brief Returns a reference to the element at specified location `idx`, with bounds checking.
+             * @brief Returns a mut reference to the element at specified location `idx`,
+             * with bounds checking.
              * 
-             * @param idx a size_t value for specifiying the desired index
+             * @param idx a `size_t` value for specifiying the position of 
+             * the element to retrieve.
+             * @return T& to the element at idx position
+             */
+            virtual T& mut_ref_at(const size_t idx) const = 0;
+
+            /**
+             * @brief Returns a copy of the value of the element at the 
+             * specified location `idx`, with bounds checking.
+             * 
+             * @param idx a `size_t` value for specifiying the position of 
+             * the element to retrieve
              * @return optional<T> wrapping copy of the underlying value 
              * if is within the range of the container, `std::nullopt` is 
              * the index is out-of-bounds
              */
-            virtual optional<T> get(const size_t idx) const = 0;
+            virtual constexpr optional<T> get(const size_t idx) const = 0;
     };
 
     /**
@@ -54,19 +66,25 @@ export namespace zero::collections {
      * will be zero initialized.
      */
     template <typename T, zero::size_t N>
-    class StackArray: Array<T> {
+    class StackArray: public Container<T> {
         private:
             T array[N];
         public:
             template <typename... InitValues>
-            StackArray(const InitValues&&... init_values) 
+            StackArray(InitValues... init_values) 
                 : array{ init_values... }
             {
                 for (size_t i = 0; i < N; i++)
                     std::cout << "Value[" << i << "]: " << array[i] << std::endl;
             }
 
-            optional<T> get(const size_t idx) const override {
+            auto mut_ref_at(const size_t idx) const -> T(&) {
+                if (idx >= sizeof(array) / sizeof(T))
+                    throw std::out_of_range("Provided index is out-of-bounds");
+                return (T&) array[idx];
+            }
+
+            constexpr optional<T> get(const size_t idx) const {
                 if (idx >= sizeof(array) / sizeof(T))
                     return std::nullopt;
                 return make_optional<T>(array[idx]);
