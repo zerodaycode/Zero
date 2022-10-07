@@ -10,7 +10,7 @@ int main() {
     // Testing the collections
     std::cout << collections_miu_greet() << std::endl;
     
-    decltype(auto) a = collections::StackArray<int, 10>(1, 2, 3);
+    collections::Array a = collections::Array<int, 10>(1, 2, 3);
     // auto b = new decltype(collections::StackArray<int, 5>{1, 2, 3, 4, 5})[0];
 
     // .get(6) terminating with uncaught exception oftype std::bad_optional_access: bad_optional_access

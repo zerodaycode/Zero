@@ -27,32 +27,37 @@ concept AccessInBounds = requires () {
 
 export namespace zero::collections {
     /**
-     * @brief Interface for dealing with the different types of containers provided by Zero
+     * @brief Wrapper over a legacy c-style raw array, encapsulating the low level
+     * details to offer a high-level interface to work with a fixed-size array
+     * stored on the stack
      * 
      * @tparam T the type of the elements which will be stored in the container
+     * @tparam N the capacity of the StackArray with which will be initialized
+     * 
+     * `StackArray` has a constructor with a variadic template arguments that initializes
+     * the array with the provided elements, up to the number constrained by N or less.
+     * 
+     * If the initializer takes n elements where n < N, non provided values
+     * will be zero initialized.
      */
     template<typename T, size_t N>
-    class Container {
+    class Array {
+        private:
+            T array[N];
+
+            /**
+             * @brief delete the `new` operator, since the intended usage of
+             * the type is to be a wrapper over a C-style array.
+             * 
+             * @return void* 
+             */
+            void* operator new(std::size_t) = delete;
+
         public:
-            template <size_t I>
-            constexpr const T& const_ref_at() const requires AccessInBounds<I, N>;
-
-            template <size_t I>
-            constexpr T& mut_ref_at() requires AccessInBounds<I, N>;
-            
-            virtual constexpr optional<T> get_or_nullopt(const size_t idx) const = 0;
-    };
-
-    template<typename T, size_t N>
-    class FixedSizeContainer : protected Container<T, N> {
-        protected:
-            T arr[N];
-
             template <typename... InitValues>
-            FixedSizeContainer(InitValues... init_values) 
-                : arr{ init_values... } {}
+            Array(InitValues... init_values) 
+                : array{ init_values... } {}
 
-        public:
             /**
              * @brief Returns a const reference to the element at specified location `idx`,
              * with bounds checking.
@@ -62,9 +67,8 @@ export namespace zero::collections {
              * @return read-only const T& to the element at idx position
              */
             template <size_t I>
-            constexpr const T& const_ref_at() const requires AccessInBounds<I, N>
-            {
-                return arr[I];
+            constexpr const T& const_ref_at() const requires AccessInBounds<I, N> {
+                return array[I];
             }
 
             /**
@@ -79,9 +83,8 @@ export namespace zero::collections {
              * @return T& to the element at idx position
              */
             template <size_t I>
-            constexpr T& mut_ref_at() requires AccessInBounds<I, N>
-            {
-                return arr[I];
+            constexpr T& mut_ref_at() requires AccessInBounds<I, N> {
+                return array[I];
             }
 
             /**
@@ -94,42 +97,10 @@ export namespace zero::collections {
              * if is within the range of the container, `std::nullopt` is 
              * the index is out-of-bounds
              */
-            constexpr optional<T> get_or_nullopt(const size_t idx) const override
-            {
-                if (idx >= sizeof(this->arr) / sizeof(T))
+            constexpr optional<T> get_or_nullopt(const size_t idx) const {
+                if (idx >= sizeof(array) / sizeof(T))
                     return std::nullopt;
-                return make_optional<T>(this->arr[idx]);
+                return make_optional<T>(array[idx]);
             }
-    };
-
-    /**
-     * @brief Wrapper over a legacy c-style raw array, encapsulating the low level
-     * details to offer a high-level interface to work with a fixed-size array
-     * stored on the stack
-     * 
-     * @tparam T the type of the elements which will be stored in the container
-     * @tparam N the capacity of the StackArray with which will be initialized
-     * 
-     * `StackArray` has a constructor with a variadic template arguments that initializes
-     * the array with the provided elements, up to the number constrained by N or less.
-     * 
-     * If the initializer takes n elements where n < N, non provided values
-     * will be zero initialized.
-     */
-    template <typename T, zero::size_t N>
-    class StackArray : public FixedSizeContainer<T, N>
-    {
-        public:
-            template <typename... InitValues>
-            StackArray(InitValues... init_values) 
-                : FixedSizeContainer<T, N>( init_values... ) {}
-
-            /**
-             * @brief delete the `new` operator, since the intended usage of
-             * the type is to be a wrapper over a C-style array.
-             * 
-             * @return void* 
-             */
-            void* operator new(std::size_t) = delete;
     };
 }
