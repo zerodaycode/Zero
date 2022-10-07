@@ -1,7 +1,6 @@
 import zero;
 
 #ifdef _WIN32
-    #pragma once
     #include <iostream>
     #include <optional>
 #else
@@ -15,7 +14,7 @@ int main() {
     // Testing the collections
     std::cout << collections_miu_greet() << std::endl;
     
-    collections::Array a = collections::Array<int, 10>(1, 2, 3);
+    constexpr collections::Array a = collections::Array<int, 10>(1, 2, 3);
     // auto b = new decltype(collections::StackArray<int, 5>{1, 2, 3, 4, 5})[0];
 
     // .get(6) terminating with uncaught exception oftype std::bad_optional_access: bad_optional_access
@@ -23,8 +22,8 @@ int main() {
     std::cout << "Getting an element 2: " << a.get_or_nullopt(2).value() << std::endl;
 
     // mutating the content of index 3
-    a.mut_ref_at<3>() = 10;
-    std::cout << a.get_or_nullopt(3).value() << std::endl;
+    // a.mut_ref_at<3>() = 10;
+    std::cout << a.get<3>() << std::endl;
 
     // cout a const ref to an element
     std::cout << a.const_ref_at<2>() << std::endl;

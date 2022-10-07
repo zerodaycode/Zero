@@ -13,11 +13,11 @@ export module array;
 import typedefs;
 
 #ifdef _WIN32
-    #include <iostream>
+    #include <type_traits>
     #include <optional>
     #include <concepts>
 #else
-    import <iostream>;
+    import <type_traits>;
     import <optional>;
     import <concepts>;
 #endif
@@ -59,20 +59,61 @@ export namespace zero::collections {
             void* operator new(std::size_t) = delete;
 
         public:
+            /**
+             * @brief public constructor for the Array<T, N> type
+             * 
+             * @tparam InitValues variadic template argument for provide
+             * at most, so much elements in initialization as the value
+             * holded by the template parameter N, being the capacitiy
+             * of the Array<T, N>
+             */
             template <typename... InitValues>
-            Array(InitValues... init_values) 
+            constexpr Array(InitValues... init_values) 
                 : array{ init_values... } {}
+
+            /**
+             * @brief Returns a copy of the value of the element at the 
+             * specified location `idx`, with bounds checking.
+             * 
+             * @param I a `size_t` templated value for specifiying the position of 
+             * the element to retrieve
+             * 
+             * @return a copy value of the ith element T at index I
+             */
+            template <size_t I>
+            constexpr T get() const {
+                return array[I];
+            }
+
+            /**
+             * @brief Returns a copy of the value of the element at the 
+             * specified location `idx`, with bounds checking.
+             * 
+             * @param idx a `size_t` value for specifiying the position of 
+             * the element to retrieve
+             * 
+             * @return optional<T> wrapping copy of the underlying value 
+             * if is within the range of the container, `std::nullopt` is 
+             * the index is out-of-bounds
+             */
+            constexpr optional<T> get_or_nullopt(const size_t idx) const {
+                if (idx >= sizeof(array) / sizeof(T))
+                    return std::nullopt;
+                return make_optional<T>(array[idx]);
+            }
 
             /**
              * @brief Returns a const reference to the element at specified location `idx`,
              * with bounds checking.
              * 
-             * @param I a `size_t` value for specifiying the position of 
+             * @tparam I a `size_t` value for specifiying the position of 
              * the element to retrieve.
+             * 
              * @return read-only const T& to the element at idx position
              */
             template <size_t I>
-            constexpr const T& const_ref_at() const requires AccessInBounds<I, N> {
+            requires AccessInBounds<I, N>
+            constexpr const T& const_ref_at() const noexcept {
                 return array[I];
             }
 
@@ -83,29 +124,16 @@ export namespace zero::collections {
              * This method is designed to change the value of some element at index `I`
              * of the underlying fixed size container.
              * 
-             * @param idx a `size_t` value for specifiying the position of 
+             * @tparam idx a `size_t` value for specifiying the position of 
              * the element to retrieve.
+             * 
              * @return T& to the element at idx position
              */
-            template <size_t I>
-            constexpr T& mut_ref_at() requires AccessInBounds<I, N> {
-                return array[I];
-            }
-
-            /**
-             * @brief Returns a copy of the value of the element at the 
-             * specified location `idx`, with bounds checking.
-             * 
-             * @param idx a `size_t` value for specifiying the position of 
-             * the element to retrieve
-             * @return optional<T> wrapping copy of the underlying value 
-             * if is within the range of the container, `std::nullopt` is 
-             * the index is out-of-bounds
-             */
-            constexpr optional<T> get_or_nullopt(const size_t idx) const {
-                if (idx >= sizeof(array) / sizeof(T))
-                    return std::nullopt;
-                return make_optional<T>(array[idx]);
-            }
+            // template <size_t I>
+            // requires AccessInBounds<I, N> 
+            // constexpr T& mut_ref_at() const noexcept {
+            //     return array[I];
+            // }
+            // TODO Currently not working with constexpr constructor
     };
 }
