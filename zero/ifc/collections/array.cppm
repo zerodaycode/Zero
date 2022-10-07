@@ -35,6 +35,9 @@ export namespace zero::collections {
     class Container {
         public:
             template <size_t I>
+            constexpr const T& const_ref_at() const requires IsInBounds<I, N>;
+
+            template <size_t I>
             constexpr T& mut_ref_at() requires IsInBounds<I, N>;
             
             /**
@@ -51,17 +54,35 @@ export namespace zero::collections {
     };
 
     template<typename T, size_t N>
-    class FixedSizeContainer : public Container<T, N> {
+    class FixedSizeContainer : protected Container<T, N> {
         protected:
             T arr[N];
 
             template <typename... InitValues>
             FixedSizeContainer(InitValues... init_values) 
                 : arr{ init_values... } {}
+
         public:
+            /**
+             * @brief Returns a const reference to the element at specified location `idx`,
+             * with bounds checking.
+             * 
+             * @param I a `size_t` value for specifiying the position of 
+             * the element to retrieve.
+             * @return read-only const T& to the element at idx position
+             */
+            template <size_t I>
+            constexpr const T& const_ref_at() const requires IsInBounds<I, N>
+            {
+                return arr[I];
+            }
+
             /**
              * @brief Returns a mut reference to the element at specified location `idx`,
              * with bounds checking.
+             * 
+             * This method is designed to change the value of some element at index `I`
+             * of the underlying fixed size container.
              * 
              * @param idx a `size_t` value for specifiying the position of 
              * the element to retrieve.

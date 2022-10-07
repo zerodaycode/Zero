@@ -19,9 +19,12 @@ int main() {
 
     // mutating the content of index 3
     a.mut_ref_at<3>() = 10;
-    // static_assert(a.get(3) == 10);
     std::cout << a.get(3).value() << std::endl;
 
+    // cout a const ref to an element
+    std::cout << a.const_ref_at<2>() << std::endl;
+    // a.const_ref_at<5>() = 15;
+    std::cout << a.get(0).value() << std::endl;
     return 0;
 }
     
