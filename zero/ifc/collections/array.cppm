@@ -15,9 +15,15 @@ import <iostream>;
 import <optional>;
 import <stdexcept>;
 import <sstream>;
+import <concepts>;
 
 using namespace zero;
 using namespace std;
+
+template <size_t idx, size_t N>
+concept AccessInBounds = requires () {
+    requires idx <= N;
+};
 
 export namespace zero::collections {
     /**
@@ -25,18 +31,58 @@ export namespace zero::collections {
      * 
      * @tparam T the type of the elements which will be stored in the container
      */
-    template<typename T>
+    template<typename T, size_t N>
     class Container {
         public:
+            template <size_t I>
+            constexpr const T& const_ref_at() const requires AccessInBounds<I, N>;
+
+            template <size_t I>
+            constexpr T& mut_ref_at() requires AccessInBounds<I, N>;
+            
+            virtual constexpr optional<T> get_or_nullopt(const size_t idx) const = 0;
+    };
+
+    template<typename T, size_t N>
+    class FixedSizeContainer : protected Container<T, N> {
+        protected:
+            T arr[N];
+
+            template <typename... InitValues>
+            FixedSizeContainer(InitValues... init_values) 
+                : arr{ init_values... } {}
+
+        public:
+            /**
+             * @brief Returns a const reference to the element at specified location `idx`,
+             * with bounds checking.
+             * 
+             * @param I a `size_t` value for specifiying the position of 
+             * the element to retrieve.
+             * @return read-only const T& to the element at idx position
+             */
+            template <size_t I>
+            constexpr const T& const_ref_at() const requires AccessInBounds<I, N>
+            {
+                return arr[I];
+            }
+
             /**
              * @brief Returns a mut reference to the element at specified location `idx`,
              * with bounds checking.
+             * 
+             * This method is designed to change the value of some element at index `I`
+             * of the underlying fixed size container.
              * 
              * @param idx a `size_t` value for specifiying the position of 
              * the element to retrieve.
              * @return T& to the element at idx position
              */
-            virtual T& mut_ref_at(const size_t idx) const = 0;
+            template <size_t I>
+            constexpr T& mut_ref_at() requires AccessInBounds<I, N>
+            {
+                return arr[I];
+            }
 
             /**
              * @brief Returns a copy of the value of the element at the 
@@ -48,7 +94,12 @@ export namespace zero::collections {
              * if is within the range of the container, `std::nullopt` is 
              * the index is out-of-bounds
              */
-            virtual constexpr optional<T> get(const size_t idx) const = 0;
+            constexpr optional<T> get_or_nullopt(const size_t idx) const override
+            {
+                if (idx >= sizeof(this->arr) / sizeof(T))
+                    return std::nullopt;
+                return make_optional<T>(this->arr[idx]);
+            }
     };
 
     /**
@@ -66,17 +117,12 @@ export namespace zero::collections {
      * will be zero initialized.
      */
     template <typename T, zero::size_t N>
-    class StackArray: public Container<T> {
-        private:
-            T array[N];
+    class StackArray : public FixedSizeContainer<T, N>
+    {
         public:
             template <typename... InitValues>
             StackArray(InitValues... init_values) 
-                : array{ init_values... }
-            {
-                for (size_t i = 0; i < N; i++)
-                    std::cout << "Value[" << i << "]: " << array[i] << std::endl;
-            }
+                : FixedSizeContainer<T, N>( init_values... ) {}
 
             /**
              * @brief delete the `new` operator, since the intended usage of
@@ -85,18 +131,5 @@ export namespace zero::collections {
              * @return void* 
              */
             void* operator new(std::size_t) = delete;
-            // void* operator new[](std::size_t) = delete;
-
-            auto mut_ref_at(const size_t idx) const -> T(&) {
-                if (idx >= sizeof(array) / sizeof(T))
-                    throw std::out_of_range("Provided index is out-of-bounds");
-                return (T&) array[idx];
-            }
-
-            constexpr optional<T> get(const size_t idx) const {
-                if (idx >= sizeof(array) / sizeof(T))
-                    return std::nullopt;
-                return make_optional<T>(array[idx]);
-            }
     };
 }
