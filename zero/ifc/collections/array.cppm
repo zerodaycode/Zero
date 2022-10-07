@@ -21,7 +21,7 @@ using namespace zero;
 using namespace std;
 
 template <size_t idx, size_t N>
-concept IsInBounds = requires () {
+concept AccessInBounds = requires () {
     requires idx <= N;
 };
 
@@ -35,22 +35,12 @@ export namespace zero::collections {
     class Container {
         public:
             template <size_t I>
-            constexpr const T& const_ref_at() const requires IsInBounds<I, N>;
+            constexpr const T& const_ref_at() const requires AccessInBounds<I, N>;
 
             template <size_t I>
-            constexpr T& mut_ref_at() requires IsInBounds<I, N>;
+            constexpr T& mut_ref_at() requires AccessInBounds<I, N>;
             
-            /**
-             * @brief Returns a copy of the value of the element at the 
-             * specified location `idx`, with bounds checking.
-             * 
-             * @param idx a `size_t` value for specifiying the position of 
-             * the element to retrieve
-             * @return optional<T> wrapping copy of the underlying value 
-             * if is within the range of the container, `std::nullopt` is 
-             * the index is out-of-bounds
-             */
-            virtual constexpr optional<T> get(const size_t idx) const = 0;
+            virtual constexpr optional<T> get_or_nullopt(const size_t idx) const = 0;
     };
 
     template<typename T, size_t N>
@@ -72,7 +62,7 @@ export namespace zero::collections {
              * @return read-only const T& to the element at idx position
              */
             template <size_t I>
-            constexpr const T& const_ref_at() const requires IsInBounds<I, N>
+            constexpr const T& const_ref_at() const requires AccessInBounds<I, N>
             {
                 return arr[I];
             }
@@ -89,7 +79,7 @@ export namespace zero::collections {
              * @return T& to the element at idx position
              */
             template <size_t I>
-            constexpr T& mut_ref_at() requires IsInBounds<I, N>
+            constexpr T& mut_ref_at() requires AccessInBounds<I, N>
             {
                 return arr[I];
             }
@@ -104,7 +94,7 @@ export namespace zero::collections {
              * if is within the range of the container, `std::nullopt` is 
              * the index is out-of-bounds
              */
-            constexpr optional<T> get(const size_t idx) const override
+            constexpr optional<T> get_or_nullopt(const size_t idx) const override
             {
                 if (idx >= sizeof(this->arr) / sizeof(T))
                     return std::nullopt;
