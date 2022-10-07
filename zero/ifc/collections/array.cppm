@@ -78,6 +78,15 @@ export namespace zero::collections {
                     std::cout << "Value[" << i << "]: " << array[i] << std::endl;
             }
 
+            /**
+             * @brief delete the `new` operator, since the intended usage of
+             * the type is to be a wrapper over a C-style array.
+             * 
+             * @return void* 
+             */
+            void* operator new(std::size_t) = delete;
+            // void* operator new[](std::size_t) = delete;
+
             auto mut_ref_at(const size_t idx) const -> T(&) {
                 if (idx >= sizeof(array) / sizeof(T))
                     throw std::out_of_range("Provided index is out-of-bounds");
