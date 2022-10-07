@@ -11,9 +11,16 @@
 export module array;
 
 import typedefs;
-import <iostream>;
-import <optional>;
-import <concepts>;
+
+#ifdef _WIN32
+    #include <iostream>
+    #include <optional>
+    #include <concepts>
+#else
+    import <iostream>;
+    import <optional>;
+    import <concepts>;
+#endif
 
 using namespace zero;
 using namespace std;

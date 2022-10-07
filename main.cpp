@@ -1,8 +1,13 @@
 import zero;
 
-import <iostream>;
-import <optional>;
-
+#ifdef _WIN32
+    #pragma once
+    #include <iostream>
+    #include <optional>
+#else
+    import <iostream>;
+    import <optional>;
+#endif
 
 using namespace zero;
 
