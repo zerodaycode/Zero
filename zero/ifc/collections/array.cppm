@@ -13,8 +13,6 @@ export module array;
 import typedefs;
 import <iostream>;
 import <optional>;
-import <stdexcept>;
-import <sstream>;
 import <concepts>;
 
 using namespace zero;
