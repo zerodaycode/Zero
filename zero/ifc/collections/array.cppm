@@ -129,11 +129,10 @@ export namespace zero::collections {
              * 
              * @return T& to the element at idx position
              */
-            // template <size_t I>
-            // requires AccessInBounds<I, N> 
-            // constexpr T& mut_ref_at() const noexcept {
-            //     return array[I];
-            // }
-            // TODO Currently not working with constexpr constructor
+            template <size_t I>
+            requires AccessInBounds<I, N> 
+            constexpr T& mut_ref_at() noexcept {
+                return array[I];
+            }
     };
 }
