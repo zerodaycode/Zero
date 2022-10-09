@@ -113,7 +113,7 @@ export namespace zero::collections {
              */
             template <size_t I>
             requires AccessInBounds<I, N>
-            constexpr const T& const_ref_at() const noexcept {
+            constexpr T const& const_ref_at() const noexcept {
                 return array[I];
             }
 
