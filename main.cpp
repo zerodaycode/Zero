@@ -6,19 +6,12 @@ import zero;
 #else
     import <iostream>;
     import <optional>;
-    import <vector>;
 #endif
 
 using namespace zero;
 
 int main() {
     // Testing the collections
-    std::cout << collections_miu_greet() << std::endl;
-
-    std::vector<int> v = {1, 2, 3};
-    // v.
-    // std::v
-    
     
     constexpr collections::Array a = collections::Array<int, 10>(1, 2, 3);
     auto b = new decltype(collections::Array<int, 5>{1, 2, 3, 4, 5})[0];

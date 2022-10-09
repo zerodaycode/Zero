@@ -10,9 +10,3 @@
 
 export module collections;
 export import array;
-
-export {
-    const char* collections_miu_greet() {
-        return "Hi from the collections module interface unit";
-    }
-}
