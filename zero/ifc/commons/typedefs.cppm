@@ -26,12 +26,7 @@
 
 export module typedefs;
 
-
-#ifdef _WIN32
-    #include <cstddef>
-#else
-    import <cstddef>;
-#endif
+import std;
 
 export namespace zero {
     /**

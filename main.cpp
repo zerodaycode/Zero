@@ -1,13 +1,5 @@
 import zero;
-
-#ifdef _WIN32
-    #include <iostream>
-    #include <optional>
-#else
-    import <iostream>;
-    import <optional>;
-    import <vector>;
-#endif
+import std;
 
 using namespace zero;
 
