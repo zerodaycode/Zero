@@ -10,17 +10,8 @@
 
 export module array;
 
+import std;
 import typedefs;
-
-#ifdef _WIN32
-    #include <type_traits>
-    #include <optional>
-    #include <concepts>
-#else
-    import <type_traits>;
-    import <optional>;
-    import <concepts>;
-#endif
 
 using namespace zero;
 using namespace std;
