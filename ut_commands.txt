@@ -1,0 +1,8 @@
+// Build boost::ut as a precompiled module unit firstly stripped legacy declarations
+clang++ -c -std=c++20 -fimplicit-modules -fmodule-map-file=./out/zork/intrinsics/zork.modulemap --precompile -o ./zero/tests/deps/ut.pcm ./zero/tests/deps/ut.cppm
+
+// Build boost::ut as a precompiled module unit from the original ut.hpp file
+clang++ -c -std=c++2a -D__cpp_modules -fimplicit-modules -fmodule-map-file=./out/zork/intrinsics/zork.modulemap --precompile -o ./zero/tests/deps/ut.pcm -x c++-module ./zero/tests/deps/ut.hpp
+
+// Build a test example using boost::ut and modules
+clang++ -std=c++20 -fimplicit-modules -fmodule-map-file=./out/zork/intrinsics/zork.modulemap -o ./zero/tests/deps/ut_main.exe ./zero/tests/ut_main.cpp ./zero/tests/deps/ut.pcm -fmodule-file=./zero/tests/deps/ut.pcm

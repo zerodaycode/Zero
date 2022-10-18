@@ -376,11 +376,11 @@ constexpr auto is_valid(...) -> bool {
 }
 
 template <class T>
-static constexpr auto is_container_v =
+inline constexpr auto is_container_v =
     is_valid<T>([](auto t) -> decltype(t.begin(), t.end(), void()) {});
 
 template <class T>
-static constexpr auto has_user_print = is_valid<T>(
+inline constexpr auto has_user_print = is_valid<T>(
     [](auto t) -> decltype(void(declval<std::ostringstream&>() << t)) {});
 
 template <class T, class = void>
@@ -420,7 +420,7 @@ inline constexpr auto is_floating_point_v<long double> = true;
 
 #if defined(__clang__) or defined(_MSC_VER)
 template <class From, class To>
-static constexpr auto is_convertible_v = __is_convertible_to(From, To);
+inline constexpr auto is_convertible_v = __is_convertible_to(From, To);
 #else
 template <class From, class To>
 constexpr auto is_convertible(int) -> decltype(bool(To(declval<From>()))) {
