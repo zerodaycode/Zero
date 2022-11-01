@@ -2,8 +2,8 @@
  * @brief Test for the Array type of the collections module of Zero
  */
 
+import std;
 import collections;
-import <optional>;
 
 #include "../deps/catch.hpp"
 
