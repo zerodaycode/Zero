@@ -28,9 +28,9 @@ export namespace zero::collections {
      * stored on the stack
      * 
      * @tparam T the type of the elements which will be stored in the container
-     * @tparam N the capacity of the StackArray with which will be initialized
+     * @tparam N the capacity of the Array with which will be initialized
      * 
-     * `StackArray` has a constructor with a variadic template arguments that initializes
+     * `Array` has a constructor with a variadic template arguments that initializes
      * the array with the provided elements, up to the number constrained by N or less.
      * 
      * If the initializer takes n elements where n < N, non provided values
@@ -50,6 +50,16 @@ export namespace zero::collections {
             void* operator new(std::size_t) = delete;
 
         public:
+
+            /**
+             * @brief returns the number of elements stored in the underlying
+             * array
+             * 
+             * @return constexpr int 
+             */
+            [[nodiscard]]
+            constexpr int len() const noexcept { return sizeof(array) / sizeof(T); }
+
             /**
              * @brief public constructor for the Array<T, N> type
              * 

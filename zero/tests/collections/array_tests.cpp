@@ -9,10 +9,14 @@ import collections;
 
 using namespace zero;
 
-constexpr collections::Array a = collections::Array<int, 5>{1, 2, 3};
+constexpr collections::Array a = collections::Array<long, 5>{1L, 2L, 3L};
 auto b = new decltype(collections::Array<int, 5>{1, 2, 3, 4, 5})[0];
 
 TEST_CASE("Basic tests for the Array type", "[collections::Array]") {
+
+    SECTION("length of the array") {
+        REQUIRE( a.len() == 5 );
+    }
 
     SECTION(".get<I>()") {
         REQUIRE( a.get<0>() == 1 );
