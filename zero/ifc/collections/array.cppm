@@ -53,7 +53,7 @@ export namespace zero::collections {
              * @return constexpr int 
              */
             [[nodiscard]]
-            consteval int len() const noexcept { return sizeof(array) / sizeof(T); }
+            inline consteval int len() const noexcept { return N; }
 
             /**
              * @brief public constructor for the Array<T, N> type
@@ -78,7 +78,7 @@ export namespace zero::collections {
              */
             template <size_t I>
             requires concepts::AccessInBounds<I, N>
-            constexpr T get() const noexcept {
+            [[nodiscard]] inline constexpr T get() const noexcept {
                 return array[I];
             }
 
@@ -93,7 +93,7 @@ export namespace zero::collections {
              * if is within the range of the container, `std::nullopt` is 
              * the index is out-of-bounds
              */
-            constexpr std::optional<T> get_or_nullopt(const size_t idx) const {
+            inline constexpr std::optional<T> get_or_nullopt(const size_t idx) const {
                 if (idx >= sizeof(array) / sizeof(T))
                     return std::nullopt;
                 return std::make_optional<T>(array[idx]);
@@ -110,7 +110,7 @@ export namespace zero::collections {
              */
             template <size_t I>
             requires concepts::AccessInBounds<I, N>
-            constexpr T const& const_ref_at() const noexcept {
+            [[nodiscard]] inline constexpr T const& const_ref_at() const noexcept {
                 return array[I];
             }
 
@@ -127,8 +127,8 @@ export namespace zero::collections {
              * @return T& to the element at idx position
              */
             template <size_t I>
-            requires concepts::AccessInBounds<I, N> 
-            constexpr T& mut_ref_at() noexcept {
+            requires concepts::AccessInBounds<I, N>
+            [[nodiscard]] inline constexpr T& mut_ref_at() noexcept {
                 return array[I];
             }
     };
