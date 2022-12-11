@@ -16,6 +16,7 @@ TEST_CASE("Basic tests for the Array type", "[collections::Array]") {
 
     SECTION("length of the array") {
         REQUIRE( a.len() == 5 );
+        REQUIRE( collections::Array<int, 1>{1}.len() == 1 );
     }
 
     SECTION(".get<I>()") {

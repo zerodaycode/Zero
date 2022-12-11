@@ -1,5 +1,5 @@
 /**
- * @brief A templated version of a raw array 
+ * @brief A templated wrapper over a raw C-style array that mimics the std:array<T, N> 
  * 
  * @file array.cppm
  * @author Alex Vergara (pyzyryab@tutanota.com)
@@ -12,14 +12,9 @@ export module array;
 
 import std;
 import typedefs;
+import concepts;
 
 using namespace zero;
-using namespace std;
-
-template <size_t idx, size_t N>
-concept AccessInBounds = requires () {
-    requires idx <= N;
-};
 
 export namespace zero::collections {
     /**
@@ -47,7 +42,7 @@ export namespace zero::collections {
              * 
              * @return void* 
              */
-            void* operator new(std::size_t) = delete;
+            void* operator new(size_t) = delete;
 
         public:
 
@@ -58,7 +53,7 @@ export namespace zero::collections {
              * @return constexpr int 
              */
             [[nodiscard]]
-            constexpr int len() const noexcept { return sizeof(array) / sizeof(T); }
+            consteval int len() const noexcept { return sizeof(array) / sizeof(T); }
 
             /**
              * @brief public constructor for the Array<T, N> type
@@ -82,7 +77,8 @@ export namespace zero::collections {
              * @return a copy value of the ith element T at index I
              */
             template <size_t I>
-            constexpr T get() const {
+            requires concepts::AccessInBounds<I, N>
+            constexpr T get() const noexcept {
                 return array[I];
             }
 
@@ -97,10 +93,10 @@ export namespace zero::collections {
              * if is within the range of the container, `std::nullopt` is 
              * the index is out-of-bounds
              */
-            constexpr optional<T> get_or_nullopt(const size_t idx) const {
+            constexpr std::optional<T> get_or_nullopt(const size_t idx) const {
                 if (idx >= sizeof(array) / sizeof(T))
                     return std::nullopt;
-                return make_optional<T>(array[idx]);
+                return std::make_optional<T>(array[idx]);
             }
 
             /**
@@ -113,7 +109,7 @@ export namespace zero::collections {
              * @return read-only const T& to the element at idx position
              */
             template <size_t I>
-            requires AccessInBounds<I, N>
+            requires concepts::AccessInBounds<I, N>
             constexpr T const& const_ref_at() const noexcept {
                 return array[I];
             }
@@ -131,7 +127,7 @@ export namespace zero::collections {
              * @return T& to the element at idx position
              */
             template <size_t I>
-            requires AccessInBounds<I, N> 
+            requires concepts::AccessInBounds<I, N> 
             constexpr T& mut_ref_at() noexcept {
                 return array[I];
             }
