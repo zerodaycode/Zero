@@ -42,4 +42,18 @@ export namespace zero {
      * in which case it is synonymous with std::uintptr_t. 
      */
     typedef std::size_t size_t;
+
+    /**
+     * @brief zero::ptrdiff_t is a type alias for the std::ptrdiff_t, 
+     * being the signed integer type of the result of subtracting two pointers.
+     * 
+     * is used for pointer arithmetic and array indexing, if negative values are 
+     * possible. 
+     * Programs that use other types, such as int, may fail on, e.g. 64-bit systems
+     * when the index exceeds INT_MAX or if it relies on 32-bit modular arithmetic
+     * 
+     * Most common place of use if usually working with iterators, specially to fullfil
+     * the `difference_type` template argument
+     */
+    typedef std::ptrdiff_t ptrdiff;
 }
