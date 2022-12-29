@@ -23,7 +23,7 @@ export namespace zero::concepts {
      * @tparam N the number of elements (size) stored in the container
      */
     template <zero::size_t idx, zero::size_t N>
-    concept AccessInBounds = requires () {
+    concept inside_bounds = requires () {
         requires idx <= N;
     };
 }

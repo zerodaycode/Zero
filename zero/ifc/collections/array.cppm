@@ -77,7 +77,7 @@ export namespace zero::collections {
              * @return a copy value of the ith element T at index I
              */
             template <size_t I>
-            requires concepts::AccessInBounds<I, N>
+            requires concepts::inside_bounds<I, N>
             [[nodiscard]] inline constexpr T get() const noexcept {
                 return array[I];
             }
@@ -109,7 +109,7 @@ export namespace zero::collections {
              * @return read-only const T& to the element at idx position
              */
             template <size_t I>
-            requires concepts::AccessInBounds<I, N>
+            requires concepts::inside_bounds<I, N>
             [[nodiscard]] inline constexpr T const& const_ref_at() const noexcept {
                 return array[I];
             }
@@ -127,7 +127,7 @@ export namespace zero::collections {
              * @return T& to the element at idx position
              */
             template <size_t I>
-            requires concepts::AccessInBounds<I, N>
+            requires concepts::inside_bounds<I, N>
             [[nodiscard]] inline constexpr T& mut_ref_at() noexcept {
                 return array[I];
             }
