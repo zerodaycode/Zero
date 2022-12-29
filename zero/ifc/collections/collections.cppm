@@ -1,5 +1,5 @@
 /**
- * @brief A module interface for working with the collections of Zero 
+ * @brief A module interface for exposing the collections of Zero 
  * 
  * @file collections.cppm
  * @author Alex Vergara (pyzyryab@tutanota.com)
