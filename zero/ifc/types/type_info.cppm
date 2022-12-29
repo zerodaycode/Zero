@@ -1,5 +1,9 @@
 /**
- * @brief Exports free standing helper functions to obtain info about `types`
+ * @brief Provides facilities to retrieve information about types at compile time
+ * 
+ * Current implementation only contains an stringifyed version of a template
+ * paratemer type T when it's passed as template argument in the `type_name<T>()`
+ * freestanding function, available under the `zero::types` namespace
  * 
  * @file type_info.cppm
  * @author Alex Vergara (pyzyryab@tutanota.com)
@@ -11,23 +15,27 @@ export module type_info;
 
 import std;
 
-/**
- * @tparam T the template argument that will be stringyfied
- * @return constexpr std::string_view with the string representation of the template argument
- */
-template <typename T> constexpr std::string_view type_name();
+export namespace zero::types {
+    /**
+     * @tparam T - the template argument that will be stringifyed
+     * @return an std::string_view with the string representation of the template argument
+     */
+    template <typename T>
+    [[nodiscard]] consteval std::string_view type_name();
 
-/**
- * @brief Primary template specialization for void types
- */
-template <>
-constexpr std::string_view type_name<void>() { return "void"; }
+    /**
+     * @brief Template specialization for void types, that chooses any arbitrary type
+     * (void in this case) as a mock for the flux that retrieves the T type name, or directly returns void for
+     * T = void
+     */
+    template <>
+    [[nodiscard]] consteval std::string_view type_name<void>() { return "void"; }
+}
 
-using type_name_prober = void;
+using mock_type = void;
 
 template <typename T>
-constexpr std::string_view wrapped_type_name() 
-{
+inline consteval std::string_view wrapped_type_name() {
 #ifdef __clang__
     return __PRETTY_FUNCTION__;
 #elif defined(__GNUC__)
@@ -39,25 +47,21 @@ constexpr std::string_view wrapped_type_name()
 #endif
 }
 
-constexpr std::size_t wrapped_type_name_prefix_length()
-{ 
-    return wrapped_type_name<type_name_prober>().find(type_name<type_name_prober>()); 
+inline consteval std::size_t wrapped_type_name_prefix_length() { 
+    return wrapped_type_name<mock_type>()
+        .find(zero::types::type_name<mock_type>()); 
 }
 
-constexpr std::size_t wrapped_type_name_suffix_length()
-{ 
-    return wrapped_type_name<type_name_prober>().length() 
+inline consteval std::size_t wrapped_type_name_suffix_length() { 
+    return wrapped_type_name<mock_type>().length() 
         - wrapped_type_name_prefix_length() 
-        - type_name<type_name_prober>().length();
+        - zero::types::type_name<mock_type>().length();
 }
 
-export namespace zero {
-    /**
-     * @brief Implementation of `type_name`
-     */
+export namespace zero::types {
+    // Implementation of `type_name`
     template <typename T>
-    constexpr std::string_view type_name() 
-    {
+    [[nodiscard]] consteval std::string_view type_name() {
         constexpr auto wrapped_name = wrapped_type_name<T>();
         constexpr auto prefix_length = wrapped_type_name_prefix_length();
         constexpr auto suffix_length = wrapped_type_name_suffix_length();
