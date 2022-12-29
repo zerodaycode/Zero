@@ -20,7 +20,7 @@ export namespace zero::iterator::concepts {
      * perfectly compatible with any element that expects tag dispaching
      */
     template <typename T>
-    concept iterator_category = requires () {
+    concept std_iterator_category = requires () {
         std::is_same<T, std::input_iterator_tag>() ||
         std::is_same<T, std::output_iterator_tag>() ||
         std::is_same<T, std::forward_iterator_tag>() ||
@@ -31,6 +31,9 @@ export namespace zero::iterator::concepts {
 }
 
 export namespace zero::iterator {
+
+    namespace iter_cpts = zero::iterator::concepts;
+
     /**
      * @brief Implementation of the ISO standard defined family of iterators
      * being this `iterator_interface` the base class for the hierarchy.
@@ -49,13 +52,13 @@ export namespace zero::iterator {
      */
     template<
         typename Derived,
+        iter_cpts::std_iterator_category Category,
         typename T,
         typename pointer_type = T*,
-        typename reference_type = T&, 
-        zero::iterator::concepts::iterator_category C
+        typename reference_type = T&
     > struct iterator {
         using value_type        = T;
-        using iterator_category = C;
+        using iterator_category = Category;
         using pointer           = pointer_type;
         using reference         = reference_type;
         using difference_type   = zero::ptrdiff;
