@@ -12,6 +12,9 @@ export module iterator;
 import std;
 import typedefs;
 
+/**
+ * @brief Namespace for define the interface requeriments of the iterator concepts
+ */
 export namespace zero::iterator::concepts {
     /**
      * @brief Enforces the requeriments over the `Category` template argument
@@ -20,13 +23,56 @@ export namespace zero::iterator::concepts {
      * perfectly compatible with any element that expects tag dispaching
      */
     template <typename T>
-    concept std_iterator_category = requires () {
+    concept std_iterator_category = 
         std::is_same<T, std::input_iterator_tag>() ||
         std::is_same<T, std::output_iterator_tag>() ||
         std::is_same<T, std::forward_iterator_tag>() ||
         std::is_same<T, std::bidirectional_iterator_tag>() ||
         std::is_same<T, std::random_access_iterator_tag>() ||
         std::is_same<T, std::contiguous_iterator_tag>();
+
+    /**
+     * @brief ALias for define that a template parameter T is a reference `T = T&`
+     */
+    template<typename T>
+    using template_arg_as_ref = T&;
+
+    /**
+     * @brief satisfied if and only if the type is referenceable (in particular, not void)
+     */
+    template<typename T>
+    concept can_reference = requires() { typename template_arg_as_ref<T>; };
+
+    /**
+     * @brief satisfied if and only if the type is dereferenceable (in particular, not void)
+     */
+    template<typename T>
+    concept dereferenceable = requires(T& t) {
+	    { *t } -> can_reference;
+	};
+
+    template<typename T>
+    concept is_signed_integer_like = 
+        std::signed_integral<T>;
+        // || is_signed_int128<T> || // Not yet
+        // std::same_as<T, std::__max_diff_type>;  // Neither ready
+
+    template<typename Iter>
+    concept weakly_incrementable = std::movable<Iter> && requires(Iter i) {
+        typename std::iter_difference_t<Iter>;
+        requires is_signed_integer_like<std::iter_difference_t<Iter>>;
+        { ++i } -> std::same_as<Iter&>;   // not required to be equality-preserving
+        i++;                           // not required to be equality-preserving
+    };
+
+    /**
+     * @brief The `input_or_output_iterator` concept forms the basis of the iterator concept taxonomy;
+     * every iterator type satisfies the `input_or_output_iterator` requirements.
+     */
+    template <typename Iter>
+    concept input_or_output_iterator = weakly_incrementable<Iter> && 
+    requires(Iter i) {
+        { *i } -> can_reference;
     };
 }
 
@@ -56,7 +102,7 @@ export namespace zero::iterator {
         typename T,
         typename pointer_type = T*,
         typename reference_type = T&
-    > struct iterator {
+    > struct base_iterator {
         using value_type        = T;
         using iterator_category = Category;
         using pointer           = pointer_type;

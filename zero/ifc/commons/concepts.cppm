@@ -15,7 +15,7 @@ import typedefs;
 export namespace zero::concepts {
 
     /**
-     * @brief Defines a constrait for container read operations,
+     * @brief Defines a constrait for container operations,
      * where the requested index to read or retrieve should be
      * inside a range between [0, N]
      * 
