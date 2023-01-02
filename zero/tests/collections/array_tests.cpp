@@ -54,3 +54,13 @@ SCENARIO("Scenario: when working with get_or_nullopt", "[Array]") {
         }
     }
 }
+
+SCENARIO("Scenario: The iterator library is modeled in Zero", "[Array]") {
+            
+    WHEN("we made our Array<T, N> iterable") {
+        THEN("users can use for-range loop") {
+            for (auto value : a)
+                REQUIRE( std::is_integral<value> );
+        }
+    }
+}
