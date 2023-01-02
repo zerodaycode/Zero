@@ -11,6 +11,70 @@ export module iterator;
 
 import std;
 import typedefs;
+/**
+ * @brief 
+ */
+namespace zero::iterator_traits {
+    /**
+     * @brief SFINAE friendly iterator_traits
+     */
+    template<typename Iter, typename = void>
+    struct iterator_traits {};
+
+    /**
+     * @brief An iterator such that iterator_traits<Iter> 
+     * names a specialization generated from the primary template.
+     */
+    template<typename Iter>
+    concept __primary_traits_iter = 
+        std::is_base_of_v<iterator_traits<Iter, void>, iterator_traits<Iter>>;
+
+    template<typename Iter, typename T>
+    struct __iter_traits_impl
+    { using type = iterator_traits<Iter>; };
+
+    template<typename Iter, typename T>
+    requires __primary_traits_iter<Iter>
+    struct __iter_traits_impl<Iter, T> {};
+
+    // ITER_TRAITS
+    template<typename Iter, typename T = Iter>
+    using __iter_traits = typename __iter_traits_impl<Iter, T>::type;
+
+    template<typename Iter>
+    struct __iter_concept_impl;
+
+    // ITER_CONCEPT(I) is ITER_TRAITS(I)::iterator_concept if that is valid.
+    template<typename Iter>
+    requires requires { typename __iter_traits<Iter>::iterator_concept; }
+    struct __iter_concept_impl<Iter>
+    { using type = typename __iter_traits<Iter>::iterator_concept; };
+
+    // Otherwise, ITER_TRAITS(I)::iterator_category if that is valid.
+    template<typename Iter>
+    requires (!requires { typename __iter_traits<Iter>::iterator_concept; }
+        && requires { typename __iter_traits<Iter>::iterator_category; })
+    struct __iter_concept_impl<Iter>
+    { using type = typename __iter_traits<Iter>::iterator_category; };
+
+    // Otherwise, random_access_tag if iterator_traits<I> is not specialized.
+    template<typename Iter>
+    requires (!requires { typename __iter_traits<Iter>::iterator_concept; }
+	  && !requires { typename __iter_traits<Iter>::iterator_category; }
+	  && __primary_traits_iter<Iter>)
+    struct __iter_concept_impl<Iter>
+    { using type = std::random_access_iterator_tag; };
+
+    // Otherwise, there is no ITER_CONCEPT(I) type.
+    template<typename Iter>
+    struct __iter_concept_impl{};
+
+    /**
+    //  * @brief the std library internal implementation's way to get a tag for a given type
+    //  */
+    template<typename Iter>
+    using iter_concept = typename __iter_concept_impl<Iter>::type;
+}
 
 /**
  * @brief Namespace for define the interface requeriments of the iterator concepts
@@ -32,7 +96,7 @@ export namespace zero::iterator::concepts {
         std::is_same<T, std::contiguous_iterator_tag>();
 
     /**
-     * @brief ALias for define that a template parameter T is a reference `T = T&`
+     * @brief Alias for define that a template parameter T is a reference `T = T&`
      */
     template<typename T>
     using template_arg_as_ref = T&;
@@ -51,6 +115,15 @@ export namespace zero::iterator::concepts {
 	    { *t } -> can_reference;
 	};
 
+    /**
+     * @brief Computes the value type of T. If `std::iterator_traits<std::remove_cvref_t<T>>`
+     * is not specialized, then `std::iter_value_t<T>` is 
+     * `std::indirectly_readable_traits<std::remove_cvref_t<T>>::value_type`. 
+     * Otherwise, it is `std::iterator_traits<std::remove_cvref_t<T>>::value_type` 
+     */
+    template<dereferenceable T>
+    using iter_reference_t = decltype(*std::declval<T&>());
+
     template<typename T>
     concept is_signed_integer_like = 
         std::signed_integral<T>;
@@ -62,7 +135,7 @@ export namespace zero::iterator::concepts {
         typename std::iter_difference_t<Iter>;
         requires is_signed_integer_like<std::iter_difference_t<Iter>>;
         { ++i } -> std::same_as<Iter&>;   // not required to be equality-preserving
-        i++;                           // not required to be equality-preserving
+        i++;                              // not required to be equality-preserving
     };
 
     /**
@@ -74,6 +147,20 @@ export namespace zero::iterator::concepts {
     requires(Iter i) {
         { *i } -> can_reference;
     };
+
+    // /**
+    //  * @brief The input_iterator concept is a refinement of input_or_output_iterator, adding the requirement that the r
+    //  * eferenced values can be read (via indirectly_readable) and the requirement 
+    //  * that the iterator concept tag be present.
+    //  */
+    // template <typename Iter>
+    // concept input_iterator =
+    //     input_or_output_iterator<I> &&
+    //     std::indirectly_readable<I> &&
+    //     requires { typename iter_reference_t<I>; } &&
+    //     std::derived_from</*ITER_CONCEPT*/<I>, 
+    //     std::input_iterator_tag>;  // Could we get rid out of this in our custom impl?
+    // }
 }
 
 export namespace zero::iterator {
@@ -81,12 +168,16 @@ export namespace zero::iterator {
     namespace iter_cpts = zero::iterator::concepts;
 
     /**
-     * @brief Implementation of the ISO standard defined family of iterators
-     * being this `iterator_interface` the base class for the hierarchy.
+     * @brief Implementation of the classical family of iterators
+     * being this `base_interface` the base class for the hierarchy.
      * 
      * The implementation design decision behind this family of iterators is using
      * the CRTP idiom, achieving much better expresiveness and performance,
      * thanks to the static polimorphism provided by this technique.
+     * 
+     * NOTE: Sure? Offering an already implemented (an customizable?) family 
+     * of iterators? Could we do something as boost::iterator_facade? But sightly
+     * different?
      * 
      * @tparam Derived the template argument for downcast to the correct child type
      * @tparam T usually know as the value_type
@@ -97,7 +188,7 @@ export namespace zero::iterator {
      * concept defined in the `zero::iterator::concepts` namespace 
      */
     template<
-        typename Derived,
+        typename Derived, // Sure? 
         iter_cpts::std_iterator_category Category,
         typename T,
         typename pointer_type = T*,
