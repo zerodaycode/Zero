@@ -9,10 +9,15 @@ import collections;
 
 using namespace zero;
 
-constexpr collections::Array a = collections::Array<int, 5>{1, 2, 3};
+constexpr collections::Array a = collections::Array<long, 5>{1L, 2L, 3L};
 auto b = new decltype(collections::Array<int, 5>{1, 2, 3, 4, 5})[0];
 
 TEST_CASE("Basic tests for the Array type", "[collections::Array]") {
+
+    SECTION("length of the array") {
+        REQUIRE( a.len() == 5 );
+        REQUIRE( collections::Array<int, 1>{1}.len() == 1 );
+    }
 
     SECTION(".get<I>()") {
         REQUIRE( a.get<0>() == 1 );
@@ -46,6 +51,16 @@ SCENARIO("Scenario: when working with get_or_nullopt", "[Array]") {
         
         THEN("an optional bad_access exception should ocurrs") {
             REQUIRE_THROWS_AS( opt_wrapper.value(), std::bad_optional_access );
+        }
+    }
+}
+
+SCENARIO("Scenario: The iterator library is modeled in Zero", "[Array]") {
+            
+    WHEN("we made our Array<T, N> iterable") {
+        THEN("users can use for-range loop") {
+            for (auto value : a)
+                REQUIRE( std::is_integral<value> );
         }
     }
 }
