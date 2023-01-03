@@ -95,8 +95,8 @@ export namespace zero::iterator::concepts {
             { i.operator->() } -> std::same_as<typename Iter::pointer>;
             { i.operator++() } -> std::same_as<decltype(std::declval<Iter&>())>;
             { i++ } -> std::same_as<void>;
-            { i.operator==(rhs) } -> std::same_as<bool>;
-            { i.operator!=(rhs) } -> std::same_as<bool>;
+            { operator==(i, rhs) } -> std::same_as<bool>;
+            { operator!=(i, rhs) } -> std::same_as<bool>;
         };
 }
 
@@ -186,15 +186,14 @@ export namespace zero::iterator {
                 ++(*this);
             }
 
-            /* NOTE! Should binary operators must be provided as friends? */
             [[nodiscard]]  //! NOTE: Should this be equality with `Sentinel`?
-            auto operator==(input_iter rhs) const -> bool {
-                return (_ptr == rhs._ptr);
+            friend auto operator==(input_iter& self, input_iter& rhs) -> bool {
+                return (self._ptr == rhs._ptr);
             }
 
             [[nodiscard]]
-            auto operator!=(input_iter rhs) const -> bool {
-                return !_ptr != (rhs._ptr);
+            friend auto operator!=(input_iter& self, input_iter& rhs) -> bool {
+                return !self._ptr != (rhs._ptr);
             }
     };
 }
@@ -202,7 +201,7 @@ export namespace zero::iterator {
 /// ----------------- compile time tests ----------------------///
 static_assert(
     zero::iterator::concepts::input_iterator<
-        zero::iterator::input_iter<std::vector<int>>
+        zero::iterator::input_iter<int>
     >, 
     "Failed to create the input iterator"
 );
