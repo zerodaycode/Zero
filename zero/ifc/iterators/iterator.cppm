@@ -91,11 +91,10 @@ export namespace zero::iterator::concepts {
         input_or_output_iterator<Iter> &&  // from the std
         std::indirectly_readable<Iter> &&  // from the std
         requires (Iter i, Iter rhs) {
-            i++;
-
-            { i.operator*() } -> std::same_as<typename Iter::base_it::reference>;
-            { i.operator->() } -> std::same_as<typename Iter::base_it::pointer>;
+            { i.operator*() } -> std::same_as<typename Iter::reference>;
+            { i.operator->() } -> std::same_as<typename Iter::pointer>;
             { i.operator++() } -> std::same_as<decltype(std::declval<Iter&>())>;
+            { i++ } -> std::same_as<void>;
             { i.operator==(rhs) } -> std::same_as<bool>;
             { i.operator!=(rhs) } -> std::same_as<bool>;
         };
@@ -153,21 +152,15 @@ export namespace zero::iterator {
 
         public:
             input_iter<T>() = delete;
-
             explicit input_iter<T>(typename base_it::pointer ptr = nullptr)
                 : _ptr { ptr } {}
-
-            [[nodiscard]]
-            input_iter<T>(const input_iter&) = default;
+            ~input_iter<T>() = default;
+            input_iter<T>(const input_iter<T>& other) = default;
+            input_iter<T>(input_iter<T>&& other) noexcept = default;
 
             auto operator=(T* ptr) -> input_iter<T>& { _ptr = ptr; return *this; }
-            auto operator=(const input_iter&) -> input_iter<T>& = default;
-            auto operator=(input_iter&&) noexcept -> input_iter<T>& = default;
-
-            [[nodiscard]]
-            input_iter<T>(const input_iter&&) noexcept = default;
-
-            ~input_iter<T>() = default;
+            auto operator=(const input_iter<T>&) -> input_iter<T>& = default;
+            auto operator=(input_iter<T>&&) noexcept -> input_iter<T>& = default;
 
             [[nodiscard]]
             auto operator->() const -> typename base_it::pointer {
@@ -193,7 +186,8 @@ export namespace zero::iterator {
                 ++(*this);
             }
 
-            [[nodiscard]]
+            /* NOTE! Should binary operators must be provided as friends? */
+            [[nodiscard]]  //! NOTE: Should this be equality with `Sentinel`?
             auto operator==(input_iter rhs) const -> bool {
                 return (_ptr == rhs._ptr);
             }
