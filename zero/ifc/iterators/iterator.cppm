@@ -12,9 +12,6 @@ export module iterator;
 import std;
 import typedefs;
 
-/**
- * @brief Namespace for define the interface requeriments of the iterator concepts
- */
 export namespace zero::iterator::concepts {
     /**
      * @brief Enforces the requeriments over the `Category` template argument
@@ -52,9 +49,11 @@ export namespace zero::iterator::concepts {
 	};
 
     /**
-     * @brief Computes the value type of T. If `std::iterator_traits<std::remove_cvref_t<T>>`
-     * is not specialized, then `std::iter_value_t<T>` is 
+     * @brief Computes the value type of T. 
+     * If `std::iterator_traits<std::remove_cvref_t<T>>` is not specialized, 
+     * then `std::iter_value_t<T>` is 
      * `std::indirectly_readable_traits<std::remove_cvref_t<T>>::value_type`. 
+     * 
      * Otherwise, it is `std::iterator_traits<std::remove_cvref_t<T>>::value_type` 
      */
     template<dereferenceable T>
@@ -92,11 +91,10 @@ export namespace zero::iterator::concepts {
         input_or_output_iterator<Iter> &&  // from the std
         std::indirectly_readable<Iter> &&  // from the std
         requires (Iter i, Iter rhs) {
-            i++;
-
-            { i.operator*() } -> std::same_as<typename Iter::base_it::reference>;
-            { i.operator->() } -> std::same_as<typename Iter::base_it::pointer>;
+            { i.operator*() } -> std::same_as<typename Iter::reference>;
+            { i.operator->() } -> std::same_as<typename Iter::pointer>;
             { i.operator++() } -> std::same_as<decltype(std::declval<Iter&>())>;
+            { i++ } -> std::same_as<void>;
             { i.operator==(rhs) } -> std::same_as<bool>;
             { i.operator!=(rhs) } -> std::same_as<bool>;
         };
@@ -154,21 +152,15 @@ export namespace zero::iterator {
 
         public:
             input_iter<T>() = delete;
-
             explicit input_iter<T>(typename base_it::pointer ptr = nullptr)
                 : _ptr { ptr } {}
-
-            [[nodiscard]]
-            input_iter<T>(const input_iter&) = default;
+            ~input_iter<T>() = default;
+            input_iter<T>(const input_iter<T>& other) = default;
+            input_iter<T>(input_iter<T>&& other) noexcept = default;
 
             auto operator=(T* ptr) -> input_iter<T>& { _ptr = ptr; return *this; }
-            auto operator=(const input_iter&) -> input_iter<T>& = default;
-            auto operator=(input_iter&&) noexcept -> input_iter<T>& = default;
-
-            [[nodiscard]]
-            input_iter<T>(const input_iter&&) noexcept = default;
-
-            ~input_iter<T>() = default;
+            auto operator=(const input_iter<T>&) -> input_iter<T>& = default;
+            auto operator=(input_iter<T>&&) noexcept -> input_iter<T>& = default;
 
             [[nodiscard]]
             auto operator->() const -> typename base_it::pointer {
@@ -186,17 +178,16 @@ export namespace zero::iterator {
             }
 
             auto operator++() -> input_iter& {
-                ++this->_ptr;
+                ++this-> _ptr;
                 return *this;
             }
 
-            auto operator++(int) -> input_iter {
-                input_iter temp(*this);
+            void operator++(int) {
                 ++(*this);
-                return temp;
             }
 
-            [[nodiscard]]
+            /* NOTE! Should binary operators must be provided as friends? */
+            [[nodiscard]]  //! NOTE: Should this be equality with `Sentinel`?
             auto operator==(input_iter rhs) const -> bool {
                 return (_ptr == rhs._ptr);
             }
