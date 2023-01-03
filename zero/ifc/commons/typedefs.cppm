@@ -17,11 +17,6 @@
  *  
  *  Defined in header <cwchar> (since C++17) 
  *  ```
- * 
- * @file typedefs.cppm
- * @author Alex Vergara (pyzyryab@tutanota.com)
- * @version 0.1.0
- * @date 2022-10-01
  */
 
 export module typedefs;

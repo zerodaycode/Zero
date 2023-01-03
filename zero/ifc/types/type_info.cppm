@@ -4,11 +4,6 @@
  * Current implementation only contains an stringifyed version of a template
  * paratemer type T when it's passed as template argument in the `type_name<T>()`
  * freestanding function, available under the `zero::types` namespace
- * 
- * @file type_info.cppm
- * @author Alex Vergara (pyzyryab@tutanota.com)
- * @version 0.1.0
- * @date 2022-12-27
  */
 
 export module type_info;
