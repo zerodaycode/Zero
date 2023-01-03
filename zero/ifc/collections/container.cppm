@@ -18,10 +18,13 @@ export namespace zero {
         // typename ConstIter 
     >
     class Container {
+        private:
+            friend Child;
+            constexpr Container() {};
         public:
-            Iter begin() { return static_cast<Child*>(this)->begin(); }
-            Iter end() { return static_cast<Child*>(this)->end(); }
-            Iter begin() const { return static_cast<const Child*>(this)->begin(); }
-            Iter end() const { return static_cast<const Child*>(this)->end(); }
+            Iter begin() { return static_cast<Child&>(*this).begin(); }
+            Iter end() { return static_cast<Child&>(*this).end(); }
+            Iter begin() const { return static_cast<const Child&>(*this).begin(); }
+            Iter end() const { return static_cast<const Child&>(*this).end(); }
     };
 }

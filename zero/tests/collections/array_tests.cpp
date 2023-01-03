@@ -12,13 +12,13 @@ using namespace zero;
 
 constexpr collections::Array a = collections::Array<long, 5>{1L, 2L, 3L};
 auto b = new decltype(collections::Array<int, 5>{1, 2, 3, 4, 5})[0];
-Container c = collections::Array<long, 5>{1L, 2L, 3L};
+collections::Array c = collections::Array<long, 5>{1L, 2L, 3L};
 
 TEST_CASE("Basic tests for the Array type", "[collections::Array]") {
 
     SECTION("length of the array") {
-        REQUIRE( a.len() == 5 );
-        REQUIRE( collections::Array<int, 1>{1}.len() == 1 );
+        REQUIRE( a.size() == 5 );
+        REQUIRE( collections::Array<int, 1>{1}.size() == 1 );
     }
 
     SECTION(".get<I>()") {

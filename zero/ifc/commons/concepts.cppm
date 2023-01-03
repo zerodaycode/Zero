@@ -19,6 +19,6 @@ export namespace zero::concepts {
      */
     template <zero::size_t idx, zero::size_t N>
     concept inside_bounds = requires () {
-        requires idx <= N;
+        requires idx < N;
     };
 }
