@@ -12,9 +12,6 @@ export module iterator;
 import std;
 import typedefs;
 
-/**
- * @brief Namespace for define the interface requeriments of the iterator concepts
- */
 export namespace zero::iterator::concepts {
     /**
      * @brief Enforces the requeriments over the `Category` template argument
@@ -52,9 +49,11 @@ export namespace zero::iterator::concepts {
 	};
 
     /**
-     * @brief Computes the value type of T. If `std::iterator_traits<std::remove_cvref_t<T>>`
-     * is not specialized, then `std::iter_value_t<T>` is 
+     * @brief Computes the value type of T. 
+     * If `std::iterator_traits<std::remove_cvref_t<T>>` is not specialized, 
+     * then `std::iter_value_t<T>` is 
      * `std::indirectly_readable_traits<std::remove_cvref_t<T>>::value_type`. 
+     * 
      * Otherwise, it is `std::iterator_traits<std::remove_cvref_t<T>>::value_type` 
      */
     template<dereferenceable T>
@@ -186,14 +185,12 @@ export namespace zero::iterator {
             }
 
             auto operator++() -> input_iter& {
-                ++this->_ptr;
+                ++this-> _ptr;
                 return *this;
             }
 
-            auto operator++(int) -> input_iter {
-                input_iter temp(*this);
+            void operator++(int) {
                 ++(*this);
-                return temp;
             }
 
             [[nodiscard]]
