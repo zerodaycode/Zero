@@ -1,11 +1,5 @@
 /**
- * @brief A templated wrapper over a raw C-style array that mimics the std:array<T, N> 
- * 
- * @file array.cppm
- * @author Alex Vergara (pyzyryab@tutanota.com)
- * @version 0.1.0
- * @date 2022-09-25
- * @copyright Copyright (c) 2022
+ * @brief A templated wrapper over a raw C-style array that mimics the std:array<T, N>
  */
 
 export module array;

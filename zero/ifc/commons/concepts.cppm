@@ -1,11 +1,6 @@
 /**
  * @brief Defines C++20 concepts to design constraints to be used
  * across the libraries
- * 
- * @file concepts.cppm
- * @author Alex Vergara (pyzyryab@tutanota.com)
- * @version 0.1.0
- * @date 2022-12-11
  */
 
 export module concepts;
