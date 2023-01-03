@@ -4,6 +4,7 @@
 
 import std;
 import collections;
+import container;
 
 #include "../deps/catch.hpp"
 
@@ -11,6 +12,7 @@ using namespace zero;
 
 constexpr collections::Array a = collections::Array<long, 5>{1L, 2L, 3L};
 auto b = new decltype(collections::Array<int, 5>{1, 2, 3, 4, 5})[0];
+Container c = collections::Array<long, 5>{1L, 2L, 3L};
 
 TEST_CASE("Basic tests for the Array type", "[collections::Array]") {
 
@@ -59,8 +61,10 @@ SCENARIO("Scenario: The iterator library is modeled in Zero", "[Array]") {
             
     WHEN("we made our Array<T, N> iterable") {
         THEN("users can use for-range loop") {
-            for (auto value : a)
-                REQUIRE( std::is_integral<value> );
+            for (auto value : c)
+                REQUIRE( value >= 0 );
         }
     }
+
+    // TODO Const-impl are broken
 }

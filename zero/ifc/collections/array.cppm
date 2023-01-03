@@ -7,6 +7,8 @@ export module array;
 import std;
 import typedefs;
 import concepts;
+import iterator;
+import container;
 
 using namespace zero;
 
@@ -26,9 +28,14 @@ export namespace zero::collections {
      * will be zero initialized.
      */
     template<typename T, size_t N>
-    class Array {
+    class Array
+        //! Fix CRTP impl is broken. It's initializing garbage trash
+        // : public Container<Array<T, N>, iterator::input_iter<T>>
+    {
         private:
             T array[N];
+
+            using iterator = iterator::input_iter<T>;
 
             /**
              * @brief delete the `new` operator, since the intended usage of
@@ -39,6 +46,12 @@ export namespace zero::collections {
             void* operator new(size_t) = delete;
 
         public:
+            // Iterator spected stuff
+            iterator begin() { return iterator(&array[0]); }
+            iterator end() { return iterator(&array[N]); }
+            // TODO Fix! Const impl are broken in the iterator
+            iterator begin() const { return iterator(&array[0]); }
+            iterator end() const { return iterator(&array[N]); }
 
             /**
              * @brief returns the number of elements stored in the underlying
@@ -46,7 +59,7 @@ export namespace zero::collections {
              * 
              * @return constexpr int 
              */
-            [[nodiscard]]
+            [[nodiscard]]  // TODO Follow STL convention and change it to size
             inline consteval int len() const noexcept { return N; }
 
             /**

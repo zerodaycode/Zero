@@ -148,7 +148,7 @@ export namespace zero::iterator {
         using base_it = base_iterator<std::input_iterator_tag, T>;
 
         private:
-            T* _ptr;
+            typename base_it::pointer _ptr;
 
         public:
             input_iter<T>() = delete;
@@ -158,7 +158,7 @@ export namespace zero::iterator {
             input_iter<T>(const input_iter<T>& other) = default;
             input_iter<T>(input_iter<T>&& other) noexcept = default;
 
-            auto operator=(T* ptr) -> input_iter<T>& { _ptr = ptr; return *this; }
+            auto operator=(typename base_it::pointer ptr) -> input_iter<T>& { _ptr = ptr; return *this; }
             auto operator=(const input_iter<T>&) -> input_iter<T>& = default;
             auto operator=(input_iter<T>&&) noexcept -> input_iter<T>& = default;
 
@@ -193,7 +193,7 @@ export namespace zero::iterator {
 
             [[nodiscard]]
             friend auto operator!=(input_iter& self, input_iter& rhs) -> bool {
-                return !self._ptr != (rhs._ptr);
+                return (!*self._ptr) != *(rhs._ptr);
             }
     };
 }
