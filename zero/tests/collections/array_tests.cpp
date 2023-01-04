@@ -66,5 +66,10 @@ SCENARIO("Scenario: The iterator library is modeled in Zero", "[Array]") {
         }
     }
 
-    // TODO Const-impl are broken
+    WHEN("we made our Array<T, N> iterable and const compatible") {
+        THEN("so users can use for-range loop over const collections") {
+            for (auto value : a)
+                REQUIRE( value >= 0 );
+        }
+    }
 }
