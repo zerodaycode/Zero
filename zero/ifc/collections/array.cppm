@@ -45,10 +45,10 @@ export namespace zero::collections {
 
             // Iterator spected stuff
             iterator begin() { return iterator(&array[0]); }
-            iterator end() { return iterator(&array[5]); }
-            // // TODO Fix! Const impl are broken in the iterator
-            // const iterator begin() const { return iterator(&array[0]); }
-            // const iterator end() const { return iterator(&array[N]); }
+            iterator end() { return iterator(&array[N]); }
+            // TODO Fix! Const impl are broken in the iterator
+            constexpr iterator begin() const { return iterator(&array[0]); }
+            constexpr iterator end() const { return iterator(&array[N]); }
 
             /**
              * @brief returns the number of elements stored in the underlying array

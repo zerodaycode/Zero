@@ -193,12 +193,12 @@ export namespace zero::iterator {
 
             [[nodiscard]]  //! NOTE: Should this be equality with `Sentinel`?
             friend auto operator==(input_iter& self, input_iter& rhs) -> bool {
-                return (self._ptr == rhs._ptr);
+                return self._ptr == rhs._ptr;
             }
 
             [[nodiscard]]
             friend auto operator!=(input_iter& self, input_iter& rhs) -> bool {
-                return (!*self._ptr) != *(rhs._ptr);
+                return self._ptr != rhs._ptr;
             }
     };
 }
