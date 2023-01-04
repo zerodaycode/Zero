@@ -7,7 +7,7 @@ export module array;
 import std;
 import typedefs;
 import concepts;
-import iterator;
+export import iterator;
 import container;
 
 using namespace zero;
@@ -41,14 +41,14 @@ export namespace zero::collections {
             void* operator new(size_t) = delete;
 
         public:
-            using iterator = iterator::input_iter<T>;
+            using iterator = zero::iterator::input_iter<T>;
+            using const_iterator = zero::iterator::input_iter<const T>;
 
             // Iterator spected stuff
             iterator begin() { return iterator(&array[0]); }
             iterator end() { return iterator(&array[N]); }
-            // TODO Fix! Const impl are broken in the iterator
-            constexpr iterator begin() const { return iterator(&array[0]); }
-            constexpr iterator end() const { return iterator(&array[N]); }
+            constexpr const_iterator begin() const { return const_iterator(&array[0]); }
+            constexpr const_iterator end() const { return const_iterator(&array[N]); }
 
             /**
              * @brief returns the number of elements stored in the underlying array
