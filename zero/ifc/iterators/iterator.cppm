@@ -168,7 +168,7 @@ export namespace zero::iterator {
             }
 
             [[nodiscard]]
-            auto operator->() const -> const typename base_it::pointer {
+            auto operator->() const -> typename base_it::pointer {
                 return _ptr;
             }
 
@@ -178,7 +178,7 @@ export namespace zero::iterator {
             }
 
             [[nodiscard]]
-            auto operator*() const -> const typename base_it::reference {
+            auto operator*() const -> typename base_it::reference {
                 return *_ptr;
             }
 
