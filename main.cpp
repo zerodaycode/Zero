@@ -1,12 +1,17 @@
-import zero;
 import std;
+import zero;
+import collections;
+import iterator;
+// import container;
 
 using namespace zero;
 
 int main() {
-    // TODO Now that the Testing Suite is integrated into the project,
-    // this file should dissapear. Only stays here until a way to #include
-    // headers // BUG (Only on WIN32) in a main file when importing modules that already uses
-    // imports are found
+    collections::Array c = collections::Array<long, 5>{1L, 2L, 3L, 4L, 5L};
+
+    std::cout << "Iterating over the values of a zero::collection!" << std::endl;
+    for (long value : c)
+        std::cout << " - Value: " << value << std::endl;
+
     return 0;
 }

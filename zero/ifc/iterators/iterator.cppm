@@ -163,6 +163,11 @@ export namespace zero::iterator {
             auto operator=(input_iter<T>&&) noexcept -> input_iter<T>& = default;
 
             [[nodiscard]]
+            auto operator->() -> typename base_it::pointer {
+                return _ptr;
+            }
+
+            [[nodiscard]]
             auto operator->() const -> typename base_it::pointer {
                 return _ptr;
             }
@@ -188,12 +193,12 @@ export namespace zero::iterator {
 
             [[nodiscard]]  //! NOTE: Should this be equality with `Sentinel`?
             friend auto operator==(input_iter& self, input_iter& rhs) -> bool {
-                return (self._ptr == rhs._ptr);
+                return self._ptr == rhs._ptr;
             }
 
             [[nodiscard]]
             friend auto operator!=(input_iter& self, input_iter& rhs) -> bool {
-                return (!*self._ptr) != *(rhs._ptr);
+                return self._ptr != rhs._ptr;
             }
     };
 }

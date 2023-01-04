@@ -29,38 +29,32 @@ export namespace zero::collections {
      */
     template<typename T, size_t N>
     class Array
-        //! Fix CRTP impl is broken. It's initializing garbage trash
         // : public Container<Array<T, N>, iterator::input_iter<T>>
     {
-        private:
+        public:
             T array[N];
-
-            using iterator = iterator::input_iter<T>;
 
             /**
              * @brief delete the `new` operator, since the intended usage of
-             * the type is to be a wrapper over a C-style array.
-             * 
-             * @return void* 
-             */
+             * the type is to be a wrapper over a C-style array stored in the stack.
+            */
             void* operator new(size_t) = delete;
 
         public:
+            using iterator = iterator::input_iter<T>;
+
             // Iterator spected stuff
             iterator begin() { return iterator(&array[0]); }
             iterator end() { return iterator(&array[N]); }
             // TODO Fix! Const impl are broken in the iterator
-            iterator begin() const { return iterator(&array[0]); }
-            iterator end() const { return iterator(&array[N]); }
+            constexpr iterator begin() const { return iterator(&array[0]); }
+            constexpr iterator end() const { return iterator(&array[N]); }
 
             /**
-             * @brief returns the number of elements stored in the underlying
-             * array
-             * 
-             * @return constexpr int 
+             * @brief returns the number of elements stored in the underlying array
              */
-            [[nodiscard]]  // TODO Follow STL convention and change it to size
-            inline consteval int len() const noexcept { return N; }
+            [[nodiscard]]
+            inline consteval int size() const noexcept { return N; }
 
             /**
              * @brief public constructor for the Array<T, N> type
