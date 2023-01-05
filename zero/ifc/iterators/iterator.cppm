@@ -163,18 +163,8 @@ export namespace zero::iterator {
             auto operator=(input_iter<T>&&) noexcept -> input_iter<T>& = default;
 
             [[nodiscard]]
-            auto operator->() -> typename base_it::pointer {
-                return _ptr;
-            }
-
-            [[nodiscard]]
             auto operator->() const -> typename base_it::pointer {
                 return _ptr;
-            }
-
-            [[nodiscard]]
-            auto operator*() -> typename base_it::reference {
-                return *_ptr;
             }
 
             [[nodiscard]]

@@ -12,7 +12,7 @@ int main() {
 
     std::cout << "Iterating over the values of a zero::collection!" << std::endl;
     for (long value : a)
-        std::cout << " - [constexpr] Value: " << value << std::endl;
+        std::cout << " - Value: " << value << std::endl;
 
     std::cout << "Iterating over the values of a constexpr zero::collection!" << std::endl;
     for (long value : b)
