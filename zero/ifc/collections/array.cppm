@@ -28,27 +28,18 @@ export namespace zero::collections {
      * will be zero initialized.
      */
     template<typename T, size_t N>
-    class Array
-        // : public Container<Array<T, N>, iterator::input_iter<T>>
-    {
+    class Array: public Container<Array<T, N>> {
         public:
             T array[N];
-
-            /**
-             * @brief delete the `new` operator, since the intended usage of
-             * the type is to be a wrapper over a C-style array stored in the stack.
-            */
-            void* operator new(size_t) = delete;
-
         public:
             using iterator = zero::iterator::input_iter<T>;
             using const_iterator = zero::iterator::input_iter<const T>;
 
-            // Iterator spected stuff
-            iterator begin() { return iterator(&array[0]); }
-            iterator end() { return iterator(&array[N]); }
-            constexpr const_iterator begin() const { return const_iterator(&array[0]); }
-            constexpr const_iterator end() const { return const_iterator(&array[N]); }
+            // Iterator stuff
+            iterator abegin() { return iterator(&array[0]); }
+            iterator aend() { return iterator(&array[N]); }
+            constexpr const_iterator abegin() const { return const_iterator(&array[0]); }
+            constexpr const_iterator aend() const { return const_iterator(&array[N]); }
 
             /**
              * @brief returns the number of elements stored in the underlying array
