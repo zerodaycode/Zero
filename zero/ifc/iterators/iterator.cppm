@@ -83,7 +83,7 @@ export namespace zero::iterator::concepts {
 
     /**
     * @brief The input_iterator concept is a refinement of input_or_output_iterator, adding the requirement that the r
-    * eferenced values can be read (via indirectly_readable) and the requirement 
+    * deferenced values can be read (via indirectly_readable) and the requirement 
     * that the iterator concept tag be present.
     */
     template <typename Iter>
@@ -98,6 +98,30 @@ export namespace zero::iterator::concepts {
             { operator==(i, rhs) } -> std::same_as<bool>;
             { operator!=(i, rhs) } -> std::same_as<bool>;
         };
+}
+
+namespace iterator::__detail {
+    /**
+     * @brief helper struct to safetly play with temporaries
+     */
+    template<class Reference>
+    struct proxy_reference {
+        Reference r;
+        Reference* operator->() {
+            return &r;
+        }
+    };
+
+    
+    /**
+     * @brief Requires to the implementors to define the
+     * `decrement()` member function.
+     * 
+     * Bidirectional iterators or higher should be constrained
+     * by this concept.
+     */
+    template <typename T>
+    concept impls_decrement = requires(T it) { it.decrement(); };
 }
 
 
@@ -141,26 +165,123 @@ export namespace zero::iterator {
     };
 
     /**
+     * @brief CRTP base class for provide an iterator facade that quickly
+     * allows the user to build any kind of iterator
+     */
+    template <typename Derived>
+    class iterator_facade {
+        private:
+            friend Derived;
+            iterator_facade() {}
+            
+            auto _self() -> Derived& {
+                return static_cast<Derived&>(*this);
+            }
+            auto _self() const -> const Derived& {
+                return static_cast<const Derived&>(*this);
+            }
+        
+        public:
+            decltype(auto) operator*() const {
+                return _self().dereference();
+            }
+
+            auto operator->() const {
+                decltype(auto) ref = **this;
+                if constexpr (std::is_reference_v<decltype(ref)>) {
+                    // `ref` is a true reference, and we're safe to take its address
+                    return std::addressof(ref);
+                } else {
+                    // `ref` is *not* a reference. Returning its address would be the
+                    // address of a local. Return that thing wrapped in an proxy_reference.
+                    return ::iterator::__detail::proxy_reference(std::move(ref));
+                }
+            }
+
+            // Prefix increment operator overload
+            [[nodiscard]]
+            Derived& operator++() {
+                _self().increment();
+                return _self();
+            }
+
+            // Postfix increment operator overload
+            [[nodiscard]]
+            Derived operator++(int) {
+                auto copy = _self();
+                ++*this;
+                return copy;
+            }
+
+            // Prefix decrement operator overload
+            [[nodiscard]]  // TODO Requieres here for ex, bidirectional iters?
+            auto operator--() -> Derived&
+            requires ::iterator::__detail::impls_decrement<Derived> {
+                _self().decrement();
+                return _self();
+            }
+
+            // Postfix increment operator overload
+            [[nodiscard]]
+            auto operator--(int) -> Derived
+            requires ::iterator::__detail::impls_decrement<Derived> {
+                auto copy = *this;
+                --*this;
+                return copy;
+            }
+
+            [[nodiscard]]
+            friend auto operator==(const Derived& self, const Derived& rhs) -> bool {
+                return self.equals_to(rhs);
+            }
+
+            [[nodiscard]]
+            friend auto operator!=(const Derived& self, const Derived& rhs) -> bool {
+                return self._ptr != rhs._ptr;
+            }
+    };
+
+    template <typename T>
+    class input_iter: public iterator_facade<input_iter<T>> {
+        private:
+            T* _ptr;
+        
+        // Three minimum-required APIs
+        const input_iter& dereference() const {
+            return _ptr;
+        }
+
+        void increment() { // TODO Mmmmm...
+            _ptr = input_iter(++_ptr);
+        }
+
+        bool equals_to(input_iter o) const {
+            return _ptr == o._ptr;
+        }
+    };
+
+
+    /**
      * @brief A generic implementation of an input_iterator
      */
     template <typename T>
-    struct input_iter: base_iterator<std::input_iterator_tag, T> {
+    struct old_input_iter: base_iterator<std::input_iterator_tag, T> {
         using base_it = base_iterator<std::input_iterator_tag, T>;
 
         private:
             typename base_it::pointer _ptr;
 
         public:
-            input_iter<T>() = delete;
-            explicit input_iter<T>(typename base_it::pointer ptr = nullptr)
+            old_input_iter<T>() = delete;
+            explicit old_input_iter<T>(typename base_it::pointer ptr = nullptr)
                 : _ptr { ptr } {}
-            ~input_iter<T>() = default;
-            input_iter<T>(const input_iter<T>& other) = default;
-            input_iter<T>(input_iter<T>&& other) noexcept = default;
+            ~old_input_iter<T>() = default;
+            old_input_iter<T>(const old_input_iter<T>& other) = default;
+            old_input_iter<T>(old_input_iter<T>&& other) noexcept = default;
 
-            auto operator=(typename base_it::pointer ptr) -> input_iter<T>& { _ptr = ptr; return *this; }
-            auto operator=(const input_iter<T>&) -> input_iter<T>& = default;
-            auto operator=(input_iter<T>&&) noexcept -> input_iter<T>& = default;
+            auto operator=(typename base_it::pointer ptr) -> old_input_iter<T>& { _ptr = ptr; return *this; }
+            auto operator=(const old_input_iter<T>&) -> old_input_iter<T>& = default;
+            auto operator=(old_input_iter<T>&&) noexcept -> old_input_iter<T>& = default;
 
             [[nodiscard]]
             auto operator->() const -> typename base_it::pointer {
@@ -172,7 +293,7 @@ export namespace zero::iterator {
                 return *_ptr;
             }
 
-            auto operator++() -> input_iter& {
+            auto operator++() -> old_input_iter& {
                 ++this-> _ptr;
                 return *this;
             }
@@ -182,12 +303,12 @@ export namespace zero::iterator {
             }
 
             [[nodiscard]]
-            friend auto operator==(input_iter& self, input_iter& rhs) -> bool {
+            friend auto operator==(old_input_iter& self, old_input_iter& rhs) -> bool {
                 return self._ptr == rhs._ptr;
             }
 
             [[nodiscard]]
-            friend auto operator!=(input_iter& self, input_iter& rhs) -> bool {
+            friend auto operator!=(old_input_iter& self, old_input_iter& rhs) -> bool {
                 return self._ptr != rhs._ptr;
             }
     };
@@ -196,13 +317,13 @@ export namespace zero::iterator {
 /// ----------------- compile time tests ----------------------///
 static_assert(
     zero::iterator::concepts::input_iterator<
-        zero::iterator::input_iter<int>
+        zero::iterator::old_input_iter<int>
     >, 
     "Failed to create the input iterator"
 );
 static_assert(
     std::input_iterator<
-        zero::iterator::input_iter<int>
+        zero::iterator::old_input_iter<int>
     >, 
     "zero::iterator::input_iter<T> isn't an std::input_iterator"
 );
