@@ -103,7 +103,7 @@ export namespace zero::iterator::concepts {
 
 export namespace zero::iterator {
 
-    namespace iter_cpts = zero::iterator::concepts;
+    namespace iter_concepts = zero::iterator::concepts;
 
     /**
      * @brief Implementation of the classical family of iterators
@@ -120,14 +120,15 @@ export namespace zero::iterator {
      * @tparam Derived the template argument for downcast to the correct child type
      * @tparam T usually know as the value_type
      * @tparam Category the category of the iterator must be one of the `iterator
-     * @tparam Pointer the pointer type. Usually T*, being T equals to value_type
-     * @tparam Reference the reference type. Usually T&, being T equals to value_type
      * category tags` defined in the standard. Enforced by the `iterator_category`
      * concept defined in the `zero::iterator::concepts` namespace 
+     * @tparam Pointer the pointer type. Usually T*, being T equals to value_type
+     * @tparam Reference the reference type. Usually T&, being T equals to value_type
+
      */
     template<
-        // typename Derived, // Sure? 
-        iter_cpts::std_iterator_category Category,
+        // typename Derived, // Not yet!
+        iter_concepts::std_iterator_category Category,
         typename T,
         typename pointer_type = T*,
         typename reference_type = T&
@@ -144,7 +145,6 @@ export namespace zero::iterator {
      */
     template <typename T>
     struct input_iter: base_iterator<std::input_iterator_tag, T> {
-        // Convenient way of access the inherited type members
         using base_it = base_iterator<std::input_iterator_tag, T>;
 
         private:
@@ -181,7 +181,7 @@ export namespace zero::iterator {
                 ++(*this);
             }
 
-            [[nodiscard]]  //! NOTE: Should this be equality with `Sentinel`?
+            [[nodiscard]]
             friend auto operator==(input_iter& self, input_iter& rhs) -> bool {
                 return self._ptr == rhs._ptr;
             }
@@ -199,4 +199,10 @@ static_assert(
         zero::iterator::input_iter<int>
     >, 
     "Failed to create the input iterator"
+);
+static_assert(
+    std::input_iterator<
+        zero::iterator::input_iter<int>
+    >, 
+    "zero::iterator::input_iter<T> isn't an std::input_iterator"
 );
