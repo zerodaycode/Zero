@@ -1,11 +1,5 @@
 /**
- * @brief A templated wrapper over a raw C-style array that mimics the std:array<T, N> 
- * 
- * @file array.cppm
- * @author Alex Vergara (pyzyryab@tutanota.com)
- * @version 0.1.0
- * @date 2022-09-25
- * @copyright Copyright (c) 2022
+ * @brief A templated wrapper over a raw C-style array that mimics the std:array<T, N>
  */
 
 export module array;
@@ -13,6 +7,8 @@ export module array;
 import std;
 import typedefs;
 import concepts;
+export import iterator;
+import container;
 
 using namespace zero;
 
@@ -32,28 +28,24 @@ export namespace zero::collections {
      * will be zero initialized.
      */
     template<typename T, size_t N>
-    class Array {
-        private:
-            T array[N];
-
-            /**
-             * @brief delete the `new` operator, since the intended usage of
-             * the type is to be a wrapper over a C-style array.
-             * 
-             * @return void* 
-             */
-            void* operator new(size_t) = delete;
-
+    class Array: public Container<Array<T, N>> {
         public:
+            T array[N];
+        public:
+            using iterator = zero::iterator::old_input_iter<T>;
+            using const_iterator = zero::iterator::old_input_iter<const T>;
+
+            // Iterator stuff
+            iterator abegin() { return iterator(&array[0]); }
+            iterator aend() { return iterator(&array[N]); }
+            constexpr const_iterator abegin() const { return const_iterator(&array[0]); }
+            constexpr const_iterator aend() const { return const_iterator(&array[N]); }
 
             /**
-             * @brief returns the number of elements stored in the underlying
-             * array
-             * 
-             * @return constexpr int 
+             * @brief returns the number of elements stored in the underlying array
              */
             [[nodiscard]]
-            inline consteval int len() const noexcept { return N; }
+            inline consteval int size() const noexcept { return N; }
 
             /**
              * @brief public constructor for the Array<T, N> type
@@ -77,7 +69,7 @@ export namespace zero::collections {
              * @return a copy value of the ith element T at index I
              */
             template <size_t I>
-            requires concepts::AccessInBounds<I, N>
+            requires concepts::inside_bounds<I, N>
             [[nodiscard]] inline constexpr T get() const noexcept {
                 return array[I];
             }
@@ -109,7 +101,7 @@ export namespace zero::collections {
              * @return read-only const T& to the element at idx position
              */
             template <size_t I>
-            requires concepts::AccessInBounds<I, N>
+            requires concepts::inside_bounds<I, N>
             [[nodiscard]] inline constexpr T const& const_ref_at() const noexcept {
                 return array[I];
             }
@@ -127,7 +119,7 @@ export namespace zero::collections {
              * @return T& to the element at idx position
              */
             template <size_t I>
-            requires concepts::AccessInBounds<I, N>
+            requires concepts::inside_bounds<I, N>
             [[nodiscard]] inline constexpr T& mut_ref_at() noexcept {
                 return array[I];
             }

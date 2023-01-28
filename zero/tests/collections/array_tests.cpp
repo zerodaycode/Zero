@@ -4,6 +4,7 @@
 
 import std;
 import collections;
+import container;
 
 #include "../deps/catch.hpp"
 
@@ -11,12 +12,13 @@ using namespace zero;
 
 constexpr collections::Array a = collections::Array<long, 5>{1L, 2L, 3L};
 auto b = new decltype(collections::Array<int, 5>{1, 2, 3, 4, 5})[0];
+collections::Array c = collections::Array<long, 5>{1L, 2L, 3L};
 
 TEST_CASE("Basic tests for the Array type", "[collections::Array]") {
 
     SECTION("length of the array") {
-        REQUIRE( a.len() == 5 );
-        REQUIRE( collections::Array<int, 1>{1}.len() == 1 );
+        REQUIRE( a.size() == 5 );
+        REQUIRE( collections::Array<int, 1>{1}.size() == 1 );
     }
 
     SECTION(".get<I>()") {
@@ -51,6 +53,23 @@ SCENARIO("Scenario: when working with get_or_nullopt", "[Array]") {
         
         THEN("an optional bad_access exception should ocurrs") {
             REQUIRE_THROWS_AS( opt_wrapper.value(), std::bad_optional_access );
+        }
+    }
+}
+
+SCENARIO("Scenario: The iterator library is modeled in Zero", "[Array]") {
+            
+    WHEN("we made our Array<T, N> iterable") {
+        THEN("users can use for-range loop") {
+            for (auto value : c)
+                REQUIRE( value >= 0 );
+        }
+    }
+
+    WHEN("we made our Array<T, N> iterable and const compatible") {
+        THEN("so users can use for-range loop over const collections") {
+            for (auto value : a)
+                REQUIRE( value >= 0 );
         }
     }
 }
