@@ -1,0 +1,34 @@
+[project]
+name = "Zero"
+authors = [ "Zero Day Code" ]
+
+[compiler]
+cpp_compiler = "clang"
+cpp_standard = "20"
+std_lib = "libc++"
+
+[build]
+output_dir = "./out"
+
+[executable]
+executable_name = "zero"
+sources = [ "*.cpp" ]
+
+[tests]
+tests_executable_name = "zero_tests"
+sources = [ "./zero/tests/**/*.cpp" ]
+
+[modules]
+base_ifcs_dir = "./zero/ifc"
+interfaces = [ 
+    { filename = 'commons/typedefs.cppm' },    
+    { filename = 'types/type_info.cppm' },
+    { filename = 'iterators/iterator.cppm', dependencies = ['typedefs'] },
+    { filename = 'commons/concepts.cppm', dependencies = ['typedefs'] },
+    { filename = 'collections/container.cppm', dependencies = ['type_info'] },
+    { filename = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
+    { filename = 'collections/collections.cppm', dependencies = ['array'] },
+    { filename = 'zero.cppm', dependencies = ['collections'] }
+]
+
+gcc_sys_modules = ['cstdio']
