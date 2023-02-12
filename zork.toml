@@ -23,7 +23,8 @@ base_ifcs_dir = "./zero/ifc"
 interfaces = [ 
     { file = 'commons/typedefs.cppm' },    
     { file = 'types/type_info.cppm' },
-    { file = 'iterators/iterator.cppm', dependencies = ['typedefs'] },
+    { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+    { file = 'iterators/iterator.cppm' },
     { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
     { file = 'collections/container.cppm', dependencies = ['type_info'] },
     { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
