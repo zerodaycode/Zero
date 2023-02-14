@@ -71,22 +71,68 @@ template <typename Derived>
                 return copy;
             }
 
-            friend Derived& operator+=(
+            [[nodiscard]] friend Derived& operator+=(
                 Derived& self,
                 ::iterator::__detail::difference_type_arg<Derived> auto offset
             ) requires ::iterator::__detail::impls_advance<Derived> {
                 self.advance(offset);
                 return self;
-            } 
+            }
 
-            [[nodiscard]]
-            friend auto operator==(const Derived& self, const Derived& rhs) -> bool {
-                return self.equals_to(rhs);
+            [[nodiscard]] friend Derived& operator-=(
+                Derived& self,
+                ::iterator::__detail::difference_type_arg<Derived> auto offset
+            ) requires ::iterator::__detail::impls_advance<Derived> {
+                return self = self - offset;
+            }
+
+            [[nodiscard]] friend Derived& operator+(
+                Derived& lhs,
+                ::iterator::__detail::difference_type_arg<Derived> auto offset
+            ) requires ::iterator::__detail::impls_advance<Derived> {
+                return lhs += offset;
+            }
+
+            [[nodiscard]] friend Derived& operator+(
+                ::iterator::__detail::difference_type_arg<Derived> auto offset,
+                Derived& rhs
+            ) requires ::iterator::__detail::impls_advance<Derived> {
+                return rhs += offset;
+            }
+
+            [[nodiscard]] friend Derived& operator-(
+                Derived& self,
+                ::iterator::__detail::difference_type_arg<Derived> auto offset
+            ) requires ::iterator::__detail::impls_advance<Derived> {
+                return self + -offset;
+            }
+
+            [[nodiscard]] 
+            friend auto operator-(const Derived& lhs, const Derived& rhs) -> Derived&
+            requires ::iterator::__detail::impls_distance_to<Derived> {
+                return rhs.distance_to(lhs);
+            }
+
+            [[nodiscard]] decltype(auto) operator[](
+                ::iterator::__detail::difference_type_arg<Derived> auto position
+            ) requires ::iterator::__detail::impls_advance<Derived> {
+                return *(_self() + position);
             }
 
             [[nodiscard]]
-            friend auto operator!=(const Derived& self, const Derived& rhs) -> bool {
-                return self._ptr != rhs._ptr;
+            friend auto operator==(const Derived& lhs, const Derived& rhs) -> bool {
+                return lhs.equals_to(rhs);
+            }
+
+            [[nodiscard]]
+            friend auto operator!=(const Derived& lhs, const Derived& rhs) -> bool {
+                return lhs._ptr != rhs._ptr;
+            }
+
+            [[nodiscard]]
+            friend auto operator<=>(const Derived& lhs, const Derived& rhs) -> bool 
+            requires ::iterator::__detail::impls_distance_to<Derived> {
+                return (lhs - rhs) <=> 0;
             }
     };
 
