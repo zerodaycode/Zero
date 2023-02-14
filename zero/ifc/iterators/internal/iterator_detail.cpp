@@ -48,7 +48,7 @@ namespace iterator::__detail {
     template <typename T>
     concept impls_distance_to = requires (const T it) { it.distance_to(it); };
     
-    // Partial template speciallizations to help us to deduce the
+    // Partial template speciallizations to allow us to deduce the
     // iterator mandatory `difference_type`
     template <typename>
     struct infer_difference_type { using type = std::ptrdiff_t; };
@@ -63,8 +63,8 @@ namespace iterator::__detail {
     template <typename T>
     using infer_difference_type_t = typename infer_difference_type<T>::type;
 
-    // Partial template speciallizations to help us to deduce the
-    // iterator mandatory `value:type`
+    /// Partial template speciallizations to allow us to deduce the
+    /// iterator mandatory `value:type`
     template <typename T>
     requires requires { typename T::value_type; }
     struct infer_value_type {
@@ -75,10 +75,7 @@ namespace iterator::__detail {
     using infer_value_type_t = typename infer_value_type<T>::type;
 
 
-    /**
-     * @brief 
-     * 
-     */
+    /// checks if the implementor contains a member .advance method
     template <typename T>
     concept impls_advance = requires 
         (T it, const infer_difference_type_t<T> offset)
@@ -86,14 +83,29 @@ namespace iterator::__detail {
         it.advance(offset);
     };
 
-    // We can meet "random access" if it provides
-    // both .advance() and .distance_to()
+    /// checks if the implementor contains a member .equals method
+    template <typename T>
+    concept impls_equals_to = requires (const T it) {
+        { it.equal_to(it) -> boolean };
+    };
+
+    /// We can determine if it is a "random access" iterator if it
+    /// provides both .advance() and .distance_to()
     template <typename T>
     concept meets_random_access =
         impls_advance<T> && impls_distance_to<T>;
 
-    // We meet `bidirectional` if we are random_access, OR we have .decrement()
+    /// We can determine if an iterator is a `bidirectional` if is at least
+    /// random_access or if has .decrement() member method
     template <typename T>
     concept meets_bidirectional =
         meets_random_access<T> || impls_decrement<T>;
+
+    /// Helper concept to declare a later-deduced parameter type,
+    /// but that type is still constrained to be a type that we
+    /// don’t yet know
+    template <typename Arg, typename Iter>
+    concept difference_type_arg =
+        std::convertible_to<Arg, infer_difference_type_t<Iter>>;
+
 }
