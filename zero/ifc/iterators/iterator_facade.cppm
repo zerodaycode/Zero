@@ -14,7 +14,7 @@ export namespace zero::iterator {
  */
 template <typename Derived>
     class iterator_facade {
-        private:
+        private
             friend Derived;
             iterator_facade() {}
             

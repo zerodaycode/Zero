@@ -24,7 +24,7 @@ namespace iterator::__detail {
 
     /**
      * @brief The iterator declares itself a single pass iterator.
-     * input or output iterator must meet this requirement
+     * input or output iterators  must meet this requirement
      */
     template <typename T>
     concept is_single_pass = bool(T::single_pass_iterator);
@@ -103,7 +103,7 @@ namespace iterator::__detail {
 
     /// Helper concept to declare a later-deduced parameter type,
     /// but that type is still constrained to be a type that we
-    /// don’t yet know
+    ///don’t yet know
     template <typename Arg, typename Iter>
     concept difference_type_arg =
         std::convertible_to<Arg, infer_difference_type_t<Iter>>;
