@@ -38,7 +38,7 @@ template <typename Derived>
                 } else {
                     // `ref` is *not* a reference. Returning its address would be the
                     // address of a local. Return that thing wrapped in an proxy_reference.
-                    return ::iterator::__detail::proxy_reference(std::move(ref));
+                    return ::iterator::__detail::arrow_proxy(ref);
                 }
             }
 

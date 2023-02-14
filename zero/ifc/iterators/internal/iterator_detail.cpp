@@ -10,14 +10,16 @@ import std;
 
 namespace iterator::__detail {
     /**
-     * @brief helper struct to safetly play with temporaries
+     * @brief implementation of the `arrow_proxy` idiom, to safetly play with temporaries.
+     * Basically, this proxy class is needed to implement the `operator->` for 
+     * iterators which can't return pointers
      */
     template<class Reference>
-    struct proxy_reference {
+    struct arrow_proxy {
         Reference r;
-        Reference* operator->() {
-            return &r;
-        }
+
+        arrow_proxy(Reference&& value) : r(std::move(value)) {}
+        Reference* operator->() const { return &r; }
     };
 
     /**
