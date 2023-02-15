@@ -20,17 +20,24 @@ sources = [ "./zero/tests/**/*.cpp" ]
 
 [modules]
 base_ifcs_dir = "./zero/ifc"
-interfaces = [ 
+interfaces = [
     { file = 'commons/typedefs.cppm' },    
     { file = 'types/type_info.cppm' },
+    { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
 
+    ### Iterator library
     { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
     { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
+    # Modern
     { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/iterator_legacy.cppm', partition = { module = 'iterator', partition_name = 'legacy_iterator' } },
+    { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
+    # Legacy
+    { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
+    { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
+    # Root
     { file = 'iterators/iterator.cppm' },
 
-    { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
+    # The collections/containers library
     { file = 'collections/container.cppm', dependencies = ['type_info'] },
     { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
     { file = 'collections/collections.cppm', dependencies = ['array'] },

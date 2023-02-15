@@ -8,13 +8,13 @@ import :detail;
 import std;
 
 export namespace zero::iterator {
-    /**
+/**
  * @brief CRTP base class for provide an iterator facade that quickly
  * allows the user to build any kind of iterator
  */
 template <typename Derived>
     class iterator_facade {
-        private
+        private:
             friend Derived;
             iterator_facade() {}
             
@@ -134,26 +134,6 @@ template <typename Derived>
             requires ::iterator::__detail::impls_distance_to<Derived> {
                 return (lhs - rhs) <=> 0;
             }
-    };
-
-    template <typename T>
-    class input_iter: public iterator_facade<input_iter<T>> {
-        private:
-            T* _ptr;
-        
-        /// Three minimum-required APIs
-
-        const input_iter& dereference() const {
-            return _ptr;
-        }
-
-        void increment() {
-            _ptr = input_iter(++_ptr);
-        }
-
-        bool equals_to(input_iter o) const {
-            return _ptr == o._ptr;
-        }
     };
 }
 

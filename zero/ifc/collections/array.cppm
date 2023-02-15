@@ -32,8 +32,8 @@ export namespace zero::collections {
         public:
             T array[N];
         public:
-            using iterator = zero::iterator::old_input_iter<T>;
-            using const_iterator = zero::iterator::old_input_iter<const T>;
+            using iterator = zero::iterator::legacy::input_iter<T>;
+            using const_iterator = zero::iterator::legacy::input_iter<const T>;
 
             // Iterator stuff
             iterator abegin() { return iterator(&array[0]); }
