@@ -1,6 +1,5 @@
 /**
- * @brief Defines C++20 concepts to design constraints to be used
- * across the libraries
+ * @brief General purpose concepts
  */
 
 export module concepts;

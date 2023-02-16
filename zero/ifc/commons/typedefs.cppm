@@ -21,7 +21,13 @@
 
 export module typedefs;
 
-import std;
+#ifdef __clang__
+    import std;
+#elif defined(__GNUC__)
+    import <cstdio>;
+#elif defined(_MSC_VER)
+    import std.core;
+#endif
 
 export namespace zero {
     /**
