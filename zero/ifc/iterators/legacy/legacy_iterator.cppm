@@ -19,12 +19,12 @@ export namespace zero::iterator::legacy {
      * defined by the standard until C++17, where the `iterator` type
      * got deprecated.
      * 
-     * @tparam T usually know as the value_type
      * @tparam Category the category of the iterator must be one of the `iterator
      * category tags` defined in the standard. Enforced by the `iterator_category`
      * concept defined in the `zero::iterator::concepts` namespace 
-     * @tparam Pointer the pointer type. Usually T*, being T equals to value_type
-     * @tparam Reference the reference type. Usually T&, being T equals to value_type
+     * @tparam T, which is usually known as the value_type
+     * @tparam The pointer type. Usually T*, being the value_type T
+     * @tparam The reference type. Usually T&, being the value_type T
      */
     template<
         iter_concepts::std_iterator_category Category,
