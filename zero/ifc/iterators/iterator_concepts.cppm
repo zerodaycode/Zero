@@ -90,7 +90,7 @@ export namespace zero::iterator::concepts {
             { i.operator*() } -> std::same_as<typename Iter::reference>;
             { i.operator->() } -> std::same_as<typename Iter::pointer>;
             { i.operator++() } -> std::same_as<decltype(std::declval<Iter&>())>;
-            { i++ } -> std::same_as<void>;
+            { i++ } -> std::same_as<Iter>;
             { operator==(i, rhs) } -> std::same_as<bool>;
             { operator!=(i, rhs) } -> std::same_as<bool>;
         };

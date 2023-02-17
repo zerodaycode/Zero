@@ -1,4 +1,4 @@
-export module iterator:legacy_input_iterator;
+export module iterator:legacy_output_iterator;
 
 import :legacy_iterator;
 import std;
@@ -9,7 +9,7 @@ export namespace zero::iterator::legacy {
      * with operator*() and operator->() 
     */
     template <typename T>
-    using base_it = iterator<std::input_iterator_tag, const T>;
+    using base_it = iterator<std::output_iterator_tag, const T>;
 
     /**
      * @brief A generic implementation of an input_iterator, that serves
@@ -56,7 +56,7 @@ export namespace zero::iterator::legacy {
                 return *this;
             }
 
-            constexpr auto operator++(int) noexcept -> input_iter {
+            constexpr auto operator++(int) noexcept -> input_iter& {
                 input_iter tmp = *this;
                 ++(*this);
                 return tmp;
