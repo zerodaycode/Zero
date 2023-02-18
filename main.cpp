@@ -26,30 +26,50 @@ int main() {
     // std::cout << "decltype c: " << zero::types::type_name<decltype(c)>() << std::endl;
     // for (long value : *c)
     //     std::cout << " - [const Container<T>*] Value: " << value << std::endl;
+    
+    std::cout << "Using output iterator with ostream: ";
+    zero::iterator::legacy::output_iter<std::ostream> out1(std::cout);
+    out1 = 1;
+    out1 = " hello";
+    out1 = 3.14;
+    std::cout << std::endl;
 
-    std::ostream_iterator<int> os_iter(std::cout, "from ostream: ");
-    // my_os_iter = 10;
-    // ++my_os_iter;
-    // my_os_iter = 20;
-    // ++my_os_iter;
-    // my_os_iter = 30;
-    // ++my_os_iter;
-    std::vector<int> v { 1, 2, 3, 4, 5 };
-    zero::iterator::legacy::output_iter<int> my_os_iter(std::cout);
+    std::cout << "Using output iterator with vector: ";
+    std::vector<int> vec;
+    zero::iterator::legacy::output_iter<decltype(vec)> out2(vec);
+    out2 = 1;
+    out2 = 2;
+    out2 = 3;
+    for (auto i : vec) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
 
-    std::copy(v.begin(), v.end(), my_os_iter);
-    // std::cout << "Reading from the output iterator: " << *my_os_iter << std::endl;
+    std::vector<int> v{ 7, 8, 9, 10, 11 };
+    std::vector<int> result;
+    zero::iterator::legacy::output_iter<decltype(v)> my_vec_iter(result);
+    std::copy(v.begin(), v.end(), my_vec_iter);
+    for (const auto& value : result) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
 
-    // std::vector<int> my_vec;
-    // zero::iterator::legacy::output_iter<std::vector<int>> my_vec_iter(&my_vec);
-    // my_vec_iter = 10;
-    // my_vec_iter = 20;
-    // my_vec_iter = 30;
+    zero::iterator::legacy::output_iter<std::ostream> output_iter(std::cout);
+    output_iter = 42;
+    output_iter = "hello";
+    output_iter = 3.14;
 
-    // for (auto elem : my_vec) {
-    //     std::cout << elem << " ";
-    // }
-    // std::cout << std::endl;
+    std::ostringstream oss;
+    zero::iterator::legacy::output_iter<decltype(oss)> oss_output_iter(oss);
+    oss_output_iter = 46;
+    oss_output_iter = "hellofghjfghjfgh";
+    oss_output_iter = 3.1425465463456;
+    std::cout << "What do we have here: " << oss.str() << std::endl;
 
-    return 0;
+    std::ofstream ofs("output.txt");
+    zero::iterator::legacy::output_iter<decltype(ofs)> ofs_output_iter(ofs);
+    ofs_output_iter = 42;
+    ofs_output_iter = "hello";
+    ofs_output_iter = 3.14;
+  return 0;
 }
