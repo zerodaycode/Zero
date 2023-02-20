@@ -38,6 +38,11 @@ interfaces = [
     # Root
     { file = 'iterators/iterator.cppm' },
 
+    # The physics library
+    { file = 'physics/quantities.cppm' },
+    # Root
+    { file = 'physics/physics.cppm' },
+
     # The collections/containers library
     { file = 'collections/container.cppm', dependencies = ['type_info'] },
     { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
