@@ -34,6 +34,7 @@ interfaces = [
     # Legacy
     { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
     { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
+    { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
     # Root
     { file = 'iterators/iterator.cppm' },
 

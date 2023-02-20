@@ -12,6 +12,7 @@ export import :iterator_facade;
 
 export import :legacy_iterator;
 export import :legacy_input_iterator;
+export import :legacy_output_iterator;
 
 import std;
 import typedefs;
@@ -30,3 +31,11 @@ static_assert(
     >, 
     "zero::iterator::input_iter<T> isn't an std::input_iterator"
 );
+
+/// Output iterator
+// static_assert(
+//     std::output_iterator<
+//         zero::iterator::legacy::output_iter<std::vector<int>>, std::vector<int>
+//     >, 
+//     "zero::iterator::output_iter<T> isn't an std::input_iterator"
+// );

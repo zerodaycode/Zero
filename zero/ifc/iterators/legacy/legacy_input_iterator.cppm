@@ -56,8 +56,10 @@ export namespace zero::iterator::legacy {
                 return *this;
             }
 
-            constexpr void operator++(int) noexcept {
+            constexpr auto operator++(int) noexcept -> input_iter {
+                input_iter tmp = *this;
                 ++(*this);
+                return tmp;
             }
 
             [[nodiscard]]
