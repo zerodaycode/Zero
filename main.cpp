@@ -71,5 +71,15 @@ int main() {
     ofs_output_iter = 42;
     ofs_output_iter = "hello";
     ofs_output_iter = 3.14;
-  return 0;
+
+    std::list<int> my_list = {1, 2, 3, 4, 5};
+    zero::iterator::legacy::output_iter<std::list<int>> out_it(my_list);
+    for (int i = 0; i < 5; ++i)
+        *out_it = 7;
+
+    for (const auto& x : my_list)
+        std::cout << x << ' ';
+
+    std::cout << '\n';
+    return 0;
 }
