@@ -17,32 +17,10 @@ int main() {
     // run_output_iterator_examples();
 
     // Physics
-    // unit_simbol us;
-    // kg k;
-
-    // static_assert(1_kg == 1_kg);
-
-    // base_unit kilogram { "Kilogram", 0, k };
-
-
-    // Creating quantities using different units within the gram family
-    // kilogram<double> kg{1.0};
-    // gram<double> g{1000.0};
-    // decagram<double> dag{0.1};
-    // hectogram<double> hg{0.01};
-    
-    // // Adding quantities with different units
-    // auto total = kg + g + dag + hg;
-    
-    // // Multiplying a quantity by a scalar
-    // auto double_total = total * 2.0;
-    
-    // // Outputting the total amount
-    // std::cout << double_total.amount << std::endl;
-
     mass<double> m1{1.0};
     mass<double> m2{2.0};
-    // auto m3 = m1 + m2;
+    auto m3 = m1 + m2;
+    // std::cout << "Adding two mass values: " << m3 << std::endl;
     // length<double> l1{1.0};
     // length<double> l2{2.0};
     // auto l3 = l1 + l2;

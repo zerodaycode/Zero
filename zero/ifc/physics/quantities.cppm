@@ -13,7 +13,6 @@ export namespace zero::physics {
         using unit_type = T;
     };
 
-
     template<typename T>
     concept simbol = requires {
         typename T::simbol;
@@ -45,14 +44,11 @@ export namespace zero::physics {
         template<typename U>
         constexpr base_magnitude(const base_magnitude<U>& other) : amount(other.amount) {}
 
-        template<typename T1, typename T2>
-        friend constexpr auto operator+(const base_magnitude<T1>& lhs, const base_magnitude<T2>& rhs) -> base_magnitude<decltype(lhs.value + rhs.value)> {
-            return base_magnitude<decltype(lhs.value + rhs.value)>(lhs.value + rhs.value);
+        template<typename U>
+        constexpr auto operator+(const base_magnitude<U>& other) -> base_magnitude<decltype(amount + other.amount)> {
+            return base_magnitude<decltype(amount + other.amount)>(amount + other.amount);
         }
     };
-
-    template <typename T1, typename T2>
-    constexpr auto operator+(const base_magnitude<T1>& lhs, const base_magnitude<T2>& rhs) -> base_magnitude<decltype(lhs.value() + rhs.value())>;
 
     template<typename T>
     struct unit_simbol {
@@ -87,7 +83,6 @@ export namespace zero::physics {
     };
 
     
-
     template<typename T>
     class length : public base_magnitude<meter_unit<T>> {
     public:
