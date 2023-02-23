@@ -44,7 +44,8 @@ interfaces = [
     # { file = 'collections/collections.cppm', dependencies = ['array'] },
     
     # The physics library
-    { file = 'physics/quantities.cppm', partition = { module = 'physics' } },
+    { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics' } },
+    { file = 'physics/quantities/quantities.cppm', partition = { module = 'physics' } },
     # Root
     { file = 'physics/physics.cppm' },
 

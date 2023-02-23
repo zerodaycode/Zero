@@ -6,6 +6,7 @@
  */
 
 export module physics:quantities;
+import :ratios;
 
 export namespace zero::physics {
     template<typename T>
@@ -14,33 +15,12 @@ export namespace zero::physics {
     };
 
     template<typename T>
-    concept symbol = requires {
+    concept Symbol = requires {
         typename T::symbol;
     };
     
-    template<typename T>
-    struct base_unit {
-        using unit_type = T;
-    };
-
-    template <typename Derived, typename T>
-    struct unit_with_prefix : public base_unit<T> {
-        using base_unit<T>::base_unit;
-        using ratio = typename Derived::ratio;
-    };
-
-    template<symbol U1, symbol U2>
-    struct unit_multiply_t;
-
-    template<symbol U1, symbol U2>
-    struct unit_multiply {
-        using type = base_unit<unit_multiply_t<typename U1::unit_type, typename U2::unit_type>>;
-    };
-
-    template <int r>
-    struct Ratio {
-        using ratio = decltype(r);
-    };
+    template<typename T, Ratio prefix, Symbol S>
+    struct base_unit {};
 
     template<typename T>
     class base_magnitude {
@@ -73,37 +53,40 @@ export namespace zero::physics {
         }
     };
 
-    template<typename T>
-    using gram_unit = unit_with_prefix<Ratio<0>, T>;
+    // template<typename T>
+    // using gram_unit = base_unit<Ratio<0>, T>;
 
+    struct kg: unit_symbol<kg> {};
+    
     template<typename T>
-    using kilogram_unit = unit_with_prefix<Ratio<3>, T>;
+    using kilogram_unit = base_unit<T, Kilo, kg>;
 
-    template<typename T>
-    using millimeter_unit = unit_with_prefix<Ratio<-3>, T>;
+    // template<typename T>
+    // using millimeter_unit = unit_with_prefix<Ratio<-3>, T>;
 
-    template<typename T>
-    using meter_unit = unit_with_prefix<Ratio<0>, T>;
+    // template<typename T>
+    // using meter_unit = unit_with_prefix<Ratio<0>, T>;
 
-    template<typename T>
-    using millisecond_unit = unit_with_prefix<Ratio<-3>, T>;
+    // template<typename T>
+    // using millisecond_unit = unit_with_prefix<Ratio<-3>, T>;
 
     template<typename T>
     class mass : public base_magnitude<kilogram_unit<T>> {
     public:
         using base_magnitude<kilogram_unit<T>>::base_magnitude;
     };
-
     
-    template<typename T>
-    class length : public base_magnitude<meter_unit<T>> {
-    public:
-        using base_magnitude<meter_unit<T>>::base_magnitude;
-    };
+    // template<typename T>
+    // class length : public base_magnitude<meter_unit<T>> {
+    // public:
+    //     using base_magnitude<meter_unit<T>>::base_magnitude;
+    // };
 
-    template<typename T>
-    class time : public base_magnitude<millisecond_unit<T>> {
-    public:
-        using base_magnitude<millisecond_unit<T>>::base_magnitude;
-    };
+    // template<typename T>
+    // class time : public base_magnitude<millisecond_unit<T>> {
+    // public:
+    //     using base_magnitude<millisecond_unit<T>>::base_magnitude;
+    // };
 }
+
+static_assert(zero::physics::Symbol<zero::physics::kg>);

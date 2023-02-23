@@ -17,8 +17,9 @@ int main() {
     // run_output_iterator_examples();
 
     // Physics
-    mass<double> m1{1.0};
-    mass<double> m2{2.0};
+    mass<short> m1{1};
+    mass<double> m2{2.0_kg};
+
     auto m_sum = m1 + m2;
     auto m_sub = m1 - m2;
     auto m_mult = m1 * m2;
