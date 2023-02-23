@@ -9,30 +9,38 @@ export module physics:quantities;
 
 export namespace zero::physics {
     template<typename T>
+    struct unit_symbol {
+        using symbol = T;
+    };
+
+    template<typename T>
+    concept symbol = requires {
+        typename T::symbol;
+    };
+    
+    template<typename T>
     struct base_unit {
         using unit_type = T;
     };
 
-    template<typename T>
-    concept simbol = requires {
-        typename T::simbol;
+    template <typename Derived, typename T>
+    struct unit_with_prefix : public base_unit<T> {
+        using base_unit<T>::base_unit;
+        using ratio = typename Derived::ratio;
+    };
+
+    template<symbol U1, symbol U2>
+    struct unit_multiply_t;
+
+    template<symbol U1, symbol U2>
+    struct unit_multiply {
+        using type = base_unit<unit_multiply_t<typename U1::unit_type, typename U2::unit_type>>;
     };
 
     template <int r>
     struct Ratio {
         using ratio = decltype(r);
     };
-
-    template<simbol U1, simbol U2>
-    struct unit_multiply;
-    template<simbol U1, simbol U2>
-    using unit_multiply_t = typename unit_multiply<U1, U2>::type;
-    template<simbol U1, simbol U2>
-    struct unit_multiply {
-        using type = unit_multiply_t<typename U1::unit_type, typename U2::unit_type>;
-    };
-
-
 
     template<typename T>
     class base_magnitude {
@@ -48,17 +56,21 @@ export namespace zero::physics {
         constexpr auto operator+(const base_magnitude<U>& other) -> base_magnitude<decltype(amount + other.amount)> {
             return base_magnitude<decltype(amount + other.amount)>(amount + other.amount);
         }
-    };
 
-    template<typename T>
-    struct unit_simbol {
-        using simbol = T;
-    };
+        template<typename U>
+        constexpr auto operator-(const base_magnitude<U>& other) -> base_magnitude<decltype(amount - other.amount)> {
+            return base_magnitude<decltype(amount - other.amount)>(amount - other.amount);
+        }
 
-    template <typename Derived, typename T>
-    struct unit_with_prefix : public base_unit<T> {
-        using base_unit<T>::base_unit;
-        using ratio = typename Derived::ratio;
+        template<typename U>
+        constexpr auto operator*(const U& other) -> base_magnitude<decltype(amount * other.amount)> {
+            return base_magnitude<decltype(amount * other.amount)>(amount * other.amount);
+        }
+
+        template<typename U>
+        constexpr auto operator/(const U& other) -> base_magnitude<decltype(amount / other.amount)> {
+            return base_magnitude<decltype(amount / other.amount)>(amount / other.amount);
+        }
     };
 
     template<typename T>

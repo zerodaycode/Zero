@@ -19,7 +19,10 @@ int main() {
     // Physics
     mass<double> m1{1.0};
     mass<double> m2{2.0};
-    auto m3 = m1 + m2;
+    auto m_sum = m1 + m2;
+    auto m_sub = m1 - m2;
+    auto m_mult = m1 * m2;
+    auto m_div = m1 / m2;
     // std::cout << "Adding two mass values: " << m3 << std::endl;
     // length<double> l1{1.0};
     // length<double> l2{2.0};
