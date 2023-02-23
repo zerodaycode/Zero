@@ -17,7 +17,7 @@ export namespace zero::physics {
     struct ratio {
         static constexpr T base = Base;
         static constexpr T exponent = Exponent;
-
+        static constexpr T value = Base * Exponent;
         static constexpr double factor = std::pow(Base, Exponent);
     };
 
@@ -31,6 +31,7 @@ export namespace zero::physics {
     using Milli = ratio<short, 10, -3>;
     using Centi = ratio<short, 10, -2>;
     using Deci = ratio<short, 10, -1>;
+    using Root = ratio<short, 10, 0>;
     using Deca = ratio<short, 10, 1>;
     using Hecto = ratio<short, 10, 2>;
     using Kilo = ratio<short, 10, 3>;
