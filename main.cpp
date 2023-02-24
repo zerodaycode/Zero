@@ -17,29 +17,15 @@ int main() {
     // run_output_iterator_examples();
 
     // Physics
-    // mass<short> m1{1};
-    // mass<double> m2{2.0};
-    // quantity<mass, Kilo, short> {1};
-    // quantity<mass<Kilo>, short> {1};
-
-    auto q1 = quantity<mass, Kilogram>{1};
-    auto q2 = quantity<mass, Kilogram>{2};
+    auto q1 = quantity<Kilogram>{1};
+    auto q2 = quantity<Kilogram>{2};
     auto q3 = q1 + q2;
     std::cout << "Masses addition: " << q1 + q2 << std::endl;
     std::cout << "In variable: " << q3 << std::endl;
 
-    // auto m_sum = m1 + m2;
-    // auto m_sub = m1 - m2;
-    // auto m_mult = m1 * m2;
-    // auto m_div = m1 / m2;
-    // std::cout << "Adding two mass values: " << m3 << std::endl;
-    // length<double> l1{1.0};
-    // length<double> l2{2.0};
-    // auto l3 = l1 + l2;
-    // zero::physics::time<double> t1{1.0};
-    // zero::physics::time<double> t2{2.0};
-    // auto t3 = t1 + t2;
-    // return 0;
+    auto l1 = quantity<Meter>{5};
+    auto l2 = quantity<Meter>{10};
+    std::cout << "Adding length magnitudes: " << l1 + l2 << std::endl;
     return 0;
 }
 

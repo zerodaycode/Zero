@@ -54,6 +54,7 @@ export namespace zero::physics {
         std::is_same_v<T, Micro> ||
         std::is_same_v<T, Milli> ||
         std::is_same_v<T, Centi> ||
+        std::is_same_v<T, Root> ||
         std::is_same_v<T, Deci> ||
         std::is_same_v<T, Deca> ||
         std::is_same_v<T, Hecto> ||
