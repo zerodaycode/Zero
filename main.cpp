@@ -17,12 +17,9 @@ int main() {
     // run_output_iterator_examples();
 
     // Physics
-    auto q1 = quantity<Kilogram>{1};
-    auto q2 = quantity<Hectogram>{2};
+    auto q1 = quantity<Kilogram, double>{3000};
+    auto q2 = quantity<Hectogram, int>{72};
     auto q3 = q1 + q2;
-
-    auto def_constr = quantity<Kilogram>();
-    std::cout << "DEF CONSTR: " << def_constr.amount << std::endl;
 
     auto cp_ctr {q3};
     std::cout << "Masses addition: " << q1 + q2 << std::endl;

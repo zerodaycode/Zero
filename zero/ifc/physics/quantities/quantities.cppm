@@ -82,61 +82,35 @@ export namespace zero::physics {
         using ratio = Hecto;
     };
 
-    template <Magnitude R>
-    struct quantity {
-        double amount;
-        constexpr quantity<R>() = default;
-        constexpr quantity<R>(double val) noexcept : amount(val) {}
-
-        template<typename U>
-        requires SameDimension<R, U>
-        constexpr auto operator+(const quantity<U>& other) 
-            -> quantity<std::conditional_t<(R::ratio::value > U::ratio::value), R, U>>
-        {
-            if constexpr (R::ratio::value > U::ratio::value)
-                return quantity<R>(amount + other.amount);
-            else
-                return quantity<U>(amount + other.amount);
-        }
-
-        // template <typename T>
-        friend std::ostream& operator<<(std::ostream& os, const quantity& q) {
-            os << q.amount;
-            return os;
-        }
-
-        // template<typename U>
-        // constexpr auto operator>(const quantity<D, U>& other) -> quantity<decltype(D - R)> {
-        //     return quantity<D, decltype(D  R)>(amount - other.amount);
-        // }
-
-        // template<typename U>
-        // constexpr auto operator-(const quantity<D, U>& other) -> quantity<decltype(amount - other.amount)> {
-        //     return quantity<D, decltype(amount - other.amount)>(amount - other.amount);
-        // }
-
-        // template<typename U>
-        // constexpr auto operator*(const U& other) -> quantity<D, decltype(amount * other.amount)> {
-        //     return quantity<D, decltype(amount * other.amount)>(amount * other.amount);
-        // }
-
-        // template<typename U>
-        // constexpr auto operator/(const U& other) -> base_magnitude<decltype(amount / other.amount)> {
-        //     return base_magnitude<decltype(amount / other.amount)>(amount / other.amount);
-        // }
-    };
     
-    // template<typename T>
-    // class length : public base_magnitude<meter_unit<T>> {
-    // public:
-    //     using base_magnitude<meter_unit<T>>::base_magnitude;
-    // };
+    template <typename T>
+    concept ValidAmountType = (std::is_integral_v<T> || std::is_floating_point_v<T>)
+        && !std::is_same_v<T, char>;
 
-    // template<typename T>
-    // class time : public base_magnitude<millisecond_unit<T>> {
-    // public:
-    //     using base_magnitude<millisecond_unit<T>>::base_magnitude;
-    // };
+    template <Magnitude M, ValidAmountType T = double>
+    struct quantity {
+        T amount;
+        constexpr quantity<M, T>() noexcept = default;
+        constexpr explicit quantity<M, T>(T val) noexcept : amount(val) {}
+    };
+
+    template<Magnitude M1, Magnitude M2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
+        requires SameDimension<M1, M2>
+    [[nodiscard]] 
+    constexpr auto operator+(const quantity<M1, T1>& lhs, const quantity<M2, T2>& other) 
+        -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
+    {
+        if constexpr (M1::ratio::value > M2::ratio::value)
+            return quantity<M1, T1>(lhs.amount + other.amount);
+        else
+            return quantity<M2, T2>(lhs.amount + other.amount);
+    }
+
+    template<typename M>
+    constexpr std::ostream& operator<<(std::ostream& os, const quantity<M>& q) {
+        os << q.amount;
+        return os;
+    }
 }
 
 static_assert(zero::physics::Symbol<zero::physics::kg>);
