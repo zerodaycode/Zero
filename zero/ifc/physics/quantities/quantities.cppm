@@ -31,10 +31,27 @@ export namespace zero::physics {
     template<Ratio prefix, Symbol S>
     class base_magnitude {};
 
+
     template <Ratio R, Symbol S>
     class mass: public base_magnitude<R, S> {};
     template<Ratio R, Symbol S>
     class length : public base_magnitude<R, S> {};
+
+    template<class T, class U>
+    struct same_template {
+        static auto test(...) -> std::false_type;
+
+        template<template<class...> class C, class... R1s, class... R2s>
+        static auto test(C<R1s...>, C<R2s...>) -> std::true_type;
+
+        static constexpr bool value = decltype(test(std::declval<T>(), std::declval<U>()))::value;
+    };
+
+    template<class T, class U>
+    inline constexpr bool same_template_v = same_template<T, U>::value;
+
+    template<class T, class U>
+    concept SameTemplate = same_template_v<T, U>;
 
     template <typename T>
     concept Magnitude = requires {
@@ -43,9 +60,9 @@ export namespace zero::physics {
     };
 
     template <typename T, typename R>
-    concept SameMagnitude = requires {
+    concept SameDimension = requires {
         requires Magnitude<T> && Magnitude<R>;
-        requires std::is_same_v<typename T::dimension, typename R::dimension>;
+        requires SameTemplate<typename T::dimension, typename R::dimension>;
     };
 
     struct Kilogram: public mass<Kilo, kg> {
@@ -62,21 +79,6 @@ export namespace zero::physics {
         using ratio = Hecto;
     };
 
-    // template <typename Magnitude1, typename Magnitude2>
-    // concept ValidUnitForDimension = requires {
-    //     Magnitude<typename Magnitude1::dimension, typename Magnitude2::ratio>;
-    // };
-    // requires {
-    //     requires Magnitude<
-    //         typename Magnitude1::dimension,
-    //         typename Magnitude1::ratio> 
-    //     && Magnitude<
-    //         typename Magnitude2::dimension,
-    //         typename Magnitude2::ratio>;
-    // } && std::is_same_v<
-    //     typename Magnitude1::dimension,
-    //     typename Magnitude2::dimension>;
-
     template <typename R>
     class quantity {
     public:
@@ -88,7 +90,7 @@ export namespace zero::physics {
         // constexpr quantity<D, R>(const quantity<D, U>& other) : amount(other.amount) {}
 
         template<typename U>
-        requires SameMagnitude<R, U>
+        requires SameDimension<R, U>
         constexpr auto operator+(const quantity<U>& other) 
             -> quantity<std::conditional_t<(R::ratio::value > U::ratio::value), R, U>>
         {
