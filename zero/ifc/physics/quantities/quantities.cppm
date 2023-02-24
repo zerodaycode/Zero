@@ -9,6 +9,25 @@ export module physics:quantities;
 import :ratios;
 import std;
 
+namespace __details {
+    // TODO Move this to the concepts module
+    template<class T, class U>
+    struct same_template {
+        static auto test(...) -> std::false_type;
+
+        template<template<class...> class C, class... R1s, class... R2s>
+        static auto test(C<R1s...>, C<R2s...>) -> std::true_type;
+
+        static constexpr bool value = decltype(test(std::declval<T>(), std::declval<U>()))::value;
+    };
+
+    template<class T, class U>
+    inline constexpr bool same_template_v = same_template<T, U>::value;
+
+    template<class T, class U>
+    concept SameTemplate = same_template_v<T, U>;
+}
+
 export namespace zero::physics {
     template<typename T>
     struct unit_symbol {
@@ -37,22 +56,6 @@ export namespace zero::physics {
     template<Ratio R, Symbol S>
     class length : public base_magnitude<R, S> {};
 
-    template<class T, class U>
-    struct same_template {
-        static auto test(...) -> std::false_type;
-
-        template<template<class...> class C, class... R1s, class... R2s>
-        static auto test(C<R1s...>, C<R2s...>) -> std::true_type;
-
-        static constexpr bool value = decltype(test(std::declval<T>(), std::declval<U>()))::value;
-    };
-
-    template<class T, class U>
-    inline constexpr bool same_template_v = same_template<T, U>::value;
-
-    template<class T, class U>
-    concept SameTemplate = same_template_v<T, U>;
-
     template <typename T>
     concept Magnitude = requires {
         typename T::dimension;
@@ -62,7 +65,7 @@ export namespace zero::physics {
     template <typename T, typename R>
     concept SameDimension = requires {
         requires Magnitude<T> && Magnitude<R>;
-        requires SameTemplate<typename T::dimension, typename R::dimension>;
+        requires __details::SameTemplate<typename T::dimension, typename R::dimension>;
     };
 
     struct Kilogram: public mass<Kilo, kg> {
@@ -79,15 +82,11 @@ export namespace zero::physics {
         using ratio = Hecto;
     };
 
-    template <typename R>
-    class quantity {
-    public:
+    template <Magnitude R>
+    struct quantity {
         double amount;
-        quantity() : amount(0) {}
-        constexpr quantity(double val) : amount(val) {}
-
-        // template<typename U>
-        // constexpr quantity<D, R>(const quantity<D, U>& other) : amount(other.amount) {}
+        constexpr quantity<R>() = default;
+        constexpr quantity<R>(double val) noexcept : amount(val) {}
 
         template<typename U>
         requires SameDimension<R, U>

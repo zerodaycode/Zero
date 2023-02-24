@@ -18,10 +18,16 @@ int main() {
 
     // Physics
     auto q1 = quantity<Kilogram>{1};
-    auto q2 = quantity<Kilogram>{2};
+    auto q2 = quantity<Hectogram>{2};
     auto q3 = q1 + q2;
+
+    auto def_constr = quantity<Kilogram>();
+    std::cout << "DEF CONSTR: " << def_constr.amount << std::endl;
+
+    auto cp_ctr {q3};
     std::cout << "Masses addition: " << q1 + q2 << std::endl;
     std::cout << "In variable: " << q3 << std::endl;
+    std::cout << "Using the copy constructor: " << cp_ctr << std::endl;
 
     auto l1 = quantity<Meter>{5};
     auto l2 = quantity<Meter>{10};
