@@ -1,49 +1,20 @@
+#pragma clang diagnostic ignored "-Wc++17-extensions"
+
 /**
  * @brief Module for design types and behavior associated with Physical Quantities.
  * 
- * A physical quantity can be undestand as a real world magnitude, related with
+ * A physical quantity can be understand as a real world magnitude, related with
  * their units in the international system
  */
-
 export module physics:quantities;
 import :ratios;
+import :quantities.symbols;
+
 import std;
+import concepts;
 
-namespace __details {
-    // TODO Move this to the concepts module
-    template<class T, class U>
-    struct same_template {
-        static auto test(...) -> std::false_type;
-
-        template<template<class...> class C, class... R1s, class... R2s>
-        static auto test(C<R1s...>, C<R2s...>) -> std::true_type;
-
-        static constexpr bool value = decltype(test(std::declval<T>(), std::declval<U>()))::value;
-    };
-
-    template<class T, class U>
-    inline constexpr bool same_template_v = same_template<T, U>::value;
-
-    template<class T, class U>
-    concept SameTemplate = same_template_v<T, U>;
-}
 
 export namespace zero::physics {
-    template<typename T>
-    struct unit_symbol {
-        using symbol = T;
-    };
-
-    template<typename T>
-    concept Symbol = requires {
-        typename T::symbol;
-    };
-    
-    struct kg: unit_symbol<kg> {};
-    struct hg: unit_symbol<hg> {};
-    struct m: unit_symbol<m> {};
-
-
     template<Ratio prefix, Symbol S>
     struct base_unit {};
 
@@ -65,7 +36,10 @@ export namespace zero::physics {
     template <typename T, typename R>
     concept SameDimension = requires {
         requires Magnitude<T> && Magnitude<R>;
-        requires __details::SameTemplate<typename T::dimension, typename R::dimension>;
+        requires zero::concepts::SameTemplate<
+            typename T::dimension,
+            typename R::dimension
+        >;
     };
 
     struct Kilogram: public mass<Kilo, kg> {
@@ -98,7 +72,7 @@ export namespace zero::physics {
         requires SameDimension<M1, M2>
     [[nodiscard]] 
     constexpr auto operator+(const quantity<M1, T1>& lhs, const quantity<M2, T2>& other) 
-        -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
+        -> quantity<std::conditional_t<(M1::ratio::value> M2::ratio::value), M1, M2>>
     {
         if constexpr (M1::ratio::value > M2::ratio::value)
             return quantity<M1, T1>(lhs.amount + other.amount);

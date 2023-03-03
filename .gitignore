@@ -3,3 +3,4 @@ data.txt
 out/
 .idea/
 gcm.cache/
+CMakeLists.txt
