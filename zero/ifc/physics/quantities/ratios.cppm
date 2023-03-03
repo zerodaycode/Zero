@@ -13,13 +13,22 @@ template <typename T>
 concept RatioV = (std::is_integral_v<T> || std::is_floating_point_v<T>)
     && !std::is_same_v<T, char>;
 
+
+consteval double getFactor(double base, double exponent);
+
 template <RatioV T = short, T Base = 10, T Exponent = 0>
 struct ratio {
     static constexpr T base = Base;
     static constexpr T exponent = Exponent;
-    static constexpr T value = Base * Exponent;
-    static constexpr double factor = std::pow(Base, Exponent);
+    static constexpr T value = getFactor(base, exponent);
 };
+
+consteval double getFactor(double base, double exponent) {
+    double result = 1;
+    for (int i = 0; i < exponent; i++)
+        result *= base;
+    return result;
+}
 
 export namespace zero::physics {
 

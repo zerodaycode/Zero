@@ -1,4 +1,3 @@
-#pragma clang diagnostic ignored "-Wc++17-extensions"
 
 /**
  * @brief Module for design types and behavior associated with Physical Quantities.
@@ -73,13 +72,24 @@ export namespace zero::physics {
     template<Magnitude M1, Magnitude M2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
         requires SameDimension<M1, M2>
     [[nodiscard]] 
-    constexpr auto operator+(const quantity<M1, T1>& lhs, const quantity<M2, T2>& other) 
+    constexpr auto operator+(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
         -> quantity<std::conditional_t<(M1::ratio::value> M2::ratio::value), M1, M2>>
     {
-        if constexpr (M1::ratio::value > M2::ratio::value)
-            return quantity<M1, T1>(lhs.amount + other.amount);
+        if constexpr (M1::ratio::value > M2::ratio::value) {
+    std::cout << std::fixed;
+//    std::cout << setprecision(2) << f;
+            auto a = lhs.amount * M1::ratio::value;
+            std::cout << "A: " << std::setprecision(3) << a << std::endl;
+            auto b = rhs.amount * M2::ratio::value;
+            std::cout << "B: " << b << std::endl;
+        return quantity<M1, T1>(
+
+        (a + b) / 1000
+    );
+        }
+
         else
-            return quantity<M2, T2>(lhs.amount + other.amount);
+            return quantity<M2, T2>(lhs.amount + rhs.amount);
     }
 
     template<typename M>
