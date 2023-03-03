@@ -26,9 +26,9 @@ int main() {
     std::cout << "In variable: " << q3 << std::endl;
     std::cout << "Using the copy constructor: " << cp_ctr << std::endl;
 
-    auto l1 = quantity<Meter>{5};
-    auto l2 = quantity<Meter>{10};
-    std::cout << "Adding length magnitudes: " << l1 + l2 << std::endl;
+    auto m1 = quantity<Meter>{5};
+    auto m2 = quantity<Meter>{10};
+    std::cout << "Adding length magnitudes: " << m1 + m2 << std::endl;
     return 0;
 }
 

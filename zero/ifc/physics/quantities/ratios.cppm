@@ -1,25 +1,27 @@
 /**
- * @brief Definiton and types for representing the different
+ * @brief Definitions for representing the different
  * order or magnitudes in a physical quantity
  */
 
 export module physics:ratios;
 import std;
 
-export namespace zero::physics {
-    /**
-     * @brief Defines a Ratio in terms of numerical values
-     */
-    template <typename T>
-    concept RatioV = std::is_integral_v<T> || std::is_floating_point_v<T>;
+/**
+ * @brief Defines a Ratio in terms of numerical values
+ */
+template <typename T>
+concept RatioV = (std::is_integral_v<T> || std::is_floating_point_v<T>)
+    && !std::is_same_v<T, char>;
 
-    template <RatioV T = short, T Base = 10, T Exponent = 0>
-    struct ratio {
-        static constexpr T base = Base;
-        static constexpr T exponent = Exponent;
-        static constexpr T value = Base * Exponent;
-        static constexpr double factor = std::pow(Base, Exponent);
-    };
+template <RatioV T = short, T Base = 10, T Exponent = 0>
+struct ratio {
+    static constexpr T base = Base;
+    static constexpr T exponent = Exponent;
+    static constexpr T value = Base * Exponent;
+    static constexpr double factor = std::pow(Base, Exponent);
+};
+
+export namespace zero::physics {
 
     using Yocto = ratio<short, 10, -24>;
     using Zepto = ratio<short, 10, -21>;

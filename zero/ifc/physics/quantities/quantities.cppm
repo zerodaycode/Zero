@@ -18,19 +18,19 @@ export namespace zero::physics {
     template<Ratio prefix, Symbol S>
     struct base_unit {};
 
-    template<Ratio prefix, Symbol S>
+    template<typename Derived>
     class base_magnitude {};
 
-
     template <Ratio R, Symbol S>
-    class mass: public base_magnitude<R, S> {};
+    class mass: public base_magnitude<mass<R, S>>, public base_unit<R, S>{};
     template<Ratio R, Symbol S>
-    class length : public base_magnitude<R, S> {};
+    class length: public base_magnitude<mass<R, S>>, public base_unit<R, S>{};
 
     template <typename T>
     concept Magnitude = requires {
         typename T::dimension;
         typename T::ratio;
+        typename T::symbol;
     };
 
     template <typename T, typename R>
@@ -45,18 +45,20 @@ export namespace zero::physics {
     struct Kilogram: public mass<Kilo, kg> {
         using dimension = mass;
         using ratio = Kilo;
+        using symbol = kg;
     };
     struct Hectogram: public mass<Hecto, hg> {
         using dimension = mass;
         using ratio = Hecto;
+        using symbol = hg;
     };
 
     struct Meter: public length<Root, m> {
         using dimension = length;
         using ratio = Hecto;
+        using symbol = m;
     };
 
-    
     template <typename T>
     concept ValidAmountType = (std::is_integral_v<T> || std::is_floating_point_v<T>)
         && !std::is_same_v<T, char>;
@@ -88,3 +90,4 @@ export namespace zero::physics {
 }
 
 static_assert(zero::physics::Symbol<zero::physics::kg>);
+static_assert(zero::physics::Magnitude<zero::physics::Kilogram>);
