@@ -1,8 +1,8 @@
 /**
  * @brief Provides facilities to retrieve information about types at compile time
  * 
- * Current implementation only contains an stringifyed version of a template
- * paratemer type T when it's passed as template argument in the `type_name<T>()`
+ * Current implementation returns an string version of a template
+ * parameter type T when it's passed as template argument in the `type_name<T>()`
  * freestanding function, available under the `zero::types` namespace
  */
 

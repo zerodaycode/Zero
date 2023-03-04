@@ -12,7 +12,6 @@ import :quantities.symbols;
 import std;
 import concepts;
 
-
 export namespace zero::physics {
     template<Ratio prefix, Symbol S>
     struct base_unit {};
@@ -69,27 +68,27 @@ export namespace zero::physics {
         constexpr explicit quantity<M, T>(T val) noexcept : amount(val) {}
     };
 
+    /**
+     * @brief Addition of two scalar values, given in the form of a pair of operands
+     * @tparam M1 the left hand side of the binary expression
+     * @tparam M2 the right hand side of the binary expression
+     * @tparam T1 the explicit type of the lhs of the binary operator +
+     * @tparam T2 the explicit type of the rhs of the binary operator +
+     */
     template<Magnitude M1, Magnitude M2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
         requires SameDimension<M1, M2>
     [[nodiscard]] 
     constexpr auto operator+(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
-        -> quantity<std::conditional_t<(M1::ratio::value> M2::ratio::value), M1, M2>>
+        -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
-        if constexpr (M1::ratio::value > M2::ratio::value) {
-    std::cout << std::fixed;
-//    std::cout << setprecision(2) << f;
-            auto a = lhs.amount * M1::ratio::value;
-            std::cout << "A: " << std::setprecision(3) << a << std::endl;
-            auto b = rhs.amount * M2::ratio::value;
-            std::cout << "B: " << b << std::endl;
-        return quantity<M1, T1>(
-
-        (a + b) / 1000
-    );
-        }
-
+        if constexpr (M1::ratio::value > M2::ratio::value)
+            return quantity<M1, T1>(
+                (lhs.amount * M1::ratio::value + rhs.amount * M2::ratio::value) / M1::ratio::value
+            );
         else
-            return quantity<M2, T2>(lhs.amount + rhs.amount);
+            return quantity<M2, T2>(
+                (lhs.amount * M1::ratio::value + rhs.amount * M2::ratio::value) / M2::ratio::value
+            );
     }
 
     template<typename M>

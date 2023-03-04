@@ -20,9 +20,11 @@ int main() {
     auto q1 = quantity<Kilogram, double>{3000};
     auto q2 = quantity<Hectogram, int>{72};
     auto q3 = q1 + q2;
+    auto q4 = q2 + q1;
 
     auto cp_ctr {q3};
-    std::cout << "Masses addition: " << q1 + q2 << std::endl;
+    std::cout << "Masses addition [Kg + Hg]: " << q1 + q2 << std::endl;
+    std::cout << "Masses addition [Hg + Kg]: " << q2 + q1 << std::endl;
     std::cout << "In variable: " << q3 << std::endl;
     std::cout << "Using the copy constructor: " << cp_ctr << std::endl;
 
