@@ -70,10 +70,14 @@ export namespace zero::physics {
 
     /**
      * @brief Addition of two scalar values, given in the form of a pair of operands
+     *
      * @tparam M1 the left hand side of the binary expression
      * @tparam M2 the right hand side of the binary expression
-     * @tparam T1 the explicit type of the lhs of the binary operator +
-     * @tparam T2 the explicit type of the rhs of the binary operator +
+     * @tparam T1 the explicit type of the quantity on the lhs of the binary operator +
+     * @tparam T2 the explicit type of the quantity on the rhs of the binary operator +
+     *
+     * @return the value of add the amount of the two magnitudes, with the return type of
+     * the one that has the bigger ratio given their common dimension
      */
     template<Magnitude M1, Magnitude M2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
         requires SameDimension<M1, M2>
@@ -88,6 +92,33 @@ export namespace zero::physics {
         else
             return quantity<M2, T2>(
                 (lhs.amount * M1::ratio::value + rhs.amount * M2::ratio::value) / M2::ratio::value
+            );
+    }
+
+    /**
+     * @brief Subtraction of two scalar values, given in the form of a pair of operands
+     *
+     * @tparam M1 the left hand side of the binary expression
+     * @tparam M2 the right hand side of the binary expression
+     * @tparam T1 the explicit type of the quantity on the lhs of the binary operator +
+     * @tparam T2 the explicit type of the quantity on the rhs of the binary operator +
+     *
+     * @return the value of add the amount of the two magnitudes, with the return type of
+     * the one that has the bigger ratio given their common dimension
+     */
+    template<Magnitude M1, Magnitude M2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
+    requires SameDimension<M1, M2>
+        [[nodiscard]]
+    constexpr auto operator-(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
+        -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
+    {
+        if constexpr (M1::ratio::value > M2::ratio::value)
+            return quantity<M1, T1>(
+                (lhs.amount * M1::ratio::value - rhs.amount * M2::ratio::value) / M1::ratio::value
+            );
+        else
+            return quantity<M2, T2>(
+                (lhs.amount * M1::ratio::value - rhs.amount * M2::ratio::value) / M2::ratio::value
             );
     }
 

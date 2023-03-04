@@ -16,10 +16,16 @@ auto m2 = quantity<Meter>{10};
 
 SCENARIO("Scenario: when we define some physical quantities in terms of magnitudes", "[quantity<Magnitude, T>...]") {
 
-        WHEN("we perform an addition arithmetic operation in the form of the binary expression of x + y") {
-            auto addition = q1 + q2;
+    WHEN("we perform an addition arithmetic operation in the form of the binary expression of x + y") {
+        auto addition = q1 + q2;
         THEN("We are able to add magnitudes with the same dimension") {
             REQUIRE(addition.amount == 3007.2);
+        }
+    }
+    WHEN("we perform an addition arithmetic operation in the form of the binary expression of x - y") {
+        auto substraction = q1 - q2;
+        THEN("We are able to add magnitudes with the same dimension") {
+            REQUIRE(substraction.amount == 2992.8);
         }
     }
 }
