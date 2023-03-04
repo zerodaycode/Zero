@@ -28,4 +28,10 @@ SCENARIO("Scenario: when we define some physical quantities in terms of magnitud
             REQUIRE(substraction.amount == 2992.8);
         }
     }
+    WHEN("we perform a multiplication in the form of the binary expression of x * y") {
+        auto multiplication = q1 * q2;
+        THEN("We are able to multiply magnitudes with the same dimension") {
+            REQUIRE(multiplication.amount == 21600000.0);
+        }
+    }
 }
