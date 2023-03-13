@@ -5,7 +5,7 @@
 * defined in the `Physics` library
 */
 
-export module physics:quantities.symbols;
+export module physics:magnitudes.symbols;
 
 export namespace zero::physics {
     template<typename T>
@@ -17,6 +17,8 @@ export namespace zero::physics {
     concept Symbol = requires {
         typename T::symbol;
     };
+
+    // TODO a submodule for every symbol?
 
     /** Definitions of symbols */
     struct kg: unit_symbol<kg> {};

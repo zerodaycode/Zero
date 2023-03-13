@@ -1,5 +1,6 @@
 export module physics;
 
-export import :quantities;
-export import :quantities.symbols;
+export import :quantity;
+export import :magnitudes;
+export import :magnitudes.symbols;
 export import :ratios;

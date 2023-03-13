@@ -1,29 +1,20 @@
-
 /**
  * @brief Module for design types and behavior associated with Physical Quantities.
  * 
  * A physical quantity can be understand as a real world magnitude, related with
  * their units in the international system
  */
-export module physics:quantities;
+export module physics:quantity;
+
 import :ratios;
-import :quantities.symbols;
+import :magnitudes.units;
+import :magnitudes.symbols;
+import :magnitudes;
 
 import std;
 import concepts;
 
 export namespace zero::physics {
-    template<Ratio prefix, Symbol S>
-    struct base_unit {};
-
-    template<typename Derived>
-    class base_magnitude {};
-
-    template <Ratio R, Symbol S>
-    class mass: public base_magnitude<mass<R, S>>, public base_unit<R, S>{};
-    template<Ratio R, Symbol S>
-    class length: public base_magnitude<mass<R, S>>, public base_unit<R, S>{};
-
     template <typename T>
     concept Magnitude = requires {
         typename T::dimension;
@@ -38,23 +29,6 @@ export namespace zero::physics {
             typename T::dimension,
             typename R::dimension
         >;
-    };
-
-    struct Kilogram: public mass<Kilo, kg> {
-        using dimension = mass;
-        using ratio = Kilo;
-        using symbol = kg;
-    };
-    struct Hectogram: public mass<Hecto, hg> {
-        using dimension = mass;
-        using ratio = Hecto;
-        using symbol = hg;
-    };
-
-    struct Meter: public length<Root, m> {
-        using dimension = length;
-        using ratio = Hecto;
-        using symbol = m;
     };
 
     template <typename T>
