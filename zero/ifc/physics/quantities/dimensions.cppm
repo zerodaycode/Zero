@@ -15,10 +15,10 @@ import :magnitudes.units;
 
 export namespace zero::physics {
     template<typename Derived>
-    class base_dimension {};
+    class dimension {};
 
     template <Ratio R, Symbol S>
-    class mass: public base_dimension<mass<R, S>>, public base_unit<R, S>{};
+    class mass: public dimension<mass<R, S>>, public base_unit<R, S>{};
     template<Ratio R, Symbol S>
-    class length: public base_dimension<length<R, S>>, public base_unit<R, S>{};
+    class length: public dimension<length<R, S>>, public base_unit<R, S>{};
 }
