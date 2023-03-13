@@ -7,9 +7,8 @@
 export module physics:quantity;
 
 import :ratios;
-import :magnitudes.units;
-import :magnitudes.symbols;
-import :magnitudes;
+import :units;
+import :units.symbols;
 
 import std;
 import concepts;
@@ -25,7 +24,7 @@ export namespace zero::physics {
     template <typename T, typename R>
     concept SameDimension = requires {
         requires Magnitude<T> && Magnitude<R>;
-        requires zero::concepts::SameTemplate<
+        requires std::is_same_v<
             typename T::dimension,
             typename R::dimension
         >;

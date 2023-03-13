@@ -5,7 +5,7 @@
 * defined in the `Physics` library
 */
 
-export module physics:magnitudes.symbols;
+export module physics:units.symbols;
 
 export namespace zero::physics {
     template<typename T>
