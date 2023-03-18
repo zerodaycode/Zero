@@ -13,7 +13,7 @@ export namespace zero::physics {
     template<Ratio prefix, Symbol S>
     struct base_unit {};
 
-    // TODO inline namespace?
+    /* Base units */
     struct Kilogram: public mass, public base_unit<Kilo, kg> {
         using dimension = mass;
         using ratio = Kilo;
@@ -30,4 +30,11 @@ export namespace zero::physics {
         using ratio = Hecto;
         using symbol = m;
     };
+
+    /* Derived units */
+    struct speed : public derived_dimension<mass, length> {};
 }
+
+static_assert(zero::physics::BaseDimension<zero::physics::mass>);
+static_assert(zero::physics::BaseDimension<zero::physics::length>);
+static_assert(zero::physics::DerivedDimension<zero::physics::speed, zero::physics::mass, zero::physics::length>);
