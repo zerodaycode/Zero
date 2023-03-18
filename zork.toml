@@ -2,6 +2,7 @@
 name = "Zero"
 authors = [ "Zero Day Code" ]
 compilation_db = true
+project_root = "zero"
 
 [compiler]
 cpp_compiler = "clang"
@@ -17,11 +18,11 @@ sources = [ "*.cpp" ]
 
 [tests]
 tests_executable_name = "zero_tests"
-sources = [ "./zero/tests/**/*.cpp" ]
+sources = [ "tests/**/*.cpp" ]
 
 [modules]
 sys_modules = ['cstdio']
-base_ifcs_dir = "./zero/ifc"
+base_ifcs_dir = "ifc"
 interfaces = [
     { file = 'commons/typedefs.cppm' },    
     { file = 'types/type_info.cppm' },
@@ -51,7 +52,7 @@ interfaces = [
     { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics' } },
     { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics' } },
     { file = 'physics/quantities/units.cppm', module_name = 'units', partition = { module = 'physics' } },
-    { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics' }, dependencies = ['type_traits'] },
+    { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics' }, dependencies = ['physics-ratios', 'physics-units', 'physics-units.symbols'] },
     # Root
     { file = 'physics/physics.cppm' },
 
