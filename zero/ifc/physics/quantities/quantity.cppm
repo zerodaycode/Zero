@@ -15,11 +15,25 @@ import concepts;
 
 export namespace zero::physics {
     template <typename T>
-    concept Magnitude = requires {
+    concept Magnitude = requires {  
+        // Actually we changed Magnitude in favor or Unit
+        // But still not ready to refactor names
         typename T::dimension;
         typename T::ratio;
         typename T::symbol;
+    }; // should represent BaseUnit
+
+    template<typename... Ts>
+    concept DerivedMagnitude = requires {
+        requires (requires { typename Ts::dimensions; } && ...);
     };
+
+    // TODO Dev notes: We could extract the arithmetic operations into standalone
+    // free template functions, and let the overload of every operator decide
+    // which implementation has to call
+
+    template<typename... Types>
+    using dimensions = std::tuple<Types...>;
 
     template <typename T, typename R>
     concept SameDimension = requires {
