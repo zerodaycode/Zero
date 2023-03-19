@@ -1,7 +1,0 @@
-CompileFlags:
-  Add: [-xc++, -Wall, -stdlib=libc++, -std=c++20, --target=x86_64-pc-linux-gnu, --precompile, -fimplicit-modules -fimplicit-module-maps, -fprebuilt-module-path=/home/alexvergara/code/c++/Zero/out/clang/modules/interfaces]
-  Compiler: clang++
-  CompilationDatabase: /home/alexvergara/code/c++/Zero
-
-Index:
-  Background: Build
