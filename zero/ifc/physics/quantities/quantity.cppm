@@ -23,10 +23,17 @@ export namespace zero::physics {
         typename T::symbol;
     }; // should represent BaseUnit
 
-    template<typename... Ts>
-    concept DerivedMagnitude = requires {
-        requires (requires { typename Ts::dimensions; } && ...);
+    template <typename T>
+    concept DerivedUnit = requires {
+        typename T::dimensions;
+//        typename T::ratio;
+//        typename T::symbol;
     };
+
+//    template<typename... Ts>
+//    concept DerivedMagnitudeNO = requires {
+//        requires (requires { typename Ts::dimensions; } && ...);
+//    };
 
     // TODO Dev notes: We could extract the arithmetic operations into standalone
     // free template functions, and let the overload of every operator decide
@@ -173,5 +180,11 @@ export namespace zero::physics {
     }
 }
 
+/* Testing our symbols */
 static_assert(zero::physics::Symbol<zero::physics::kg>);
+
+/* Testing our base units */
 static_assert(zero::physics::Magnitude<zero::physics::Kilogram>);
+
+/* Testing our derived units */
+static_assert(zero::physics::DerivedUnit<zero::physics::MetersPerSecond>);

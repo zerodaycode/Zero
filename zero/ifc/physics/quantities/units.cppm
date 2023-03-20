@@ -5,6 +5,8 @@
 
 export module physics:units;
 
+import std;
+
 import :ratios;
 import :dimensions;
 import :units.symbols;
@@ -13,7 +15,7 @@ export namespace zero::physics {
     template<Ratio prefix, Symbol S>
     struct base_unit {};
 
-    /* Base units */
+    /* Base units */  // TODO Probably we may get rid out of the tagging inheritance of base_unit?
     struct Kilogram: public mass, public base_unit<Kilo, kg> {
         using dimension = mass;
         using ratio = Kilo;
@@ -27,14 +29,12 @@ export namespace zero::physics {
 
     struct Meter: public length, public base_unit<Root, m> {
         using dimension = length;
-        using ratio = Hecto;
+        using ratio = Root;
         using symbol = m;
     };
 
     /* Derived units */
-    struct speed : public derived_dimension<mass, length> {};
+    struct MetersPerSecond : public speed {
+        using dimensions = speed::dimensions;
+    };
 }
-
-static_assert(zero::physics::BaseDimension<zero::physics::mass>);
-static_assert(zero::physics::BaseDimension<zero::physics::length>);
-static_assert(zero::physics::DerivedDimension<zero::physics::speed, zero::physics::mass, zero::physics::length>);

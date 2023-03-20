@@ -1,13 +1,13 @@
 [project]
 name = "Zero"
 authors = [ "Zero Day Code" ]
-compilation_db = true
+#compilation_db = true
 project_root = "zero"
 
 [compiler]
 cpp_compiler = "clang"
 cpp_standard = "20"
-std_lib = "libc++"
+std_lib = "STDLIBCPP"
 
 [build]
 output_dir = "./out"

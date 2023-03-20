@@ -15,27 +15,36 @@ import :units.symbols;
 
 export namespace zero::physics {
     /* Base dimensions */
-    class base_dimension {
-    };
+    struct base_dimension {};
 
-    class mass : public base_dimension {
-    };
-
-    class length : public base_dimension {
-    };
+    struct mass : public base_dimension {};
+    struct length : public base_dimension {};
+    struct time : public base_dimension {};
 
     template<typename T>
     concept BaseDimension = std::is_base_of_v<base_dimension, T>;
 
     /* Compound dimensions */
     template<BaseDimension... Ts>
-    class derived_dimension {};
-
-
+    struct derived_dimension {};
 
     template<typename T, typename... Bs>
     concept DerivedDimension = requires {
         requires (BaseDimension<Bs>, ...);
-        //requires (std::is_base_of_v<derived_dimension<Bs>, T> && ...); // expands the pack of base dimensions
+        requires (std::is_base_of_v<derived_dimension<Bs...>, T>);
+    };
+
+    struct speed : public derived_dimension<time, length> {
+        using dimensions = std::tuple<time, length>;
     };
 }
+
+static_assert(zero::physics::BaseDimension<zero::physics::mass>);
+static_assert(zero::physics::BaseDimension<zero::physics::length>);
+static_assert(
+    zero::physics::DerivedDimension<
+        zero::physics::speed,
+        zero::physics::time,
+        zero::physics::length
+    >
+);
