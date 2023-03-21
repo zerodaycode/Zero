@@ -19,8 +19,8 @@ export namespace zero::physics {
         // Actually we changed Magnitude in favor or Unit
         // But still not ready to refactor names
         typename T::dimension;
-        typename T::ratio;
-        typename T::symbol;
+        typename T::base_unit::ratio;
+        typename T::base_unit::symbol;
     }; // should represent BaseUnit
 
     template <typename T>
@@ -79,13 +79,16 @@ export namespace zero::physics {
     constexpr auto operator+(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
         -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
+        constexpr auto m1_ratio_v = M1::base_unit::ratio::value;
+        constexpr auto m2_ratio_v = M2::base_unit::ratio::value;
+
         if constexpr (M1::ratio::value > M2::ratio::value)
             return quantity<M1, T1>(
-                (lhs.amount * M1::ratio::value + rhs.amount * M2::ratio::value) / M1::ratio::value
+                (lhs.amount * m1_ratio_v + rhs.amount * m2_ratio_v) / m1_ratio_v
             );
         else
             return quantity<M2, T2>(
-                (lhs.amount * M1::ratio::value + rhs.amount * M2::ratio::value) / M2::ratio::value
+                (lhs.amount * m1_ratio_v + rhs.amount * m2_ratio_v) / m1_ratio_v
             );
     }
 
@@ -106,13 +109,16 @@ export namespace zero::physics {
     constexpr auto operator-(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
         -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
+        constexpr auto m1_ratio_v = M1::base_unit::ratio::value;
+        constexpr auto m2_ratio_v = M2::base_unit::ratio::value;
+
         if constexpr (M1::ratio::value > M2::ratio::value)
             return quantity<M1, T1>(
-                (lhs.amount * M1::ratio::value - rhs.amount * M2::ratio::value) / M1::ratio::value
+                (lhs.amount * m1_ratio_v - rhs.amount * m2_ratio_v) / m1_ratio_v
             );
         else
             return quantity<M2, T2>(
-                (lhs.amount * M1::ratio::value - rhs.amount * M2::ratio::value) / M2::ratio::value
+                (lhs.amount * m1_ratio_v - rhs.amount * m2_ratio_v) / m1_ratio_v
             );
     }
 
@@ -133,13 +139,16 @@ export namespace zero::physics {
     constexpr auto operator*(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
         -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
+        constexpr auto m1_ratio_v = M1::base_unit::ratio::value;
+        constexpr auto m2_ratio_v = M2::base_unit::ratio::value;
+
         if constexpr (M1::ratio::value > M2::ratio::value)
             return quantity<M1, T1>(
-                (lhs.amount * M1::ratio::value * rhs.amount * M2::ratio::value) / M1::ratio::value
+                (lhs.amount * m1_ratio_v * rhs.amount * m2_ratio_v) / m1_ratio_v
             );
         else
             return quantity<M2, T2>(
-                (lhs.amount * M1::ratio::value * rhs.amount * M2::ratio::value) / M2::ratio::value
+                (lhs.amount * m1_ratio_v * rhs.amount * m2_ratio_v) / m1_ratio_v
             );
     }
 
@@ -160,14 +169,17 @@ export namespace zero::physics {
     constexpr auto operator/(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
         -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
+        constexpr auto m1_ratio_v = M1::base_unit::ratio::value;
+        constexpr auto m2_ratio_v = M2::base_unit::ratio::value;
+
         if constexpr (M1::ratio::value > M2::ratio::value)
             return quantity<M1, T1>(
-                ((lhs.amount * M1::ratio::value) / (rhs.amount * M2::ratio::value)) / M1::ratio::value
+                ((lhs.amount * m1_ratio_v) / (rhs.amount * m2_ratio_v)) / m1_ratio_v
             );
-    else
-        return quantity<M2, T2>(
-            ((lhs.amount * M1::ratio::value) / (rhs.amount * M2::ratio::value)) / M2::ratio::value
-        );
+        else
+            return quantity<M2, T2>(
+                ((lhs.amount * m1_ratio_v) / (rhs.amount * m2_ratio_v)) / m2_ratio_v
+            );
     }
 
     /**
