@@ -15,14 +15,20 @@ export namespace zero::physics {
     /* Base units */
     template<BaseDimension Dimension, Ratio R, Symbol S>
     struct base_unit: public Dimension {
+        using dimension = Dimension;
         using ratio = R;
         using symbol = S;
     };
 
     template <typename T>
-    concept BaseUnit = requires {
-        typename T::ratio; // TODO && T::ratio is Ratio
-        typename T::symbol; // TODO && T::symbol is Symbol
+    concept BaseUnit =
+        BaseDimension <typename T::dimension> &&
+        Ratio <typename T::ratio> &&
+        Symbol <typename T::symbol> &&
+    requires {
+        typename T::dimension;
+        typename T::ratio;
+        typename T::symbol;
     };
 
     struct Kilogram : public base_unit<mass, Kilo, kg> {};
