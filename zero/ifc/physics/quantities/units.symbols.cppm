@@ -24,4 +24,5 @@ export namespace zero::physics {
     struct kg: unit_symbol<kg> {};
     struct hg: unit_symbol<hg> {};
     struct m: unit_symbol<m> {};
+    struct s: unit_symbol<s> {};
 }

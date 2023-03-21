@@ -33,12 +33,13 @@ export namespace zero::physics {
     struct time : public base_dimension<time> {};
 
     template<typename T>
-    concept BaseDimension =
-        std::is_base_of_v<base_dimension<T>, T>;
+    concept BaseDimension = std::is_base_of_v<base_dimension<T>, T>;
 
     /* Compound dimensions */
-    template<BaseDimension... Ts>
-    struct derived_dimension {};
+    template<BaseDimension... Dimensions>
+    struct derived_dimension {
+        using dimensions = std::tuple<Dimensions...>;
+    };
 
     template<typename T, typename... Bs>
     concept DerivedDimension = requires {
@@ -46,9 +47,7 @@ export namespace zero::physics {
         requires (std::is_base_of_v<derived_dimension<Bs...>, T>);
     };
 
-    struct speed : public derived_dimension<time, length> {
-        using dimensions = std::tuple<time, length>;
-    };
+    struct speed : public derived_dimension<time, length> {};
 }
 
 static_assert(zero::physics::BaseDimension<zero::physics::mass>);
