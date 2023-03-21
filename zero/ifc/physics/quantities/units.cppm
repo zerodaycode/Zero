@@ -19,15 +19,9 @@ export namespace zero::physics {
     };
 
     /* Base units */
-    struct Kilogram: public mass, public base_unit<Kilo, kg> {
-        using dimension = mass;
-    };
-    struct Hectogram: public mass, public base_unit<Hecto, hg> {
-        using dimension = mass;
-    };
-    struct Meter: public length, public base_unit<Root, m> {
-        using dimension = length;
-    };
+    struct Kilogram: public mass, public base_unit<Kilo, kg> {};
+    struct Hectogram: public mass, public base_unit<Hecto, hg> {};
+    struct Meter: public length, public base_unit<Root, m> {};
 
     /* Derived units */
     struct MetersPerSecond : public speed {

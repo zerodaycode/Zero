@@ -6,12 +6,12 @@
  */
 export module physics:quantity;
 
+import std;
+import concepts;
+
 import :ratios;
 import :units;
 import :units.symbols;
-
-import std;
-import concepts;
 
 export namespace zero::physics {
     template <typename T>
@@ -19,8 +19,8 @@ export namespace zero::physics {
         // Actually we changed Magnitude in favor or Unit
         // But still not ready to refactor names
         typename T::dimension;
-        typename T::base_unit::ratio;
-        typename T::base_unit::symbol;
+        typename T::ratio;
+        typename T::symbol;
     }; // should represent BaseUnit
 
     template <typename T>
