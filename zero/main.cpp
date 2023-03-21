@@ -22,6 +22,8 @@ int main() {
     auto q3 = q1 + q2;
     auto q4 = q2 + q1;
 
+    auto velocity = quantity<MetersPerSecond> {300000};
+
     auto cp_ctr {q3};
     std::cout << "Masses addition [Kg + Hg]: " << q1 + q2 << std::endl;
     std::cout << "Masses addition [Hg + Kg]: " << q2 + q1 << std::endl;

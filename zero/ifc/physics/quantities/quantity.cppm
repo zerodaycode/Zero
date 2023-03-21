@@ -15,7 +15,7 @@ import :units.symbols;
 
 export namespace zero::physics {
     template <typename T>
-    concept Magnitude = requires {  
+    concept Unit = requires {
         // Actually we changed Magnitude in favor or Unit
         // But still not ready to refactor names
         typename T::dimension;
@@ -24,11 +24,13 @@ export namespace zero::physics {
     }; // should represent BaseUnit
 
     template <typename T>
-    concept DerivedUnit = requires {
+    concept DerivedMagnitude = requires {
         typename T::dimensions;
-//        typename T::ratio;
-//        typename T::symbol;
+        typename T::units;
     };
+
+    template <typename T>
+    concept Magnitude = Unit<T> || DerivedMagnitude<T>;
 
 //    template<typename... Ts>
 //    concept DerivedMagnitudeNO = requires {
@@ -196,7 +198,7 @@ export namespace zero::physics {
 static_assert(zero::physics::Symbol<zero::physics::kg>);
 
 /* Testing our base units */
-static_assert(zero::physics::Magnitude<zero::physics::Kilogram>);
+static_assert(zero::physics::Unit<zero::physics::Kilogram>);
 
 /* Testing our derived units */
-static_assert(zero::physics::DerivedUnit<zero::physics::MetersPerSecond>);
+static_assert(zero::physics::DerivedMagnitude<zero::physics::MetersPerSecond>);

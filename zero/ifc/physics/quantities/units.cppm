@@ -13,34 +13,34 @@ import :units.symbols;
 
 export namespace zero::physics {
     /* Base units */
-    template<Ratio r, Symbol s>
-    struct base_unit {
-        using ratio = r;
-        using symbol = s;
+    template<BaseDimension Dimension, Ratio R, Symbol S>
+    struct base_unit: public Dimension {
+        using ratio = R;
+        using symbol = S;
     };
 
     template <typename T>
     concept BaseUnit = requires {
-        typename T::ratio; // && T::ratio is same v
-        typename T::symbol;
+        typename T::ratio; // TODO && T::ratio is Ratio
+        typename T::symbol; // TODO && T::symbol is Symbol
     };
 
-    struct Kilogram: public mass, public base_unit<Kilo, kg> {};
-    struct Hectogram: public mass, public base_unit<Hecto, hg> {};
-    struct Meter: public length, public base_unit<Root, m> {};
+    struct Kilogram : public base_unit<mass, Kilo, kg> {};
+    struct Hectogram :public base_unit<mass, Hecto, hg> {};
+    struct Meter : public base_unit<length, Root, m> {};
 
 
     /* Derived units */
-    template <BaseUnit... baseUnits>
+    template <BaseUnit... BaseUnits>
     struct derived_unit {
-        using units = std::tuple<baseUnits...>;
+        using units = std::tuple<BaseUnits...>;
     };
 
     struct MetersPerSecond :
         public speed,
         public derived_unit<
-            base_unit<Root, m>,
-            base_unit<Root, s>
+            base_unit<length, Root, m>,
+            base_unit<time, Root, s>
         >
     {};
 }

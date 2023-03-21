@@ -36,9 +36,9 @@ export namespace zero::physics {
     concept BaseDimension = std::is_base_of_v<base_dimension<T>, T>;
 
     /* Compound dimensions */
-    template<BaseDimension... Dimensions>
+    template<BaseDimension... Ds>
     struct derived_dimension {
-        using dimensions = std::tuple<Dimensions...>;
+        using dimensions = std::tuple<Ds...>;
     };
 
     template<typename T, typename... Bs>
