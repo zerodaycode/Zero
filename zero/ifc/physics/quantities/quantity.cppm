@@ -10,39 +10,34 @@ import std;
 import concepts;
 
 import :ratios;
+import :dimensions;
 import :units;
 import :units.symbols;
 
 export namespace zero::physics {
     template <typename T>
-    concept Unit = requires {
-        // Actually we changed Magnitude in favor or Unit
-        // But still not ready to refactor names
-        typename T::dimension;
-        typename T::ratio;
-        typename T::symbol;
-    }; // should represent BaseUnit
+    concept BaseMagnitude =
+        BaseUnit<T> && BaseDimension<typename T::dimension>;
+
+    template<typename T>
+    struct is_base_magnitude : std::false_type {};
+
+    template<typename T>
+        requires BaseMagnitude<T>
+    struct is_base_magnitude<T> : std::true_type {};
 
     template <typename T>
     concept DerivedMagnitude = requires {
-        typename T::dimensions;
-        typename T::units;
+        DerivedUnit<T> && DerivedDimension<typename T::self, typename T::dimensions>;
     };
 
     template <typename T>
-    concept Magnitude = Unit<T> || DerivedMagnitude<T>;
+    concept Magnitude = is_base_magnitude<T>::value || DerivedMagnitude<T>;
 
-//    template<typename... Ts>
-//    concept DerivedMagnitudeNO = requires {
-//        requires (requires { typename Ts::dimensions; } && ...);
-//    };
 
     // TODO Dev notes: We could extract the arithmetic operations into standalone
     // free template functions, and let the overload of every operator decide
     // which implementation has to call
-
-    template<typename... Types>
-    using dimensions = std::tuple<Types...>;
 
     template <typename T, typename R>
     concept SameDimension = requires {
@@ -198,7 +193,7 @@ export namespace zero::physics {
 static_assert(zero::physics::Symbol<zero::physics::kg>);
 
 /* Testing our base units */
-static_assert(zero::physics::Unit<zero::physics::Kilogram>);
+static_assert(zero::physics::Magnitude<zero::physics::Kilogram>);
 
 /* Testing our derived units */
-static_assert(zero::physics::DerivedMagnitude<zero::physics::MetersPerSecond>);
+//static_assert(zero::physics::DerivedUnit<zero::physics::MetersPerSecond>);

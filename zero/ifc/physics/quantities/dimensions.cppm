@@ -15,28 +15,42 @@ import :units.symbols;
 
 export namespace zero::physics {
     /* Base dimensions */
-    struct base_dimension {};
 
-    struct mass : public base_dimension {};
-    struct length : public base_dimension{};
-    struct time : public base_dimension {};
+    /**
+     * CRTP base "tag" for declaring a base dimension. By being a CRTP base class, we can
+     * declare the `dimension` alias inside this type, so we can access it from the tags
+     * of their implementors like T::base_dimension::dimension, which always will be the
+     * dimension of the template parameter itself, and avoid pollute the public API with
+     * using declarations when they can be automatically set up from the base tag
+     */
+    template <typename Dimension>
+    struct base_dimension {
+        using dimension = Dimension;
+    };
+
+    struct mass : public base_dimension<mass> {};
+    struct length : public base_dimension<length> {};
+    struct time : public base_dimension<time> {};
 
     template<typename T>
-    concept BaseDimension = std::is_base_of_v<base_dimension, T>;
+    concept BaseDimension = std::is_base_of_v<base_dimension<T>, T> &&
+        requires { typename T::dimension; };
 
     /* Compound dimensions */
-    template<BaseDimension... Ds>
+    template<typename Derived, BaseDimension... Dimensions>
     struct derived_dimension {
-        using dimensions = std::tuple<Ds...>;
+        using self = Derived;
+        using dimensions = std::tuple<Dimensions...>;
     };
 
     template<typename T, typename... Bs>
     concept DerivedDimension = requires {
         requires (BaseDimension<Bs>, ...);
-        requires (std::is_base_of_v<derived_dimension<Bs...>, T>);
+        requires (std::is_base_of_v<derived_dimension<T, Bs...>, T>);
+        typename T::self;
     };
 
-    struct speed : public derived_dimension<time, length> {};
+    struct speed : public derived_dimension<speed, time, length> {};
 }
 
 static_assert(zero::physics::BaseDimension<zero::physics::mass>);

@@ -23,6 +23,8 @@ export namespace zero::physics {
     /** Definitions of symbols */
     struct kg: unit_symbol<kg> {};
     struct hg: unit_symbol<hg> {};
+    struct km: unit_symbol<km> {};
     struct m: unit_symbol<m> {};
+    struct h: unit_symbol<h> {};
     struct s: unit_symbol<s> {};
 }

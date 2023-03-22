@@ -33,6 +33,8 @@ int main() {
     auto m1 = quantity<Meter>{5};
     auto m2 = quantity<Meter>{10};
     std::cout << "Adding length magnitudes: " << m1 + m2 << std::endl;
+
+    auto meters_per_second = quantity<MetersPerSecond>{100};
     return 0;
 }
 
