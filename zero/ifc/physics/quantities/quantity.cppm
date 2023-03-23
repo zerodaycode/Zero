@@ -40,7 +40,7 @@ export namespace zero::physics {
     // which implementation has to call
 
     template <typename T, typename R>
-    concept SameDimension = requires {
+    concept SameDimension = requires {  // TODO SameDimensionality?¿! For support deriveds?
         requires Magnitude<T> && Magnitude<R>;
         requires std::is_same_v<
             typename T::dimension,
@@ -61,18 +61,12 @@ export namespace zero::physics {
 
     /**
      * @brief Addition of two scalar values, given in the form of a pair of operands
-     *
-     * @tparam M1 the left hand side of the binary expression
-     * @tparam M2 the right hand side of the binary expression
-     * @tparam T1 the explicit type of the quantity on the lhs of the binary operator +
-     * @tparam T2 the explicit type of the quantity on the rhs of the binary operator +
-     *
-     * @return the value of add the amount of the two magnitudes, with the return type of
-     * the one that has the bigger ratio given their common dimension
+     * @return the resultant scalar value of adding the amount of the two magnitudes, with
+     * the return type of the one that has the bigger ratio given their common dimension
      */
     template<Magnitude M1, Magnitude M2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
-        requires SameDimension<M1, M2>
-    [[nodiscard]] 
+//        requires SameDimension<M1, M2> // TODO SameDimensionality
+    [[nodiscard]]
     constexpr auto operator+(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
         -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
@@ -89,6 +83,34 @@ export namespace zero::physics {
             );
     }
 
+
+/* Implementation of operator+() overload for derived magnitudes
+    template<typename M1, typename M2, typename T1, typename T2>
+    requires SameDimension<M1, M2>
+    [[nodiscard]]
+    constexpr auto operator+(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs) {
+        using namespace std;
+        if constexpr (is_base_magnitude_v<M1> && is_base_magnitude_v<M2>) {
+            // Both magnitudes are base magnitudes, just add the amounts
+            return quantity<M1, decltype(lhs.amount + rhs.amount)>{lhs.amount + rhs.amount};
+        }
+        else {
+            // At least one magnitude is a derived magnitude, compute the sum using fold expression
+            using dimensions = typename M1::derived_dimension::dimensions;
+            constexpr size_t num_dimensions = std::tuple_size_v<dimensions>;
+
+            // Compute the scaled quantities for each dimension of lhs and rhs
+            std::array<decltype(scale < std::tuple_element_t < 0, dimensions >, T1 >
+                                                                                (T1{})), num_dimensions> lhs_scaled{};
+            std::array<decltype(scale < std::tuple_element_t < 0, dimensions >, T2 >
+                                                                                (T2{})), num_dimensions> rhs_scaled{};
+            std::apply([&](const auto &... dim) {
+                size_t i = 0;
+                ((lhs_scaled[i] = scale<decltype(dim), T1>(lhs.amount)), ..., ++i);
+                i = 0;
+                ((rhs_scaled[i] = scale<decltype(dim), T2>(rhs.amount)), ..., ++i);
+            }, dimensions{});*/
+
     /**
      * @brief Subtraction of two scalar values, given in the form of a pair of operands
      *
@@ -97,8 +119,8 @@ export namespace zero::physics {
      * @tparam T1 the explicit type of the quantity on the lhs of the binary operator +
      * @tparam T2 the explicit type of the quantity on the rhs of the binary operator +
      *
-     * @return the value of add the amount of the two magnitudes, with the return type of
-     * the one that has the bigger ratio given their common dimension
+     * @return the resultant scalar value of subtracting the amount of the two magnitudes, with
+     * the return type of the one that has the bigger ratio given their common dimension
      */
     template<Magnitude M1, Magnitude M2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
         requires SameDimension<M1, M2>
