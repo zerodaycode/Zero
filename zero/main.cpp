@@ -18,25 +18,25 @@ int main() {
 
     // Physics
     auto q1 = quantity<Kilogram, double>{3000};
-    auto q2 = quantity<Hectogram, int>{72};
-    auto q3 = q1 + q2;
-    auto q4 = q2 + q1;
+//    auto q2 = quantity<Hectogram, int>{72};
+//    auto q3 = q1 + q2;
+//    auto q4 = q2 + q1;
 
     auto velocity = quantity<MetersPerSecond> {300'000};
     auto velocity2 = quantity<MetersPerSecond> {200'000};
-    std::cout << "Velocities addition [m/s + m/s]: " << velocity + velocity2 << std::endl;
+    std::cout << "Velocities addition [m/s + m/s]: " << velocity + velocity2 << "\n";
 
-    auto cp_ctr {q3};
-    std::cout << "Masses addition [Kg + Hg]: " << q1 + q2 << std::endl;
-    std::cout << "Masses addition [Hg + Kg]: " << q2 + q1 << std::endl;
-    std::cout << "In variable: " << q3 << std::endl;
-    std::cout << "Using the copy constructor: " << cp_ctr << std::endl;
+//    auto cp_ctr {q3};
+//    std::cout << "Masses addition [Kg + Hg]: " << q1 + q2 << std::endl;
+//    std::cout << "Masses addition [Hg + Kg]: " << q2 + q1 << std::endl;
+//    std::cout << "In variable: " << q3 << std::endl;
+//    std::cout << "Using the copy constructor: " << cp_ctr << std::endl;
 
-    auto m1 = quantity<Meter>{5};
-    auto m2 = quantity<Meter>{10};
-    std::cout << "Adding length magnitudes: " << m1 + m2 << std::endl;
-
-    auto meters_per_second = quantity<MetersPerSecond>{100};
+//    auto m1 = quantity<Meter>{5};
+//    auto m2 = quantity<Meter>{10};
+//    std::cout << "Adding length magnitudes: " << m1 + m2 << std::endl;
+//
+//    auto meters_per_second = quantity<MetersPerSecond>{100};
     return 0;
 }
 

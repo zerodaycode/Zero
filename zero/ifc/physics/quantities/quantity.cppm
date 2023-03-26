@@ -8,6 +8,8 @@ export module physics:quantity;
 
 import std;
 import concepts;
+import type_info;
+import str_manip;
 
 import :ratios;
 import :dimensions;
@@ -34,9 +36,8 @@ export namespace zero::physics {
     template <typename T>
     concept Magnitude = is_base_magnitude<T>::value || DerivedMagnitude<T>;
 
-
     template <typename T, typename R>
-    concept SameDimension = requires {  // TODO SameDimensionality?¿! For support deriveds?
+    concept SameDimension = requires {
         requires Magnitude<T> && Magnitude<R>;
         requires std::is_same_v<
             typename T::dimension,
@@ -53,6 +54,30 @@ export namespace zero::physics {
         T amount;
         constexpr quantity<M, T>() noexcept = default;
         constexpr explicit quantity<M, T>(T val) noexcept : amount(val) {}
+
+        template <typename Dummy = void, typename = std::enable_if_t<DerivedMagnitude<M>, Dummy>>
+        std::vector<std::string> dimensions() const {
+            std::vector<std::string> stringified_dimensions;
+            std::apply([&](auto... dim) {
+                ((stringified_dimensions.emplace_back(zero::split_str(zero::types::type_name<decltype(dim)>()).back())), ...);
+            }, typename M::derived_dimension::dimensions{});
+            return stringified_dimensions;
+        }
+
+        template <typename Dummy = void, typename = std::enable_if_t<DerivedMagnitude<M>, Dummy>>
+        void print_dimensions() const requires DerivedMagnitude<M> {
+            std::string dimension_names;
+            std::apply([&](auto... dim) {
+                (
+                    (dimension_names +=
+                        zero::split_str(zero::types::type_name<decltype(dim)>(), "::").back() + ", "
+                    ), ...
+                );
+            }, typename M::derived_dimension::dimensions{});
+            auto magnitude_str_t = zero::split_str(zero::types::type_name<M>(), "::").back();
+            std::cout << magnitude_str_t << " has dimensions of: ["
+                << dimension_names.substr(0, dimension_names.size() - 2) << "]\n";
+        }
     };
 
     /**
@@ -83,9 +108,17 @@ export namespace zero::physics {
      * @brief same as the operator+() overload for the {@link BaseMagnitude}, but for {@link DerivedMagnitude}
      */
     template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
-//        requires SameDimensions<M1, M2>
+//        requires SameDimensions // <-- this is a TODO <M1, M2>
     [[nodiscard]]
     constexpr auto operator+(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
+        using dm1_dimensions = typename DM1::derived_dimension::dimensions;
+        using dm2_dimensions = typename DM2::derived_dimension::dimensions;
+        constexpr size_t dm1_num_dimensions = std::tuple_size_v<dm1_dimensions>;
+        constexpr size_t dm2_num_dimensions = std::tuple_size_v<dm2_dimensions>;
+        std::cout << "\nDerived magnitude 1 has: " << dm1_num_dimensions << " dimensions\n";
+        std::cout << "Derived magnitude 2 has: " << dm2_num_dimensions << " dimensions\n";
+
+        lhs.print_dimensions();  // Just having fun for a while ;)
         return 2;
     }
 

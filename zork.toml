@@ -1,7 +1,7 @@
 [project]
 name = "Zero"
 authors = [ "Zero Day Code" ]
-#compilation_db = true
+compilation_db = true
 project_root = "zero"
 
 [compiler]
@@ -25,6 +25,7 @@ sys_modules = ['cstdio']
 base_ifcs_dir = "ifc"
 interfaces = [
     { file = 'commons/typedefs.cppm' },    
+    { file = 'text/str_manip.cppm' },
     { file = 'types/type_info.cppm' },
     { file = 'types/type_traits.cppm' },
     { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
