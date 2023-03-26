@@ -1,3 +1,5 @@
+//#pragma clang diagnostic ignored "-Wc++17-extensions"
+
 /**
  * @brief General purpose concepts
  */
@@ -6,6 +8,7 @@ export module concepts;
 
 import std;
 import typedefs;
+import type_traits;
 
 export namespace zero::concepts {
 
@@ -22,7 +25,7 @@ export namespace zero::concepts {
     };
 
     /**
-     * @brief Defines a constrait for container operations,
+     * @brief Defines a constraint for container operations,
      * where the requested index to read or retrieve should be
      * inside a range between [0, N]
      * 
@@ -33,4 +36,14 @@ export namespace zero::concepts {
     concept inside_bounds = requires () {
         requires idx < N;
     };
+
+    /**
+     * @brief Constrains the implementors to receive types that
+     * shares the same template, without taking in consideration
+     * the possible template arguments
+     * @tparam T
+     * @tparam U
+     */
+    template<class T, class U>
+    concept SameTemplate = zero::same_template_v<T, U>;
 }
