@@ -5,7 +5,7 @@ import :iterator_facade;
 export namespace zero::iterator {
     /**
      * @brief A generic implementation of an input iterator based on
-     * compile time polimorphism thanks to the {@link iterator_facade}
+     * compile time polymorphism thanks to the {@link iterator_facade}
      * using CRTP 
      * 
      * @details An input iterator implements the three minimum required

@@ -3,3 +3,7 @@ data.txt
 out/
 .idea/
 gcm.cache/
+CMakeLists.txt
+cmake-build-debug
+.clangd
+compile_commands.json

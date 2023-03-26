@@ -17,41 +17,29 @@ int main() {
     // run_output_iterator_examples();
 
     // Physics
-    // unit_simbol us;
-    // kg k;
+    auto q1 = quantity<Kilogram, double>{3000};
+//    auto q2 = quantity<Hectogram, int>{72};
+//    auto q3 = q1 + q2;
+//    auto q4 = q2 + q1;
 
-    // static_assert(1_kg == 1_kg);
+    auto velocity = quantity<MetersPerSecond> {300'000};
+    auto velocity2 = quantity<MetersPerSecond> {200'000};
+    std::cout << "Velocities addition [m/s + m/s]: " << velocity + velocity2 << "\n";
 
-    // base_unit kilogram { "Kilogram", 0, k };
+//    auto cp_ctr {q3};
+//    std::cout << "Masses addition [Kg + Hg]: " << q1 + q2 << std::endl;
+//    std::cout << "Masses addition [Hg + Kg]: " << q2 + q1 << std::endl;
+//    std::cout << "In variable: " << q3 << std::endl;
+//    std::cout << "Using the copy constructor: " << cp_ctr << std::endl;
 
-
-    // Creating quantities using different units within the gram family
-    // kilogram<double> kg{1.0};
-    // gram<double> g{1000.0};
-    // decagram<double> dag{0.1};
-    // hectogram<double> hg{0.01};
-    
-    // // Adding quantities with different units
-    // auto total = kg + g + dag + hg;
-    
-    // // Multiplying a quantity by a scalar
-    // auto double_total = total * 2.0;
-    
-    // // Outputting the total amount
-    // std::cout << double_total.amount << std::endl;
-
-    mass<double> m1{1.0};
-    mass<double> m2{2.0};
-    // auto m3 = m1 + m2;
-    // length<double> l1{1.0};
-    // length<double> l2{2.0};
-    // auto l3 = l1 + l2;
-    // zero::physics::time<double> t1{1.0};
-    // zero::physics::time<double> t2{2.0};
-    // auto t3 = t1 + t2;
-    // return 0;
+//    auto m1 = quantity<Meter>{5};
+//    auto m2 = quantity<Meter>{10};
+//    std::cout << "Adding length magnitudes: " << m1 + m2 << std::endl;
+//
+//    auto meters_per_second = quantity<MetersPerSecond>{100};
     return 0;
 }
+
 
 /*
 void run_containers_examples() {

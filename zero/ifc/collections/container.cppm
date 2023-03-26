@@ -19,7 +19,7 @@ export namespace zero {
              * @brief When N classes happen to derive from the same CRTP base class,
              * we likely get to undefined behaviour when the CRTP will try to use the
              * wrong class. That's why we are declaring the friend Child from the template
-             * parameter and a defaul-constructor. Since the constructor in the base class
+             * parameter and a default constructor. Since the constructor in the base class
              * is private, no one can access it except the friend classes.
              * And the only friend class is the template class
              */

@@ -1,11 +1,13 @@
 [project]
 name = "Zero"
 authors = [ "Zero Day Code" ]
+compilation_db = true
+project_root = "zero"
 
 [compiler]
 cpp_compiler = "clang"
 cpp_standard = "20"
-std_lib = "libc++"
+std_lib = "LIBCPP"
 
 [build]
 output_dir = "./out"
@@ -16,39 +18,46 @@ sources = [ "*.cpp" ]
 
 [tests]
 tests_executable_name = "zero_tests"
-sources = [ "./zero/tests/**/*.cpp" ]
+sources = [ "tests/**/*.cpp" ]
 
 [modules]
-base_ifcs_dir = "./zero/ifc"
+sys_modules = ['cstdio']
+base_ifcs_dir = "ifc"
 interfaces = [
-    # { file = 'commons/typedefs.cppm' },    
-    # { file = 'types/type_info.cppm' },
-    # { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
+    { file = 'commons/typedefs.cppm' },    
+    { file = 'text/str_manip.cppm' },
+    { file = 'types/type_info.cppm' },
+    { file = 'types/type_traits.cppm' },
+    { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
 
-    # ### Iterator library
-    # { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
-    # { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
-    # # Modern
-    # { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
-    # { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
-    # # Legacy
-    # { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
-    # { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
-    # { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
-    # # Root
-    # { file = 'iterators/iterator.cppm' },
+    ### Iterator library
+    { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+    { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
+    # Modern
+    { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
+    { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
+    # Legacy
+    { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
+    { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
+    { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
+    # Root
+    { file = 'iterators/iterator.cppm' },
 
-    # # The collections/containers library
-    # { file = 'collections/container.cppm', dependencies = ['type_info'] },
-    # { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
-    # { file = 'collections/collections.cppm', dependencies = ['array'] },
+    # The collections/containers librar
+    { file = 'collections/container.cppm', dependencies = ['type_info'] },
+    { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
+    { file = 'collections/collections.cppm', dependencies = ['array'] },
     
     # The physics library
-    { file = 'physics/quantities.cppm', partition = { module = 'physics' } },
+    { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics' } },
+    { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics' } },
+    { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics' } },
+    { file = 'physics/quantities/units.cppm', module_name = 'units', partition = { module = 'physics' } },
+    { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics' }, dependencies = ['physics-ratios', 'physics-units', 'physics-units.symbols'] },
     # Root
     { file = 'physics/physics.cppm' },
 
+    # The main interface of the project
     { file = 'zero.cppm' }
 ]
 
-gcc_sys_modules = ['cstdio']
