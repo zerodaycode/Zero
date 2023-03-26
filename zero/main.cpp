@@ -22,7 +22,9 @@ int main() {
     auto q3 = q1 + q2;
     auto q4 = q2 + q1;
 
-    auto velocity = quantity<MetersPerSecond> {300000};
+    auto velocity = quantity<MetersPerSecond> {300'000};
+    auto velocity2 = quantity<MetersPerSecond> {200'000};
+    std::cout << "Velocities addition [m/s + m/s]: " << velocity + velocity2 << std::endl;
 
     auto cp_ctr {q3};
     std::cout << "Masses addition [Kg + Hg]: " << q1 + q2 << std::endl;
@@ -37,6 +39,7 @@ int main() {
     auto meters_per_second = quantity<MetersPerSecond>{100};
     return 0;
 }
+
 
 /*
 void run_containers_examples() {
