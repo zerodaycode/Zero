@@ -23,9 +23,10 @@ export namespace zero::physics {
      * dimension of the template parameter itself, and avoid pollute the public API with
      * using declarations when they can be automatically set up from the base tag
      */
-    template <typename Dimension>
+    template <typename Dimension, short DimensionExponent = 1>
     struct base_dimension {
         using dimension = Dimension;
+        using dimension_exp = DimensionExponent;
     };
 
     struct mass : public base_dimension<mass> {};

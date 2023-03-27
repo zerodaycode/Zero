@@ -49,6 +49,12 @@ export namespace zero::physics {
     concept ValidAmountType = (std::is_integral_v<T> || std::is_floating_point_v<T>)
         && !std::is_same_v<T, char>;
 
+    /**
+     * A measurable property of a physical body, expressed in the terms of a scalar value with
+     * their units
+     * @tparam M a type that satisfies the {@link Magnitude} concept
+     * @tparam T a valid type for represent the scalar numeric value, constrained by the {@link ValidAmountType} concept
+     */
     template <Magnitude M, ValidAmountType T = double>
     struct quantity {
         T amount;
