@@ -18,8 +18,10 @@ import :units.symbols;
 
 export namespace zero::physics {
     template <typename T>
-    concept BaseMagnitude =
-        BaseUnit<T> && BaseDimension<typename T::dimension>;
+    concept BaseMagnitude = requires {
+        BaseUnit<T>;
+        BaseDimension<typename T::dimension>;
+    };
 
     template<typename T>
     struct is_base_magnitude : std::false_type {};
@@ -30,7 +32,8 @@ export namespace zero::physics {
 
     template <typename T>
     concept DerivedMagnitude = requires {
-        DerivedUnit<T> && DerivedDimension<typename T::self, typename T::dimensions>;
+        DerivedUnit<T>;
+        DerivedDimension<typename T::self, typename T::dimensions>;
     };
 
     template <typename T>
@@ -119,12 +122,24 @@ export namespace zero::physics {
     constexpr auto operator+(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
         using dm1_dimensions = typename DM1::derived_dimension::dimensions;
         using dm2_dimensions = typename DM2::derived_dimension::dimensions;
+
+        using dm1_ratios = typename DM1::units;
+
         constexpr size_t dm1_num_dimensions = std::tuple_size_v<dm1_dimensions>;
         constexpr size_t dm2_num_dimensions = std::tuple_size_v<dm2_dimensions>;
         std::cout << "\nDerived magnitude 1 has: " << dm1_num_dimensions << " dimensions\n";
         std::cout << "Derived magnitude 2 has: " << dm2_num_dimensions << " dimensions\n";
 
         lhs.print_dimensions();  // Just having fun for a while ;)
+
+//        if constexpr (M1::ratio::value > M2::ratio::value)
+//            return quantity<M1, T1>(
+//                (lhs.amount * m1_ratio_v + rhs.amount * m2_ratio_v) / m1_ratio_v
+//            );
+//        else
+//            return quantity<M2, T2>(
+//                (lhs.amount * m1_ratio_v + rhs.amount * m2_ratio_v) / m1_ratio_v
+//            );
         return 2;
     }
 

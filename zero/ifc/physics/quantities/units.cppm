@@ -29,9 +29,9 @@ export namespace zero::physics {
         typename T::symbol;
     };
 
-    struct Kilogram: public mass, public base_unit<Kilo, kg> {};
-    struct Hectogram: public mass, public base_unit<Hecto, hg> {};
-    struct Meter: public length, public base_unit<Root, m> {};
+    struct Kilogram: public mass<1>, public base_unit<Kilo, kg> {};
+    struct Hectogram: public mass<1>, public base_unit<Hecto, hg> {};
+    struct Meter: public length<1>, public base_unit<Root, m> {};
 
 
     /* Derived units */
@@ -57,7 +57,7 @@ export namespace zero::physics {
         public speed,
         public derived_unit<
             base_unit<Kilo, km>,
-            base_unit<Root, h> // Pff primo
+            base_unit<Root, h>
         >
     {};
 }
