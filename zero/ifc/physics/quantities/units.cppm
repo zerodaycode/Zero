@@ -48,7 +48,7 @@ export namespace zero::physics {
     struct MetersPerSecond :
         public speed,
         public derived_unit<
-            base_unit<Root, m>,
+            base_unit<Kilo, m>,
             base_unit<Root, s>
         >
     {};

@@ -123,24 +123,13 @@ export namespace zero::physics {
         using dm1_dimensions = typename DM1::derived_dimension::dimensions;
         using dm2_dimensions = typename DM2::derived_dimension::dimensions;
 
-        using dm1_ratios = typename DM1::units;
+        constexpr size_t total_base_units = std::tuple_size_v<typename DM1::units>;
+        double dm1_ratios_product = 1.0;
+        for (int i = 0; i < total_base_units; i++)
+            dm1_ratios_product = std::tuple_element_t<0, typename DM1::units>::ratio::value;
 
-        constexpr size_t dm1_num_dimensions = std::tuple_size_v<dm1_dimensions>;
-        constexpr size_t dm2_num_dimensions = std::tuple_size_v<dm2_dimensions>;
-        std::cout << "\nDerived magnitude 1 has: " << dm1_num_dimensions << " dimensions\n";
-        std::cout << "Derived magnitude 2 has: " << dm2_num_dimensions << " dimensions\n";
-
-        lhs.print_dimensions();  // Just having fun for a while ;)
-
-//        if constexpr (M1::ratio::value > M2::ratio::value)
-//            return quantity<M1, T1>(
-//                (lhs.amount * m1_ratio_v + rhs.amount * m2_ratio_v) / m1_ratio_v
-//            );
-//        else
-//            return quantity<M2, T2>(
-//                (lhs.amount * m1_ratio_v + rhs.amount * m2_ratio_v) / m1_ratio_v
-//            );
-        return 2;
+        std::cout << "Product ratios: " << dm1_ratios_product << "\n";
+        return 0;
     }
 
 

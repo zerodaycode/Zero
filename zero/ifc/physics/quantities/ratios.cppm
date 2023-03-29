@@ -7,7 +7,8 @@ export module physics:ratios;
 import std;
 
 /**
- * @brief Defines a Ratio in terms of numerical values
+ * @brief Defines a Ratio in terms of the power of the numerical values
+ * of the given Base and the given Exponent
  */
 template <typename T>
 concept RatioV = (std::is_integral_v<T> || std::is_floating_point_v<T>)
