@@ -7,3 +7,4 @@ CMakeLists.txt
 cmake-build-debug
 .clangd
 compile_commands.json
+notes.txt

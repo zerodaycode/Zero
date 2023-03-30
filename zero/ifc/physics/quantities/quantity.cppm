@@ -33,7 +33,7 @@ export namespace zero::physics {
     template <typename T>
     concept DerivedMagnitude = requires {
         DerivedUnit<T>;
-        DerivedDimension<typename T::self, typename T::dimensions>;
+        DerivedDimension<typename T::self>;
     };
 
     template <typename T>
@@ -123,7 +123,9 @@ export namespace zero::physics {
         using dm1_dimensions = typename DM1::derived_dimension::dimensions;
         using dm2_dimensions = typename DM2::derived_dimension::dimensions;
 
-        std::cout << "\nRatios product: " << DM1::ratios_product << "\n"; // Prints 10000 for MetersPerSecond.
+        constexpr auto dm1_ratios_c = DM1::ratios_product;
+
+        std::cout << "\nRatios product: " << dm1_ratios_c << "\n"; // Prints 10000 for MetersPerSecond.
 
         return 0;
     }

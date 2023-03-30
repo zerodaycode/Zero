@@ -50,11 +50,19 @@ export namespace zero::physics {
     };
 
     /* Derived units */
-    template <BaseUnit... baseUnits>
+    template <typename DerivedDim, BaseUnit... BaseUnits>
+        requires (DerivedDimension<DerivedDim>)
     struct derived_unit {
-        using units = std::tuple<baseUnits...>;
+        using units = std::tuple<BaseUnits...>;
         using ratios = typename ratios_detail<units>::ratios;
         static constexpr auto ratios_product = ratios_product_calculator<ratios>::value;
+
+//        static constexpr double dimensionality = [] {
+//            double product = 1;
+//            std::size_t i = 0;
+//            ((product *= std::pow(std::get<i++>(typename DerivedDim::dimensions{})::dimension_exp * BaseUnits::ratio::value, 1.0)), ...);
+//            return product;
+//        }();
     };
 
     template <typename T>
@@ -67,6 +75,7 @@ export namespace zero::physics {
     struct MetersPerSecond :
         public speed,
         public derived_unit<
+            speed,
             base_unit<Kilo, m>,
             base_unit<Hecto, s>
         >
@@ -75,6 +84,7 @@ export namespace zero::physics {
     struct KilometersPerHour :
         public speed,
         public derived_unit<
+            speed,
             base_unit<Kilo, km>,
             base_unit<Root, h>
         >

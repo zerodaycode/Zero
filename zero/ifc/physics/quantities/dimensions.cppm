@@ -49,10 +49,14 @@ export namespace zero::physics {
         using dimensions = std::tuple<Dimensions...>;
     };
 
-    template<typename T, typename... Bs>
+    template <typename T, std::size_t... Is>
+    constexpr bool is_derived_dimension_impl() {
+        return (std::is_base_of_v<derived_dimension<T, std::tuple_element_t<Is, typename T::dimensions>> && ...>);
+    }
+
+    template<typename T>
     concept DerivedDimension = requires {
-        requires (BaseDimension<Bs>, ...);
-        requires (std::is_base_of_v<derived_dimension<T, Bs...>, T>);
+        is_derived_dimension_impl<T>();
         typename T::self;
     };
 
@@ -61,10 +65,4 @@ export namespace zero::physics {
 
 static_assert(zero::physics::BaseDimension<zero::physics::mass<1>>);
 static_assert(zero::physics::BaseDimension<zero::physics::length<1>>);
-static_assert(
-    zero::physics::DerivedDimension<
-        zero::physics::speed,
-        zero::physics::length<1>,
-        zero::physics::time< -1>
-    >
-);
+static_assert(zero::physics::DerivedDimension<zero::physics::speed>);
