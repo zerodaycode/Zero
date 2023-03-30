@@ -10,7 +10,7 @@ import std;
 
 namespace iterator::__detail {
     /**
-     * @brief implementation of the `arrow_proxy` idiom, to safetly play with temporaries.
+     * @brief implementation of the `arrow_proxy` idiom, to safely play with temporaries.
      * Basically, this proxy class is needed to implement the `operator->` for 
      * iterators which can't return pointers
      */

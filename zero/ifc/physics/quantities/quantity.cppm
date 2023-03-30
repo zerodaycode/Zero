@@ -123,12 +123,8 @@ export namespace zero::physics {
         using dm1_dimensions = typename DM1::derived_dimension::dimensions;
         using dm2_dimensions = typename DM2::derived_dimension::dimensions;
 
-        constexpr size_t total_base_units = std::tuple_size_v<typename DM1::units>;
-        double dm1_ratios_product = 1.0;
-        for (int i = 0; i < total_base_units; i++)
-            dm1_ratios_product = std::tuple_element_t<0, typename DM1::units>::ratio::value;
+        std::cout << "\nRatios product: " << DM1::ratios_product << "\n"; // Prints 10000 for MetersPerSecond.
 
-        std::cout << "Product ratios: " << dm1_ratios_product << "\n";
         return 0;
     }
 
