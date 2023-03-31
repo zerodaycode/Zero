@@ -78,11 +78,9 @@ export namespace zero::physics {
         void print_dimensions() const requires DerivedMagnitude<M> {
             std::string dimension_names;
             std::apply([&](auto... dim) {
-                (
-                    (dimension_names +=
-                        zero::split_str(zero::types::type_name<decltype(dim)>(), "::").back() + ", "
-                    ), ...
-                );
+                ((dimension_names +=
+                    zero::split_str(zero::types::type_name<decltype(dim)>(), "::").back() + ", "
+                ), ...);
             }, typename M::derived_dimension::dimensions{});
             auto magnitude_str_t = zero::split_str(zero::types::type_name<M>(), "::").back();
             std::cout << magnitude_str_t << " has dimensions of: ["
@@ -120,7 +118,7 @@ export namespace zero::physics {
     template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
 //        requires SameDimensions // <-- this is a TODO <M1, M2>
     [[nodiscard]]
-    constexpr auto operator+(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
+    consteval auto operator+(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
         using dm1_dimensions = typename DM1::derived_dimension::dimensions;
         using dm2_dimensions = typename DM2::derived_dimension::dimensions;
 
@@ -217,7 +215,7 @@ export namespace zero::physics {
 static_assert(zero::physics::Symbol<zero::physics::kg>);
 
 /* Testing our base units */
-static_assert(zero::physics::Magnitude<zero::physics::kilogram>);
+static_assert(zero::physics::Magnitude<zero::physics::Kilogram>);
 
 /* Testing our derived units */
-//static_assert(zero::physics::DerivedUnit<zero::physics::MetersPerSecond>);
+static_assert(zero::physics::DerivedUnit<zero::physics::MetersPerSecond>);

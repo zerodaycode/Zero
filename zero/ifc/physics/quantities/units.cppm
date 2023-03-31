@@ -32,11 +32,11 @@ export namespace zero::physics {
         typename T::symbol;
     };
 
-    struct kilogram: public mass<1>, public base_unit<Kilo, kg> {};
-    struct hectogram: public mass<1>, public base_unit<Hecto, hg> {};
-    struct meter: public length<1>, public base_unit<Root, m> {};
-    struct second: public time<1>, public base_unit<Second, s> {};
-    struct hour: public time<1>, public base_unit<Hour, s> {};
+    struct Kilogram: public mass<1>, public base_unit<kilo, kg> {};
+    struct Hectogram: public mass<1>, public base_unit<hecto, hg> {};
+    struct Meter: public length<1>, public base_unit<root, m> {};
+    struct Second: public time<1>, public base_unit<second, s> {};
+    struct Hour: public time<1>, public base_unit<hour, h> {};
 
     /* Derived units */
     template <typename DerivedDim, BaseUnit... BaseUnits>
@@ -53,16 +53,15 @@ export namespace zero::physics {
     template <typename T>
     concept DerivedUnit = requires {
         typename T::units;
-        typename T::ratios;
-        T::ratios_product;
+        T::dimensionality;
     } && std::is_base_of_v<typename T::derived_dimension, T>;
 
     struct MetersPerSecond :
         public speed,
         public derived_unit<
             speed,
-            base_unit<Root, m>,
-            base_unit<Second, s>
+            base_unit<root, m>,
+            base_unit<second, s>
         >
     {};
 
@@ -70,8 +69,8 @@ export namespace zero::physics {
         public speed,
         public derived_unit<
             speed,
-            base_unit<Kilo, km>,
-            base_unit<Hour, h>
+            base_unit<kilo, km>,
+            base_unit<hour, h>
         >
     {};
 }
