@@ -23,7 +23,7 @@ int main() {
 //    auto q4 = q2 + q1;
 
     auto velocity = quantity<MetersPerSecond> {300'000};
-    auto velocity2 = quantity<MetersPerSecond> {200'000};
+    auto velocity2 = quantity<KilometersPerHour> {200};
     std::cout << "Velocities addition [m/s + m/s]: " << velocity + velocity2 << "\n";
 
 

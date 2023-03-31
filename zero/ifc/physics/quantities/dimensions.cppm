@@ -50,13 +50,13 @@ export namespace zero::physics {
     };
 
     template <typename T, std::size_t... Is>
-    constexpr bool is_derived_dimension_impl() {
+    constexpr bool is_derived_dimension() {
         return (std::is_base_of_v<derived_dimension<T, std::tuple_element_t<Is, typename T::dimensions>> && ...>);
     }
 
     template<typename T>
     concept DerivedDimension = requires {
-        is_derived_dimension_impl<T>();
+        is_derived_dimension<T>();
         typename T::self;
     };
 

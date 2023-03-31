@@ -11,6 +11,9 @@ import concepts;
 import :ratios;
 import :dimensions;
 import :units.symbols;
+import :units.detail;
+
+using namespace units::__detail;
 
 export namespace zero::physics {
     /* Base units */
@@ -33,36 +36,21 @@ export namespace zero::physics {
     struct Hectogram: public mass<1>, public base_unit<Hecto, hg> {};
     struct Meter: public length<1>, public base_unit<Root, m> {};
 
-    template<typename T>
-    struct ratios_detail;
 
-    template<BaseUnit... BaseUnits>
-    struct ratios_detail<std::tuple<BaseUnits...>> {
-        using ratios = std::tuple<typename BaseUnits::ratio...>;
-    };
-
-    template <typename T>
-    struct ratios_product_calculator;
-
-    template<Ratio... BaseUnitsRatios>
-    struct ratios_product_calculator<std::tuple<BaseUnitsRatios...>> {
-        static constexpr auto value = (1 * ... * BaseUnitsRatios::value);
-    };
 
     /* Derived units */
     template <typename DerivedDim, BaseUnit... BaseUnits>
         requires (DerivedDimension<DerivedDim>)
     struct derived_unit {
         using units = std::tuple<BaseUnits...>;
-        using ratios = typename ratios_detail<units>::ratios;
-        static constexpr auto ratios_product = ratios_product_calculator<ratios>::value;
 
-//        static constexpr double dimensionality = [] {
-//            double product = 1;
-//            std::size_t i = 0;
-//            ((product *= std::pow(std::get<i++>(typename DerivedDim::dimensions{})::dimension_exp * BaseUnits::ratio::value, 1.0)), ...);
-//            return product;
-//        }();
+        static constexpr double dimensionality = [] {
+            std::size_t i = 0;
+            return (1 * ... * [&i] {
+                auto bd = dimensions_exponents<typename DerivedDim::dimensions>::value[i++];
+                return power(BaseUnits::ratio::value, bd);
+            } ());
+        } ();
     };
 
     template <typename T>

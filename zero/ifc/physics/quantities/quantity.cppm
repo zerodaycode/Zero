@@ -15,6 +15,7 @@ import :ratios;
 import :dimensions;
 import :units;
 import :units.symbols;
+import :units.detail;
 
 export namespace zero::physics {
     template <typename T>
@@ -123,9 +124,11 @@ export namespace zero::physics {
         using dm1_dimensions = typename DM1::derived_dimension::dimensions;
         using dm2_dimensions = typename DM2::derived_dimension::dimensions;
 
-        constexpr auto dm1_ratios_c = DM1::ratios_product;
+        constexpr auto dm1_dimensionality = DM1::dimensionality;
+        constexpr auto dm2_dimensionality = DM2::dimensionality;
 
-        std::cout << "\nRatios product: " << dm1_ratios_c << "\n"; // Prints 10000 for MetersPerSecond.
+        std::cout << "\nDM1 dimensionality: " << dm1_dimensionality << "\n";
+        std::cout << "\nDM2 dimensionality: " << dm2_dimensionality << "\n";
 
         return 0;
     }
