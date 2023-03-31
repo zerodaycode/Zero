@@ -25,7 +25,7 @@ struct ratio {
 };
 
 [[nodiscard]]
-consteval double consteval_power(const double base, const double exponent) {
+inline consteval double consteval_power(const double base, const double exponent) {
     return power(base, exponent);
 }
 
@@ -62,6 +62,9 @@ export namespace zero::physics {
     using Zetta = ratio<short, 10, 21>;
     using Yotta = ratio<short, 10, 24>;
 
+    using Second = ratio<short, 60, 0>;
+    using Hour = ratio<short, 60, 2>;
+
     template <typename T>
     concept Ratio = 
         std::is_same_v<T, Yocto> ||
@@ -84,5 +87,7 @@ export namespace zero::physics {
         std::is_same_v<T, Peta> ||
         std::is_same_v<T, Exa> ||
         std::is_same_v<T, Zetta> ||
+        std::is_same_v<T, Second> ||  // provisional
+        std::is_same_v<T, Hour> ||  // Provisional
         std::is_same_v<T, Yotta>;
 }

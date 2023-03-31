@@ -17,14 +17,19 @@ int main() {
     // run_output_iterator_examples();
 
     // Physics
-    auto q1 = quantity<Kilogram, double>{3000};
+    auto q1 = quantity<kilogram, double>{3000};
 //    auto q2 = quantity<Hectogram, int>{72};
 //    auto q3 = q1 + q2;
 //    auto q4 = q2 + q1;
 
-    auto velocity = quantity<MetersPerSecond> {300'000};
-    auto velocity2 = quantity<KilometersPerHour> {200};
-    std::cout << "Velocities addition [m/s + m/s]: " << velocity + velocity2 << "\n";
+    std::cout.precision(15);
+
+    constexpr auto velocity = quantity<MetersPerSecond> {300'000.};
+    constexpr auto velocity2 = quantity<MetersPerSecond> {300'000.};
+    constexpr auto velocity3 = quantity<KilometersPerHour> {200.};
+    auto v_addition = velocity + velocity2;
+    std::cout << "Velocities addition [m/s + m/s]: " << v_addition << "\n";
+    std::cout << "Velocities addition 2 [m/s + m/s]: " << velocity2 +  velocity3 << "\n";
 
 
 //    auto m1 = quantity<Meter>{5};

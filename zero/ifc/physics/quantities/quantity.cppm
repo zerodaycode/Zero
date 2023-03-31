@@ -124,13 +124,10 @@ export namespace zero::physics {
         using dm1_dimensions = typename DM1::derived_dimension::dimensions;
         using dm2_dimensions = typename DM2::derived_dimension::dimensions;
 
-        constexpr auto dm1_dimensionality = DM1::dimensionality;
-        constexpr auto dm2_dimensionality = DM2::dimensionality;
+        constexpr double dm1_dimensionality = DM1::dimensionality;
+        constexpr double dm2_dimensionality = DM2::dimensionality;
 
-        std::cout << "\nDM1 dimensionality: " << dm1_dimensionality << "\n";
-        std::cout << "\nDM2 dimensionality: " << dm2_dimensionality << "\n";
-
-        return 0;
+        return (lhs.amount * dm1_dimensionality) + (rhs.amount * dm2_dimensionality);
     }
 
 
@@ -220,7 +217,7 @@ export namespace zero::physics {
 static_assert(zero::physics::Symbol<zero::physics::kg>);
 
 /* Testing our base units */
-static_assert(zero::physics::Magnitude<zero::physics::Kilogram>);
+static_assert(zero::physics::Magnitude<zero::physics::kilogram>);
 
 /* Testing our derived units */
 //static_assert(zero::physics::DerivedUnit<zero::physics::MetersPerSecond>);

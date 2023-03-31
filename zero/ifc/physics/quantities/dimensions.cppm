@@ -47,6 +47,7 @@ export namespace zero::physics {
     struct derived_dimension {
         using self = Derived;
         using dimensions = std::tuple<Dimensions...>;
+        static constexpr auto total_dimensions = std::tuple_size<dimensions>::value;
     };
 
     template <typename T, std::size_t... Is>

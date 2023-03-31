@@ -32,11 +32,11 @@ export namespace zero::physics {
         typename T::symbol;
     };
 
-    struct Kilogram: public mass<1>, public base_unit<Kilo, kg> {};
-    struct Hectogram: public mass<1>, public base_unit<Hecto, hg> {};
-    struct Meter: public length<1>, public base_unit<Root, m> {};
-
-
+    struct kilogram: public mass<1>, public base_unit<Kilo, kg> {};
+    struct hectogram: public mass<1>, public base_unit<Hecto, hg> {};
+    struct meter: public length<1>, public base_unit<Root, m> {};
+    struct second: public time<1>, public base_unit<Second, s> {};
+    struct hour: public time<1>, public base_unit<Hour, s> {};
 
     /* Derived units */
     template <typename DerivedDim, BaseUnit... BaseUnits>
@@ -44,13 +44,10 @@ export namespace zero::physics {
     struct derived_unit {
         using units = std::tuple<BaseUnits...>;
 
-        static constexpr double dimensionality = [] {
-            std::size_t i = 0;
-            return (1 * ... * [&i] {
-                auto bd = dimensions_exponents<typename DerivedDim::dimensions>::value[i++];
-                return power(BaseUnits::ratio::value, bd);
-            } ());
-        } ();
+        static constexpr double dimensionality = []<std::size_t... Is>(std::index_sequence<Is...>) {
+            using dm_exp = dimensions_exponents<typename DerivedDim::dimensions>;
+            return (1.0 * ... * consteval_power(BaseUnits::ratio::value, dm_exp::value[Is]));
+        } (std::make_index_sequence<DerivedDim::total_dimensions>{});
     };
 
     template <typename T>
@@ -64,8 +61,8 @@ export namespace zero::physics {
         public speed,
         public derived_unit<
             speed,
-            base_unit<Kilo, m>,
-            base_unit<Hecto, s>
+            base_unit<Root, m>,
+            base_unit<Second, s>
         >
     {};
 
@@ -74,7 +71,7 @@ export namespace zero::physics {
         public derived_unit<
             speed,
             base_unit<Kilo, km>,
-            base_unit<Root, h>
+            base_unit<Hour, h>
         >
     {};
 }
