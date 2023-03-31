@@ -49,6 +49,15 @@ export namespace zero::physics {
         >;
     };
 
+    template <typename T, typename R>
+    concept SameDimensions = requires {
+        requires Magnitude<T> && Magnitude<R>;
+        requires std::is_same_v<
+            typename T::derived_dimension,
+            typename R::derived_dimension
+        >;
+    };
+
     template <typename T>
     concept ValidAmountType = (std::is_integral_v<T> || std::is_floating_point_v<T>)
         && !std::is_same_v<T, char>;
@@ -116,7 +125,7 @@ export namespace zero::physics {
      * @brief same as the operator+() overload for the {@link BaseMagnitude}, but for {@link DerivedMagnitude}
      */
     template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
-//        requires SameDimensions // <-- this is a TODO <M1, M2>
+        requires SameDimensions<DM1, DM2>
     [[nodiscard]]
     consteval auto operator+(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
         using dm1_dimensions = typename DM1::derived_dimension::dimensions;

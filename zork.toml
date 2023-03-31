@@ -7,7 +7,7 @@ project_root = "zero"
 [compiler]
 cpp_compiler = "clang"
 cpp_standard = "20"
-std_lib = "STDLIBCPP"
+std_lib = "LIBCPP"
 
 [build]
 output_dir = "./out"
