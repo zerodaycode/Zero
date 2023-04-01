@@ -23,42 +23,43 @@ export namespace zero::physics {
      * dimension of the template parameter itself, and avoid pollute the public API with
      * using declarations when they can be automatically set up from the base tag
      */
-    template <typename Dimension>
+    template <typename Dimension, short DimensionExponent = 1>
     struct base_dimension {
         using dimension = Dimension;
+        static constexpr short dimension_exp = DimensionExponent;
     };
 
-    struct mass : public base_dimension<mass> {};
-    struct length : public base_dimension<length> {};
-    struct time : public base_dimension<time> {};
+    template <short DimensionExponent = 1>
+    struct mass : public base_dimension<mass<DimensionExponent>, DimensionExponent> {};
+
+    template <short DimensionExponent = 1>
+    struct length : public base_dimension<length<DimensionExponent>, DimensionExponent> {};
+
+    template <short DimensionExponent = 1>
+    struct time : public base_dimension<time<DimensionExponent>, DimensionExponent> {};
 
     template<typename T>
-    concept BaseDimension = std::is_base_of_v<base_dimension<T>, T> &&
-        requires { typename T::dimension; };
+    concept BaseDimension = std::is_base_of_v<base_dimension<T, T::dimension_exp>, T> &&
+        requires { typename T::dimension; T::dimension_exp; };
 
     /* Compound dimensions */
-    template<typename Derived, BaseDimension... Dimensions>
+    template<typename Derived, typename... Dimensions>
     struct derived_dimension {
         using self = Derived;
         using dimensions = std::tuple<Dimensions...>;
+        static constexpr auto total_dimensions = std::tuple_size<dimensions>::value;
     };
 
-    template<typename T, typename... Bs>
+    template<typename T, std::size_t... Is>
     concept DerivedDimension = requires {
-        requires (BaseDimension<Bs>, ...);
-        requires (std::is_base_of_v<derived_dimension<T, Bs...>, T>);
         typename T::self;
-    };
+        typename T::dimensions;
+        T::total_dimensions;
+    } && (std::is_base_of_v<derived_dimension<T, std::tuple_element_t<Is, typename T::dimensions>>, T> && ...);
 
-    struct speed : public derived_dimension<speed, time, length> {};
+    struct speed : public derived_dimension<speed, length<>, time< -1 >> {};
 }
 
-static_assert(zero::physics::BaseDimension<zero::physics::mass>);
-static_assert(zero::physics::BaseDimension<zero::physics::length>);
-static_assert(
-    zero::physics::DerivedDimension<
-        zero::physics::speed,
-        zero::physics::time,
-        zero::physics::length
-    >
-);
+static_assert(zero::physics::BaseDimension<zero::physics::mass<1>>);
+static_assert(zero::physics::BaseDimension<zero::physics::length<1>>);
+static_assert(zero::physics::DerivedDimension<zero::physics::speed>);

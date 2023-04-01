@@ -7,10 +7,9 @@ module iterator:detail;
 
 import std;
 
-
 namespace iterator::__detail {
     /**
-     * @brief implementation of the `arrow_proxy` idiom, to safetly play with temporaries.
+     * @brief implementation of the `arrow_proxy` idiom, to safely play with temporaries.
      * Basically, this proxy class is needed to implement the `operator->` for 
      * iterators which can't return pointers
      */
@@ -48,7 +47,7 @@ namespace iterator::__detail {
     template <typename T>
     concept impls_distance_to = requires (const T it) { it.distance_to(it); };
     
-    // Partial template speciallizations to allow us to deduce the
+    // Partial template specializations to allow us to deduce the
     // iterator mandatory `difference_type`
     template <typename>
     struct infer_difference_type { using type = std::ptrdiff_t; };

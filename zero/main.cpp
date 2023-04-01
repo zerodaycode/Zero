@@ -1,64 +1,59 @@
 import std;
-// import zero;
-// import collections;
-// import iterator;
-// import container;
-// import type_info;
+import zero;
+import collections;
+import iterator;
+import container;
+import type_info;
 import physics;
 
 using namespace zero::physics;
 
 // Forward decls
-// void run_containers_examples();
-// void run_output_iterator_examples();
+void run_containers_examples();
+void run_output_iterator_examples();
 
 int main() {
     // run_containers_examples();
     // run_output_iterator_examples();
 
+    std::cout.precision(15);
+
     // Physics
     auto q1 = quantity<Kilogram, double>{3000};
-//    auto q2 = quantity<Hectogram, int>{72};
-//    auto q3 = q1 + q2;
-//    auto q4 = q2 + q1;
+    auto q2 = quantity<Hectogram, int>{72};
+    std::cout << "Masses addition [m/s + m/s]: " << q1 + q2 << "\n";
 
-    auto velocity = quantity<MetersPerSecond> {300'000};
-    auto velocity2 = quantity<MetersPerSecond> {200'000};
-    std::cout << "Velocities addition [m/s + m/s]: " << velocity + velocity2 << "\n";
+    constexpr auto velocity = quantity<MetersPerSecond> {300'000.};
+    constexpr auto velocity2 = quantity<KilometersPerHour> {200.};
 
-//    auto cp_ctr {q3};
-//    std::cout << "Masses addition [Kg + Hg]: " << q1 + q2 << std::endl;
-//    std::cout << "Masses addition [Hg + Kg]: " << q2 + q1 << std::endl;
-//    std::cout << "In variable: " << q3 << std::endl;
-//    std::cout << "Using the copy constructor: " << cp_ctr << std::endl;
+    std::cout << "Velocities addition  [m/s + km/h]: " << velocity +  velocity2 << "\n";
+    std::cout << "Velocities subtraction  [m/s - km/h]: " << velocity - velocity2 << "\n";
+    std::cout << "Velocities multiplication  [m/s * km/h]: " << velocity * velocity2 << "\n";
+    std::cout << "Velocities division  [m/s / km/h]: " << velocity / velocity2 << "\n";
 
-//    auto m1 = quantity<Meter>{5};
-//    auto m2 = quantity<Meter>{10};
-//    std::cout << "Adding length magnitudes: " << m1 + m2 << std::endl;
-//
-//    auto meters_per_second = quantity<MetersPerSecond>{100};
     return 0;
 }
 
 
-/*
 void run_containers_examples() {
+    using namespace zero;
+
     constexpr auto a = collections::Array<long, 5>{1L, 2L, 3L, 4L, 5L};
     const Container<collections::Array<long, 5>>& b = collections::Array<long, 5>{1L, 2L, 3L, 4L, 5L};
     Container<collections::Array<long, 5>>* c = new collections::Array<long, 5>{1L, 2L, 3L, 4L, 5L};
 
     std::cout << "Iterating over the values of a constexpr zero::collection!" << std::endl;
-    std::cout << "decltype a: " << zero::types::type_name<decltype(a)>() << std::endl;
+    std::cout << "decltype a: " << types::type_name<decltype(a)>() << std::endl;
     for (long value : a)
         std::cout << " - [constexpr] Value: " << value << std::endl;
 
     std::cout << "Iterating over the values of a zero::container!" << std::endl;
-    std::cout << "decltype b: " << zero::types::type_name<decltype(b)>() << std::endl;
+    std::cout << "decltype b: " << types::type_name<decltype(b)>() << std::endl;
     for (long value : b)
         std::cout << " - [const Container<T>&] Value: " << value << std::endl;
 
     std::cout << "Iterating over the values of a zero::container dynamically allocated!" << std::endl;
-    std::cout << "decltype c: " << zero::types::type_name<decltype(c)>() << std::endl;
+    std::cout << "decltype c: " << types::type_name<decltype(c)>() << std::endl;
     for (long value : *c)
         std::cout << " - [const Container<T>*] Value: " << value << std::endl;
 }
@@ -119,4 +114,3 @@ void run_output_iterator_examples() {
 
     std::cout << '\n';
 }
-*/

@@ -49,6 +49,8 @@ interfaces = [
     { file = 'collections/collections.cppm', dependencies = ['array'] },
     
     # The physics library
+    { file = 'physics/quantities/internal/units_detail.cpp', partition = { module = 'physics', partition_name = 'units.detail' } },
+
     { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics' } },
     { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics' } },
     { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics' } },

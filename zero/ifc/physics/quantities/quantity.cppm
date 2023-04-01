@@ -15,11 +15,14 @@ import :ratios;
 import :dimensions;
 import :units;
 import :units.symbols;
+import :units.detail;
 
 export namespace zero::physics {
     template <typename T>
-    concept BaseMagnitude =
-        BaseUnit<T> && BaseDimension<typename T::dimension>;
+    concept BaseMagnitude = requires {
+        BaseUnit<T>;
+        BaseDimension<typename T::dimension>;
+    };
 
     template<typename T>
     struct is_base_magnitude : std::false_type {};
@@ -30,7 +33,8 @@ export namespace zero::physics {
 
     template <typename T>
     concept DerivedMagnitude = requires {
-        DerivedUnit<T> && DerivedDimension<typename T::self, typename T::dimensions>;
+        DerivedUnit<T>;
+        DerivedDimension<typename T::derived_dimension>;
     };
 
     template <typename T>
@@ -38,10 +42,19 @@ export namespace zero::physics {
 
     template <typename T, typename R>
     concept SameDimension = requires {
-        requires Magnitude<T> && Magnitude<R>;
+        requires BaseMagnitude<T> && BaseMagnitude<R>;
         requires std::is_same_v<
             typename T::dimension,
             typename R::dimension
+        >;
+    };
+
+    template <typename T, typename R>
+    concept SameDimensions = requires {
+        requires DerivedMagnitude<T> && DerivedMagnitude<R>;
+        requires std::is_same_v<
+            typename T::derived_dimension,
+            typename R::derived_dimension
         >;
     };
 
@@ -49,6 +62,12 @@ export namespace zero::physics {
     concept ValidAmountType = (std::is_integral_v<T> || std::is_floating_point_v<T>)
         && !std::is_same_v<T, char>;
 
+    /**
+     * A measurable property of a physical body, expressed in the terms of a scalar value with
+     * their units
+     * @tparam M a type that satisfies the {@link Magnitude} concept
+     * @tparam T a valid type for represent the scalar numeric value, constrained by the {@link ValidAmountType} concept
+     */
     template <Magnitude M, ValidAmountType T = double>
     struct quantity {
         T amount;
@@ -68,11 +87,9 @@ export namespace zero::physics {
         void print_dimensions() const requires DerivedMagnitude<M> {
             std::string dimension_names;
             std::apply([&](auto... dim) {
-                (
-                    (dimension_names +=
-                        zero::split_str(zero::types::type_name<decltype(dim)>(), "::").back() + ", "
-                    ), ...
-                );
+                ((dimension_names +=
+                    zero::split_str(zero::types::type_name<decltype(dim)>(), "::").back() + ", "
+                ), ...);
             }, typename M::derived_dimension::dimensions{});
             auto magnitude_str_t = zero::split_str(zero::types::type_name<M>(), "::").back();
             std::cout << magnitude_str_t << " has dimensions of: ["
@@ -108,20 +125,17 @@ export namespace zero::physics {
      * @brief same as the operator+() overload for the {@link BaseMagnitude}, but for {@link DerivedMagnitude}
      */
     template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
-//        requires SameDimensions // <-- this is a TODO <M1, M2>
+        requires SameDimensions<DM1, DM2>
     [[nodiscard]]
-    constexpr auto operator+(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
-        using dm1_dimensions = typename DM1::derived_dimension::dimensions;
-        using dm2_dimensions = typename DM2::derived_dimension::dimensions;
-        constexpr size_t dm1_num_dimensions = std::tuple_size_v<dm1_dimensions>;
-        constexpr size_t dm2_num_dimensions = std::tuple_size_v<dm2_dimensions>;
-        std::cout << "\nDerived magnitude 1 has: " << dm1_num_dimensions << " dimensions\n";
-        std::cout << "Derived magnitude 2 has: " << dm2_num_dimensions << " dimensions\n";
+    consteval auto operator+(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
+        constexpr double dm1_dimensionality = DM1::dimensionality;
+        constexpr double dm2_dimensionality = DM2::dimensionality;
 
-        lhs.print_dimensions();  // Just having fun for a while ;)
-        return 2;
+        if constexpr (dm1_dimensionality > dm2_dimensionality)
+            return quantity<DM1, T1>((lhs.amount * dm1_dimensionality) + (rhs.amount * dm2_dimensionality));
+        else
+            return quantity<DM2, T2>((lhs.amount * dm1_dimensionality) + (rhs.amount * dm2_dimensionality));
     }
-
 
     /**
      * @brief Subtraction of two scalar values in a binary expression for the - operator
@@ -145,6 +159,22 @@ export namespace zero::physics {
             return quantity<M2, T2>(
                 (lhs.amount * m1_ratio_v - rhs.amount * m2_ratio_v) / m1_ratio_v
             );
+    }
+
+    /**
+     * @brief same as the operator-() overload for the {@link BaseMagnitude}, but for {@link DerivedMagnitude}
+     */
+    template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
+        requires SameDimensions<DM1, DM2>
+    [[nodiscard]]
+    consteval auto operator-(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
+        constexpr double dm1_dimensionality = DM1::dimensionality;
+        constexpr double dm2_dimensionality = DM2::dimensionality;
+
+        if constexpr (dm1_dimensionality > dm2_dimensionality)
+            return quantity<DM1, T1>((lhs.amount * dm1_dimensionality) - (rhs.amount * dm2_dimensionality));
+        else
+            return quantity<DM2, T2>((lhs.amount * dm1_dimensionality) - (rhs.amount * dm2_dimensionality));
     }
 
     /**
@@ -172,6 +202,22 @@ export namespace zero::physics {
     }
 
     /**
+     * @brief same as the operator*() overload for the {@link BaseMagnitude}, but for {@link DerivedMagnitude}
+     */
+    template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
+        requires SameDimensions<DM1, DM2>
+    [[nodiscard]]
+    consteval auto operator*(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
+        constexpr double dm1_dimensionality = DM1::dimensionality;
+        constexpr double dm2_dimensionality = DM2::dimensionality;
+
+        if constexpr (dm1_dimensionality > dm2_dimensionality)
+            return quantity<DM1, T1>((lhs.amount * dm1_dimensionality) * (rhs.amount * dm2_dimensionality));
+        else
+            return quantity<DM2, T2>((lhs.amount * dm1_dimensionality) * (rhs.amount * dm2_dimensionality));
+    }
+
+    /**
      * @brief Division of two scalar values in a binary expression for the - operator
      * @return the resultant scalar value of divide the amount of the two quantities, with
      * the return type of the one that has the bigger ratio given their common dimension
@@ -196,6 +242,22 @@ export namespace zero::physics {
     }
 
     /**
+    * @brief same as the operator/() overload for the {@link BaseMagnitude}, but for {@link DerivedMagnitude}
+    */
+    template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
+        requires SameDimensions<DM1, DM2>
+    [[nodiscard]]
+    consteval auto operator/(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
+        constexpr double dm1_dimensionality = DM1::dimensionality;
+        constexpr double dm2_dimensionality = DM2::dimensionality;
+
+        if constexpr (dm1_dimensionality > dm2_dimensionality)
+            return quantity<DM1, T1>((lhs.amount * dm1_dimensionality) / (rhs.amount * dm2_dimensionality));
+        else
+            return quantity<DM2, T2>((lhs.amount * dm1_dimensionality) / (rhs.amount * dm2_dimensionality));
+    }
+
+    /**
      * Sends to an output stream a formatted version of some {@link quantity}
      */
     template<typename M>
@@ -212,4 +274,4 @@ static_assert(zero::physics::Symbol<zero::physics::kg>);
 static_assert(zero::physics::Magnitude<zero::physics::Kilogram>);
 
 /* Testing our derived units */
-//static_assert(zero::physics::DerivedUnit<zero::physics::MetersPerSecond>);
+static_assert(zero::physics::DerivedUnit<zero::physics::MetersPerSecond>);

@@ -11,6 +11,9 @@ import concepts;
 import :ratios;
 import :dimensions;
 import :units.symbols;
+import :units.detail;
+
+using namespace units::__detail;
 
 export namespace zero::physics {
     /* Base units */
@@ -29,35 +32,45 @@ export namespace zero::physics {
         typename T::symbol;
     };
 
-    struct Kilogram: public mass, public base_unit<Kilo, kg> {};
-    struct Hectogram: public mass, public base_unit<Hecto, hg> {};
-    struct Meter: public length, public base_unit<Root, m> {};
-
+    struct Kilogram: public mass<1>, public base_unit<kilo, kg> {};
+    struct Hectogram: public mass<1>, public base_unit<hecto, hg> {};
+    struct Meter: public length<1>, public base_unit<root, m> {};
+    struct Second: public time<1>, public base_unit<second, s> {};
+    struct Hour: public time<1>, public base_unit<hour, h> {};
 
     /* Derived units */
-    template <BaseUnit... baseUnits>
+    template <typename DerivedDim, BaseUnit... BaseUnits>
+        requires (DerivedDimension<DerivedDim>)
     struct derived_unit {
-        using units = std::tuple<baseUnits...>;
+        using derived_dimension = DerivedDim;
+        using units = std::tuple<BaseUnits...>;
+
+        static constexpr double dimensionality = []<std::size_t... Is>(std::index_sequence<Is...>) {
+            using dm_exp = dimensions_exponents<typename DerivedDim::dimensions>;
+            return (1.0 * ... * consteval_power(BaseUnits::ratio::value, dm_exp::value[Is]));
+        } (std::make_index_sequence<DerivedDim::total_dimensions>{});
     };
 
-    template <typename T>
+    template <typename T, std::size_t... Is>
     concept DerivedUnit = requires {
         typename T::units;
-    } && std::is_base_of_v<typename T::derived_dimension, T>;
+        typename T::derived_dimension;
+        T::dimensionality;
+    } && (std::is_base_of_v<derived_unit<typename T::derived_dimension, std::tuple_element_t<Is, typename T::units>>, T> && ...);
 
     struct MetersPerSecond :
-        public speed,
         public derived_unit<
-            base_unit<Root, m>,
-            base_unit<Root, s>
+            speed,
+            base_unit<root, m>,
+            base_unit<second, s>
         >
     {};
 
     struct KilometersPerHour :
-        public speed,
         public derived_unit<
-            base_unit<Kilo, km>,
-            base_unit<Root, h> // Pff primo
+            speed,
+            base_unit<kilo, km>,
+            base_unit<hour, h>
         >
     {};
 }
