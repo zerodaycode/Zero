@@ -128,13 +128,13 @@ export namespace zero::physics {
         requires SameDimensions<DM1, DM2>
     [[nodiscard]]
     consteval auto operator+(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
-        using dm1_dimensions = typename DM1::derived_dimension::dimensions;
-        using dm2_dimensions = typename DM2::derived_dimension::dimensions;
-
         constexpr double dm1_dimensionality = DM1::dimensionality;
         constexpr double dm2_dimensionality = DM2::dimensionality;
 
-        return (lhs.amount * dm1_dimensionality) + (rhs.amount * dm2_dimensionality);
+        if constexpr (dm1_dimensionality > dm2_dimensionality)
+            return quantity<DM1, T1>((lhs.amount * dm1_dimensionality) + (rhs.amount * dm2_dimensionality));
+        else
+            return quantity<DM2, T2>((lhs.amount * dm1_dimensionality) + (rhs.amount * dm2_dimensionality));
     }
 
     /**
@@ -168,13 +168,13 @@ export namespace zero::physics {
         requires SameDimensions<DM1, DM2>
     [[nodiscard]]
     consteval auto operator-(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
-        using dm1_dimensions = typename DM1::derived_dimension::dimensions;
-        using dm2_dimensions = typename DM2::derived_dimension::dimensions;
-
         constexpr double dm1_dimensionality = DM1::dimensionality;
         constexpr double dm2_dimensionality = DM2::dimensionality;
 
-        return (lhs.amount * dm1_dimensionality) - (rhs.amount * dm2_dimensionality);
+        if constexpr (dm1_dimensionality > dm2_dimensionality)
+            return quantity<DM1, T1>((lhs.amount * dm1_dimensionality) - (rhs.amount * dm2_dimensionality));
+        else
+            return quantity<DM2, T2>((lhs.amount * dm1_dimensionality) - (rhs.amount * dm2_dimensionality));
     }
 
     /**
@@ -208,13 +208,13 @@ export namespace zero::physics {
         requires SameDimensions<DM1, DM2>
     [[nodiscard]]
     consteval auto operator*(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
-        using dm1_dimensions = typename DM1::derived_dimension::dimensions;
-        using dm2_dimensions = typename DM2::derived_dimension::dimensions;
-
         constexpr double dm1_dimensionality = DM1::dimensionality;
         constexpr double dm2_dimensionality = DM2::dimensionality;
 
-        return (lhs.amount * dm1_dimensionality) * (rhs.amount * dm2_dimensionality);
+        if constexpr (dm1_dimensionality > dm2_dimensionality)
+            return quantity<DM1, T1>((lhs.amount * dm1_dimensionality) * (rhs.amount * dm2_dimensionality));
+        else
+            return quantity<DM2, T2>((lhs.amount * dm1_dimensionality) * (rhs.amount * dm2_dimensionality));
     }
 
     /**
@@ -248,13 +248,13 @@ export namespace zero::physics {
         requires SameDimensions<DM1, DM2>
     [[nodiscard]]
     consteval auto operator/(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
-        using dm1_dimensions = typename DM1::derived_dimension::dimensions;
-        using dm2_dimensions = typename DM2::derived_dimension::dimensions;
-
         constexpr double dm1_dimensionality = DM1::dimensionality;
         constexpr double dm2_dimensionality = DM2::dimensionality;
 
-        return (lhs.amount * dm1_dimensionality) / (rhs.amount * dm2_dimensionality);
+        if constexpr (dm1_dimensionality > dm2_dimensionality)
+            return quantity<DM1, T1>((lhs.amount * dm1_dimensionality) / (rhs.amount * dm2_dimensionality));
+        else
+            return quantity<DM2, T2>((lhs.amount * dm1_dimensionality) / (rhs.amount * dm2_dimensionality));
     }
 
     /**

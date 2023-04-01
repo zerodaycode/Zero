@@ -18,7 +18,7 @@ export namespace zero {
         std::vector<std::string> tokens;
 
         std::istringstream iss;
-        if constexpr (std::is_same_v<std::remove_reference_t<T>, std::string_view)
+        if constexpr (std::is_same_v<std::remove_reference_t<T>, std::string_view>)
             iss = std::istringstream(std::string {str});
         else
             iss = std::istringstream(std::forward<T>(str));

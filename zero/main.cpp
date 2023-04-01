@@ -26,10 +26,10 @@ int main() {
     constexpr auto velocity = quantity<MetersPerSecond> {300'000.};
     constexpr auto velocity2 = quantity<KilometersPerHour> {200.};
 
-    std::cout << "Velocities addition  [m/s + m/s]: " << velocity +  velocity2 << "\n";
-    std::cout << "Velocities subtraction  [m/s - m/s]: " << velocity - velocity2 << "\n";
-    std::cout << "Velocities multiplication  [m/s * m/s]: " << velocity * velocity2 << "\n";
-    std::cout << "Velocities division  [m/s / m/s]: " << velocity / velocity2 << "\n";
+    std::cout << "Velocities addition  [m/s + km/h]: " << velocity +  velocity2 << "\n";
+    std::cout << "Velocities subtraction  [m/s - km/h]: " << velocity - velocity2 << "\n";
+    std::cout << "Velocities multiplication  [m/s * km/h]: " << velocity * velocity2 << "\n";
+    std::cout << "Velocities division  [m/s / km/h]: " << velocity / velocity2 << "\n";
 
     return 0;
 }
