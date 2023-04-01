@@ -24,11 +24,12 @@ int main() {
     std::cout << "Masses addition [m/s + m/s]: " << q1 + q2 << "\n";
 
     constexpr auto velocity = quantity<MetersPerSecond> {300'000.};
-    constexpr auto velocity2 = quantity<MetersPerSecond> {300'000.};
-    constexpr auto velocity3 = quantity<KilometersPerHour> {200.};
-    auto v_addition = velocity + velocity2;
-    std::cout << "Velocities addition [m/s + m/s]: " << v_addition << "\n";
-    std::cout << "Velocities addition 2 [m/s + m/s]: " << velocity2 +  velocity3 << "\n";
+    constexpr auto velocity2 = quantity<KilometersPerHour> {200.};
+
+    std::cout << "Velocities addition  [m/s + m/s]: " << velocity +  velocity2 << "\n";
+    std::cout << "Velocities subtraction  [m/s - m/s]: " << velocity - velocity2 << "\n";
+    std::cout << "Velocities multiplication  [m/s * m/s]: " << velocity * velocity2 << "\n";
+    std::cout << "Velocities division  [m/s / m/s]: " << velocity / velocity2 << "\n";
 
     return 0;
 }

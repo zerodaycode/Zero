@@ -40,7 +40,7 @@ export namespace zero::physics {
 
     template<typename T>
     concept BaseDimension = std::is_base_of_v<base_dimension<T, T::dimension_exp>, T> &&
-        requires { typename T::dimension; };
+        requires { typename T::dimension; T::dimension_exp; };
 
     /* Compound dimensions */
     template<typename Derived, typename... Dimensions>
@@ -50,16 +50,12 @@ export namespace zero::physics {
         static constexpr auto total_dimensions = std::tuple_size<dimensions>::value;
     };
 
-    template <typename T, std::size_t... Is>
-    constexpr bool is_derived_dimension() {
-        return (std::is_base_of_v<derived_dimension<T, std::tuple_element_t<Is, typename T::dimensions>> && ...>);
-    }
-
-    template<typename T>
+    template<typename T, std::size_t... Is>
     concept DerivedDimension = requires {
-        is_derived_dimension<T>();
         typename T::self;
-    };
+        typename T::dimensions;
+        T::total_dimensions;
+    } && (std::is_base_of_v<derived_dimension<T, std::tuple_element_t<Is, typename T::dimensions>>, T> && ...);
 
     struct speed : public derived_dimension<speed, length<>, time< -1 >> {};
 }

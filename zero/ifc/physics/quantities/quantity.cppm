@@ -34,7 +34,7 @@ export namespace zero::physics {
     template <typename T>
     concept DerivedMagnitude = requires {
         DerivedUnit<T>;
-        DerivedDimension<typename T::self>;
+        DerivedDimension<typename T::derived_dimension>;
     };
 
     template <typename T>
@@ -42,7 +42,7 @@ export namespace zero::physics {
 
     template <typename T, typename R>
     concept SameDimension = requires {
-        requires Magnitude<T> && Magnitude<R>;
+        requires BaseMagnitude<T> && BaseMagnitude<R>;
         requires std::is_same_v<
             typename T::dimension,
             typename R::dimension
@@ -51,7 +51,7 @@ export namespace zero::physics {
 
     template <typename T, typename R>
     concept SameDimensions = requires {
-        requires Magnitude<T> && Magnitude<R>;
+        requires DerivedMagnitude<T> && DerivedMagnitude<R>;
         requires std::is_same_v<
             typename T::derived_dimension,
             typename R::derived_dimension
@@ -137,7 +137,6 @@ export namespace zero::physics {
         return (lhs.amount * dm1_dimensionality) + (rhs.amount * dm2_dimensionality);
     }
 
-
     /**
      * @brief Subtraction of two scalar values in a binary expression for the - operator
      * @return the resultant scalar value of subtracting the amount of the two quantities, with
@@ -160,6 +159,22 @@ export namespace zero::physics {
             return quantity<M2, T2>(
                 (lhs.amount * m1_ratio_v - rhs.amount * m2_ratio_v) / m1_ratio_v
             );
+    }
+
+    /**
+     * @brief same as the operator-() overload for the {@link BaseMagnitude}, but for {@link DerivedMagnitude}
+     */
+    template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
+        requires SameDimensions<DM1, DM2>
+    [[nodiscard]]
+    consteval auto operator-(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
+        using dm1_dimensions = typename DM1::derived_dimension::dimensions;
+        using dm2_dimensions = typename DM2::derived_dimension::dimensions;
+
+        constexpr double dm1_dimensionality = DM1::dimensionality;
+        constexpr double dm2_dimensionality = DM2::dimensionality;
+
+        return (lhs.amount * dm1_dimensionality) - (rhs.amount * dm2_dimensionality);
     }
 
     /**
@@ -187,6 +202,22 @@ export namespace zero::physics {
     }
 
     /**
+     * @brief same as the operator*() overload for the {@link BaseMagnitude}, but for {@link DerivedMagnitude}
+     */
+    template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
+        requires SameDimensions<DM1, DM2>
+    [[nodiscard]]
+    consteval auto operator*(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
+        using dm1_dimensions = typename DM1::derived_dimension::dimensions;
+        using dm2_dimensions = typename DM2::derived_dimension::dimensions;
+
+        constexpr double dm1_dimensionality = DM1::dimensionality;
+        constexpr double dm2_dimensionality = DM2::dimensionality;
+
+        return (lhs.amount * dm1_dimensionality) * (rhs.amount * dm2_dimensionality);
+    }
+
+    /**
      * @brief Division of two scalar values in a binary expression for the - operator
      * @return the resultant scalar value of divide the amount of the two quantities, with
      * the return type of the one that has the bigger ratio given their common dimension
@@ -208,6 +239,22 @@ export namespace zero::physics {
             return quantity<M2, T2>(
                 ((lhs.amount * m1_ratio_v) / (rhs.amount * m2_ratio_v)) / m2_ratio_v
             );
+    }
+
+    /**
+    * @brief same as the operator/() overload for the {@link BaseMagnitude}, but for {@link DerivedMagnitude}
+    */
+    template<DerivedMagnitude DM1, DerivedMagnitude DM2, ValidAmountType T1 = double, ValidAmountType T2 = T1>
+        requires SameDimensions<DM1, DM2>
+    [[nodiscard]]
+    consteval auto operator/(const quantity<DM1, T1>& lhs, const quantity<DM2, T2>& rhs) {
+        using dm1_dimensions = typename DM1::derived_dimension::dimensions;
+        using dm2_dimensions = typename DM2::derived_dimension::dimensions;
+
+        constexpr double dm1_dimensionality = DM1::dimensionality;
+        constexpr double dm2_dimensionality = DM2::dimensionality;
+
+        return (lhs.amount * dm1_dimensionality) / (rhs.amount * dm2_dimensionality);
     }
 
     /**

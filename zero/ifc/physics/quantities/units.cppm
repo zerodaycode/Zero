@@ -42,6 +42,7 @@ export namespace zero::physics {
     template <typename DerivedDim, BaseUnit... BaseUnits>
         requires (DerivedDimension<DerivedDim>)
     struct derived_unit {
+        using derived_dimension = DerivedDim;
         using units = std::tuple<BaseUnits...>;
 
         static constexpr double dimensionality = []<std::size_t... Is>(std::index_sequence<Is...>) {
@@ -50,14 +51,14 @@ export namespace zero::physics {
         } (std::make_index_sequence<DerivedDim::total_dimensions>{});
     };
 
-    template <typename T>
+    template <typename T, std::size_t... Is>
     concept DerivedUnit = requires {
         typename T::units;
+        typename T::derived_dimension;
         T::dimensionality;
-    } && std::is_base_of_v<typename T::derived_dimension, T>;
+    } && (std::is_base_of_v<derived_unit<typename T::derived_dimension, std::tuple_element_t<Is, typename T::units>>, T> && ...);
 
     struct MetersPerSecond :
-        public speed,
         public derived_unit<
             speed,
             base_unit<root, m>,
@@ -66,7 +67,6 @@ export namespace zero::physics {
     {};
 
     struct KilometersPerHour :
-        public speed,
         public derived_unit<
             speed,
             base_unit<kilo, km>,
