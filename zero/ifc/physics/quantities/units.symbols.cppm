@@ -1,11 +1,8 @@
-#pragma clang diagnostic ignored "-Wc++17-extensions"
-
 /**
-* Contains the type definitions for the physical quantities
-* defined in the `Physics` library
+* Contains the type definitions for the symbols that represents a physical quantity
 */
 
-export module physics:units.symbols;
+export module physics.quantities:units.symbols;
 
 export namespace zero::physics {
     template<typename T>
@@ -17,8 +14,6 @@ export namespace zero::physics {
     concept Symbol = requires {
         typename T::symbol;
     };
-
-    // TODO a submodule for every symbol?
 
     /** Definitions of symbols */
     struct kg: unit_symbol<kg> {};

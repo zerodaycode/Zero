@@ -4,7 +4,7 @@
  * A physical quantity can be understand as a real world magnitude, related with
  * their units in the international system
  */
-export module physics:quantity;
+export module physics.quantities:quantity;
 
 import std;
 import concepts;
@@ -267,11 +267,3 @@ export namespace zero::physics {
     }
 }
 
-/* Testing our symbols */
-static_assert(zero::physics::Symbol<zero::physics::kg>);
-
-/* Testing our base units */
-static_assert(zero::physics::Magnitude<zero::physics::Kilogram>);
-
-/* Testing our derived units */
-static_assert(zero::physics::DerivedUnit<zero::physics::MetersPerSecond>);

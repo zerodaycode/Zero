@@ -3,7 +3,7 @@
  * order or magnitudes in a physical quantity
  */
 
-export module physics:ratios;
+export module physics.quantities:ratios;
 import std;
 
 /**

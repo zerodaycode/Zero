@@ -55,13 +55,15 @@ interfaces = [
     { file = 'collections/collections.cppm', dependencies = ['array'] },
     
     # The physics library
-    { file = 'physics/quantities/internal/units_detail.cpp', partition = { module = 'physics', partition_name = 'units.detail' } },
+        # The quantities library
+        { file = 'physics/quantities/internal/units_detail.cpp', partition = { module = 'physics.quantities', partition_name = 'units.detail' } },
 
-    { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics' } },
-    { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics' } },
-    { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics' } },
-    { file = 'physics/quantities/units.cppm', module_name = 'units', partition = { module = 'physics' } },
-    { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics' }, dependencies = ['physics-ratios', 'physics-units', 'physics-units.symbols'] },
+        { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/units.cppm', module_name = 'units', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/physics.quantities.cppm' },
     # Root
     { file = 'physics/physics.cppm' },
 

@@ -4,7 +4,7 @@
  * units module
  */
 
-module physics:units.detail;
+module physics.quantities:units.detail;
 
 import std;
 

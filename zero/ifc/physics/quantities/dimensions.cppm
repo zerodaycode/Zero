@@ -7,7 +7,7 @@
  * Physical dimensions can be used to classify physical quantities and compare them based on their fundamental nature.
 */
 
-export module physics:dimensions;
+export module physics.quantities:dimensions;
 
 import std;
 import :ratios;
@@ -29,15 +29,6 @@ export namespace zero::physics {
         static constexpr short dimension_exp = DimensionExponent;
     };
 
-    template <short DimensionExponent = 1>
-    struct mass : public base_dimension<mass<DimensionExponent>, DimensionExponent> {};
-
-    template <short DimensionExponent = 1>
-    struct length : public base_dimension<length<DimensionExponent>, DimensionExponent> {};
-
-    template <short DimensionExponent = 1>
-    struct time : public base_dimension<time<DimensionExponent>, DimensionExponent> {};
-
     template<typename T>
     concept BaseDimension = std::is_base_of_v<base_dimension<T, T::dimension_exp>, T> &&
         requires { typename T::dimension; T::dimension_exp; };
@@ -56,10 +47,4 @@ export namespace zero::physics {
         typename T::dimensions;
         T::total_dimensions;
     } && (std::is_base_of_v<derived_dimension<T, std::tuple_element_t<Is, typename T::dimensions>>, T> && ...);
-
-    struct speed : public derived_dimension<speed, length<>, time< -1 >> {};
 }
-
-static_assert(zero::physics::BaseDimension<zero::physics::mass<1>>);
-static_assert(zero::physics::BaseDimension<zero::physics::length<1>>);
-static_assert(zero::physics::DerivedDimension<zero::physics::speed>);
