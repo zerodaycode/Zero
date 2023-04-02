@@ -3,6 +3,17 @@
 Zero project it's a set of powerful libraries written in modern C++ and for
 modern C++ projects
 
+## Libraries
+
+Quick description, and links to the documentation of all the libraries of the project
+
+- [Physics](./zero/ifc/physics/README.md) - A general purpose library for dealing with field related aspects and problems of physics
+  - [Quantities](./zero/ifc/physics/quantities) - Compile time library for work with physical quantities acording the `SI`
+- [Collections](./zero/ifc/collections/README.md) - Custom containers, operations and interfaces
+- [Iterators](./zero/ifc/iterators/README.md) - Custom iterator interfaces, and some legacy implementation (just as examples) of the legacy ones
+- [Text](./zero/ifc/text/README.md) - Character types and manipulation operations on them
+- [Types](./zero/ifc/types/README.md) - Information about types and traits for types
+
 ## Sponsorship
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" width="100" />

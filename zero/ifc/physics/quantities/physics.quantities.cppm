@@ -22,7 +22,7 @@ export namespace zero::physics {
     template <short DimensionExponent = 1>
     struct time : public base_dimension<time<DimensionExponent>, DimensionExponent> {};
 
-    struct speed : public derived_dimension<speed, length<>, time< -1 >> {};
+    struct speed : public derived_dimension<length<>, time< -1 >> {};
 
 
     /* -------------- Units -------------- */

@@ -34,16 +34,14 @@ export namespace zero::physics {
         requires { typename T::dimension; T::dimension_exp; };
 
     /* Compound dimensions */
-    template<typename Derived, typename... Dimensions>
+    template<typename... Dimensions>
     struct derived_dimension {
-        using self = Derived;
         using dimensions = std::tuple<Dimensions...>;
         static constexpr auto total_dimensions = std::tuple_size<dimensions>::value;
     };
 
     template<typename T, std::size_t... Is>
     concept DerivedDimension = requires {
-        typename T::self;
         typename T::dimensions;
         T::total_dimensions;
     } && (std::is_base_of_v<derived_dimension<T, std::tuple_element_t<Is, typename T::dimensions>>, T> && ...);
