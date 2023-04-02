@@ -14,8 +14,8 @@ template <typename T>
 concept RatioV = (std::is_integral_v<T> || std::is_floating_point_v<T>)
     && !std::is_same_v<T, char>;
 
-consteval double consteval_power(const double base, const double exponent);
-constexpr double power(const double base, const double exponent);
+consteval double consteval_power(double base, int exponent);
+constexpr double power(double base, int exponent);
 
 template <RatioV T = short, T Base = 10, T Exponent = 0>
 struct ratio {
@@ -25,14 +25,14 @@ struct ratio {
 };
 
 [[nodiscard]]
-inline consteval double consteval_power(const double base, const double exponent) {
+inline consteval double consteval_power(const double base, const int exponent) {
     return power(base, exponent);
 }
 
 [[nodiscard]]
-constexpr double power(const double base, const double exponent) {
+constexpr double power(const double base, const int exponent) {
     double result = 1;
-    const size_t limit = ((exponent >= 0) ? exponent : exponent * -1);
+    const int limit = ((exponent >= 0) ? exponent : exponent * -1);
     for (int i = 0; i < limit; i++)
         result *= (exponent >= 0) ? base : 1/base;
     return result;

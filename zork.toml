@@ -7,7 +7,13 @@ project_root = "zero"
 [compiler]
 cpp_compiler = "clang"
 cpp_standard = "20"
-std_lib = "STDLIBCPP"
+std_lib = "LIBCPP"
+extra_args = [
+    '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
+    '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',
+    '-Wmisleading-indentation', '-Wnull-dereference', '-Wdouble-promotion', '-Wformat=2', '-Wimplicit-fallthrough',
+    '-Weffc++'
+]
 
 [build]
 output_dir = "./out"

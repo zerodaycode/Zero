@@ -29,20 +29,12 @@ What is feasible, however, is to use the modules in projects that start from scr
 
 Zero was born from the idea of improving as library developers, to be able to design better public APIs and to offer content focused on maintainability, sustainability, scalability and performance, and, above all, it is a personal and professional learning project about different software engineering tools, and in search of a deeper knowledge of one of our favorite tools, C++.
 
+## Build system
+
 The last but not least, is using `Zero` as a platform for showing our [`Zork++`](https://github.com/zerodaycode/Zork) build
 system in a real world environment, so people can profit by taking examples of how we set-up things with `Zork++`
 in a big scale project. Also, we introduce the changes of the latest releases available here, so it serves as well as
 a kind of latest up-to-date guide.
-
-## Disclaimer
-
-This project is not a "production ready" project, far from it. Even if the written implementations are correct, solid and efficient, we just want to mix fun and knowledge, create a good development environment, and have productive talks about what exists in C++, what could have existed, its interpretations... This project is just an experiment, and as Herb Sutter would say, the default of an experiment is to fail. Maybe tomorrow we can refine our language concepts, improve the implementations (that's the root idea) adn the knowledge about the intrinsics, or adhere completely to the Standard and start being an alternative for certain projects. But that is not the initial or main goal. The goal is to create, learn and share, and for that, the more people we contribute, the better!
-
-## Build system
-
-We are relying on [`Zork++`](https://github.com/zerodaycode/Zork) to build our project around the
-latest features of the language, including the full usage of modules on all the source files
-of the codes instead of the legacy headers.
 
 ## Testing tools
 
