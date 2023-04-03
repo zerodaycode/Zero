@@ -74,6 +74,21 @@ export namespace zero::physics {
         constexpr quantity<M, T>() noexcept = default;
         constexpr explicit quantity<M, T>(T val) noexcept : amount(val) {}
 
+        /**
+         * Converts a quantity of a dimension to another one with the same dimension
+         */
+        template <Magnitude Target>
+        constexpr auto to() const noexcept -> quantity<Target, T> {
+            if constexpr (is_base_magnitude<Target>::value)
+                return quantity<Target, T>(amount * (Target::ratio::value / M::ratio::value));
+            else
+                return quantity<Target, T>((amount * M::dimensionality) / Target::dimensionality);
+        }
+
+        /**
+         * @return an {@link std::vector} with the dimensions declared for the Magnitude M
+         * as {@link std::string}
+         */
         template <typename Dummy = void, typename = std::enable_if_t<DerivedMagnitude<M>, Dummy>>
         std::vector<std::string> dimensions() const {
             std::vector<std::string> stringified_dimensions;
@@ -83,6 +98,9 @@ export namespace zero::physics {
             return stringified_dimensions;
         }
 
+        /**
+         * prints a formatted version of the dimensions that are declared for the Magnitude M
+         */
         template <typename Dummy = void, typename = std::enable_if_t<DerivedMagnitude<M>, Dummy>>
         void print_dimensions() const requires DerivedMagnitude<M> {
             std::string dimension_names;
@@ -108,16 +126,16 @@ export namespace zero::physics {
     constexpr auto operator+(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
          -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
-        constexpr auto m1_ratio_v = M1::base_unit::ratio::value;
-        constexpr auto m2_ratio_v = M2::base_unit::ratio::value;
+        constexpr auto m1_ratio_v = M1::ratio::value;
+        constexpr auto m2_ratio_v = M2::ratio::value;
 
-        if constexpr (M1::ratio::value > M2::ratio::value)
+        if constexpr (m1_ratio_v > m2_ratio_v)
             return quantity<M1, T1>(
                 (lhs.amount * m1_ratio_v + rhs.amount * m2_ratio_v) / m1_ratio_v
             );
         else
             return quantity<M2, T2>(
-                (lhs.amount * m1_ratio_v + rhs.amount * m2_ratio_v) / m1_ratio_v
+                (lhs.amount * m1_ratio_v + rhs.amount * m2_ratio_v) / m2_ratio_v
             );
     }
 
@@ -148,16 +166,16 @@ export namespace zero::physics {
     constexpr auto operator-(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
         -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
-        constexpr auto m1_ratio_v = M1::base_unit::ratio::value;
-        constexpr auto m2_ratio_v = M2::base_unit::ratio::value;
+        constexpr auto m1_ratio_v = M1::ratio::value;
+        constexpr auto m2_ratio_v = M2::ratio::value;
 
-        if constexpr (M1::ratio::value > M2::ratio::value)
+        if constexpr (m1_ratio_v > m2_ratio_v)
             return quantity<M1, T1>(
                 (lhs.amount * m1_ratio_v - rhs.amount * m2_ratio_v) / m1_ratio_v
             );
         else
             return quantity<M2, T2>(
-                (lhs.amount * m1_ratio_v - rhs.amount * m2_ratio_v) / m1_ratio_v
+                (lhs.amount * m1_ratio_v - rhs.amount * m2_ratio_v) / m2_ratio_v
             );
     }
 
@@ -188,16 +206,16 @@ export namespace zero::physics {
     constexpr auto operator*(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
         -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
-        constexpr auto m1_ratio_v = M1::base_unit::ratio::value;
-        constexpr auto m2_ratio_v = M2::base_unit::ratio::value;
+        constexpr auto m1_ratio_v = M1::ratio::value;
+        constexpr auto m2_ratio_v = M2::ratio::value;
 
-        if constexpr (M1::ratio::value > M2::ratio::value)
+        if constexpr (m1_ratio_v > m2_ratio_v)
             return quantity<M1, T1>(
                 (lhs.amount * m1_ratio_v * rhs.amount * m2_ratio_v) / m1_ratio_v
             );
         else
             return quantity<M2, T2>(
-                (lhs.amount * m1_ratio_v * rhs.amount * m2_ratio_v) / m1_ratio_v
+                (lhs.amount * m1_ratio_v * rhs.amount * m2_ratio_v) / m2_ratio_v
             );
     }
 
@@ -228,10 +246,10 @@ export namespace zero::physics {
     constexpr auto operator/(const quantity<M1, T1>& lhs, const quantity<M2, T2>& rhs)
         -> quantity<std::conditional_t<(M1::ratio::value > M2::ratio::value), M1, M2>>
     {
-        constexpr auto m1_ratio_v = M1::base_unit::ratio::value;
-        constexpr auto m2_ratio_v = M2::base_unit::ratio::value;
+        constexpr auto m1_ratio_v = M1::ratio::value;
+        constexpr auto m2_ratio_v = M2::ratio::value;
 
-        if constexpr (M1::ratio::value > M2::ratio::value)
+        if constexpr (m1_ratio_v > m2_ratio_v)
             return quantity<M1, T1>(
                 ((lhs.amount * m1_ratio_v) / (rhs.amount * m2_ratio_v)) / m1_ratio_v
             );

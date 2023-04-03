@@ -21,7 +21,7 @@ template <RatioV T = short, T Base = 10, T Exponent = 0>
 struct ratio {
     static constexpr T base = Base;
     static constexpr T exponent = Exponent;
-    static constexpr T value = consteval_power(base, exponent);
+    static constexpr double value = consteval_power(base, exponent);
 };
 
 [[nodiscard]]

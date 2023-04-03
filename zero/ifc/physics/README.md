@@ -64,3 +64,19 @@ For example:
 `struct Kilogram: public mass<1>, public base_unit<kilo, kg> {};`
 - `unit_symbol` - A CRTP base type for define strong types for the units. As seen above, `kg` in the strong type
 for define the symbol of kilogram, according to the `SI`
+
+## Conversion
+
+We provide in the API an easy way to convert quantities of the same dimension (for the bases) or with the
+same dimensionality (for derived) with a simple template member function called `to<Magnitude Target>`.
+Here's an example:
+
+```
+constexpr auto velocity = quantity<MetersPerSecond>(300'000);
+
+quantity<KilometersPerHour> kmph = velocity.to<KilometersPerHour>();
+quantity<MetersPerSecond> mps = kmph.to<MetersPerSecond>();
+
+std::cout << "Converting meters per second to kilometers per hour: " << kmph << "\n"; // Prints 1'080'000
+std::cout << "Converting kilometers per hour to meters per second: " << mps << "\n";  // Prints 300'000
+```
