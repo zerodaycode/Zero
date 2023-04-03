@@ -13,7 +13,7 @@ import :dimensions;
 import :units.symbols;
 import :units.detail;
 
-using namespace units::__detail;
+using namespace quantities::__detail;
 
 export namespace zero::physics {
     /* Base units */

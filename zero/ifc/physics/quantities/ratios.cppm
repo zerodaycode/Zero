@@ -17,7 +17,7 @@ concept RatioV = (std::is_integral_v<T> || std::is_floating_point_v<T>)
 consteval double consteval_power(double base, int exponent);
 constexpr double power(double base, int exponent);
 
-template <RatioV T = short, T Base = 10, T Exponent = 0>
+template <RatioV T = short, T Base = 10, T Exponent = 0>  // TODO template guide deduction, reorder members
 struct ratio {
     static constexpr T base = Base;
     static constexpr T exponent = Exponent;

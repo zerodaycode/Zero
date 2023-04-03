@@ -23,21 +23,21 @@ int main() {
     constexpr auto q2 = quantity<Hectogram>{7.2};
     std::cout << "Masses addition [m/s + m/s]: " << q1 + q2 << "\n";
 
-    constexpr auto kgms = quantity<Kilogram>{1.};
-    std::cout << "Converting kilograms to hectograms: " << kgms.to<Hectogram>() << "\n";
+//    constexpr auto kgms = quantity<Kilogram>{1.};
+//    std::cout << "Converting kilograms to hectograms: " << kgms.to<Hectogram>() << "\n";
 
     constexpr auto velocity = quantity<MetersPerSecond> {300'000.};
     constexpr auto velocity2 = quantity<KilometersPerHour> {200.};
 
     std::cout << "Velocities addition  [m/s + km/h]: " << velocity +  velocity2 << "\n";
-    std::cout << "Velocities subtraction  [km/h - m/s]: " << velocity2 - velocity << "\n";
-    std::cout << "Velocities multiplication  [m/s * km/h]: " << velocity * velocity2 << "\n";
-    std::cout << "Velocities division  [m/s / km/h]: " << velocity / velocity2 << "\n";
+//    std::cout << "Velocities subtraction  [km/h - m/s]: " << velocity2 - velocity << "\n";
+//    std::cout << "Velocities multiplication  [m/s * km/h]: " << velocity * velocity2 << "\n";
+//    std::cout << "Velocities division  [m/s / km/h]: " << velocity / velocity2 << "\n";
 
-    constexpr quantity<KilometersPerHour> kmph = velocity.to<KilometersPerHour>();
-    constexpr quantity<MetersPerSecond> mps = kmph.to<MetersPerSecond>();
-    std::cout << "Converting meters per second to kilometers per hour: " << kmph << "\n";
-    std::cout << "Converting kilometers per hour to meters per second: " << mps << "\n";
+//    constexpr quantity<KilometersPerHour> kmph = velocity.to<KilometersPerHour>();
+//    constexpr quantity<MetersPerSecond> mps = kmph.to<MetersPerSecond>();
+//    std::cout << "Converting meters per second to kilometers per hour: " << kmph << "\n";
+//    std::cout << "Converting kilometers per hour to meters per second: " << mps << "\n";
 
     return 0;
 }

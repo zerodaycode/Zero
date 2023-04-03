@@ -8,7 +8,7 @@ module physics.quantities:units.detail;
 
 import std;
 
-export namespace units::__detail {
+export namespace quantities::__detail {
     template<typename T>
     struct dimensions_exponents;
 

@@ -8,3 +8,5 @@
 export module physics;
 
 export import physics.quantities;
+export import type_info;
+export import str_manip;
