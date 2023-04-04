@@ -48,9 +48,10 @@ inline consteval double consteval_power_of(const double base, const int exponent
  */
 template <int Base = 10, int Exponent = 0, int BaseDenominator = 1>
 struct ratio {
-    static constexpr double base = Base / BaseDenominator;
-    static constexpr double exponent = Exponent;
-    static constexpr double value = consteval_power_of(base, exponent);
+    static constexpr double base = static_cast<double>(Base);
+    static constexpr double exponent = static_cast<double>(Exponent);
+    static constexpr double base_denominator = static_cast<double>(BaseDenominator);
+    static constexpr double value = consteval_power_of(base / base_denominator, exponent);
 };
 
 export namespace zero::physics {
@@ -81,6 +82,7 @@ export namespace zero::physics {
     using second = ratio<60, 0>;
     using minute = ratio<60, 1>;
     using hour = ratio<60, 2>;
+    using day = ratio<24, 1>;
 
     template <typename T>
     concept Ratio = requires {

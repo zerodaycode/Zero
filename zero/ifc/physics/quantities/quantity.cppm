@@ -80,8 +80,22 @@ export namespace zero::physics {
          */
         template <Magnitude Target>
         constexpr auto to() const noexcept -> quantity<Target, T> {
-            if constexpr (is_base_magnitude<Target>::value)
-                return quantity<Target, T>(amount * (Target::ratio::value / M::ratio::value));
+            if constexpr (is_base_magnitude<Target>::value) {
+                std::cout << "Ratio for M: [" << M::ratio::value << "] base: " << M::ratio::base << " exp: " << M::ratio::exponent << " base_den: " << M::ratio::base_denominator << " || ratio for target: [" << Target::ratio::value << "] base: " << Target::ratio::base << " exp: " << Target::ratio::exponent << " base_den: " << Target::ratio::base_denominator << "\n";
+//                return quantity<Target, T>(amount * (M::ratio::value / Target::ratio::value));
+//                return quantity<Target, T>((amount * M::ratio::value) / ((M::ratio::base_denominator * Target::ratio::base_denominator) / Target::ratio::value));
+//                return quantity<Target, T>(
+//                    (
+//                        (amount * M::ratio::base) / M::ratio::base_denominator
+//                    ) * Target::ratio::value
+//                );
+                return quantity<Target, T>(
+                    (
+                        (amount * (M::ratio::value * Target::ratio::value)) / Target::ratio::value
+                    )
+//                    * Target::ratio::value
+                );
+            }
             else
                 return quantity<Target, T>((amount * M::dimensionality) / Target::dimensionality);
         }

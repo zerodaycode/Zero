@@ -47,6 +47,17 @@ int main() {
     std::cout << "Electric Charge in Coulombs: " << quantity<Coulomb>{5000} << "\n";
     std::cout << "Voltage in Volts: " << quantity<Volt>{240} << "\n\n";
 
+    std::cout << "\nMessing with time:\n";
+//    constexpr auto hour = quantity<Hour>{1};
+//    std::cout << "Converting one hour to minutes: " << hour.to<Minute>() << "\n";
+//    std::cout << "Converting one hour to seconds: " << hour.to<Second>() << "\n";
+    constexpr auto hours_24 = quantity<Hour>{24};
+    constexpr auto one_day = quantity<Day>{1};
+//    std::cout << "Representing 24 hours: " << hours_24 << "\n";
+    std::cout << "Converting 24 hours to one day: " << hours_24.to<Day>() << "\n";
+    std::cout << "Converting one day to hours: " << one_day.to<Hour>() << "\n";
+//    std::cout << "Representing one day: " << one_day << "\n\n";
+
     return 0;
 }
 

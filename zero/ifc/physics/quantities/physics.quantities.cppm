@@ -61,7 +61,9 @@ export namespace zero::physics {
 
     /* Base Units for Time dimension */
     struct Second: public time<>, public base_unit<second, s> {};
+    struct Minute: public time<>, public base_unit<minute, m> {};
     struct Hour: public time<>, public base_unit<hour, h> {};
+    struct Day: public time<>, public base_unit<day, d> {};
 
     /* Base Units for the Electric Current dimension */
     struct Ampere: public electric_current<>, public base_unit<root, A> {};
