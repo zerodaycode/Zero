@@ -4,33 +4,28 @@
  */
 
 export module physics.quantities:ratios;
+
 import std;
 
 /**
- * @brief Defines a Ratio in terms of the power of the numerical values
- * of the given Base and the given Exponent
+ * @brief Represents a power that can be used as a ratio.
+ *
+ * This struct template represents a mathematical power, where the base is an integral number,
+ * and the exponent is an integer. It's designed to be used as a ratio in the context of units
+ * of measure, where the power describes how a certain quantity is measured relative to a
+ * reference unit.
+ *
+ * @tparam Base The integral base of the power.
+ * @tparam Exponent The integer exponent of the power.
+ * @tparam BaseDenominator The denominator of the base, which can be used to represent fractional
+ * powers. By default, this is set to 1, indicating an integer base.
  */
 template <typename T>
 concept RatioV = (std::is_integral_v<T> || std::is_floating_point_v<T>)
     && !std::is_same_v<T, char>;
 
-consteval double consteval_power(double base, int exponent);
-constexpr double power(double base, int exponent);
-
-template <RatioV T = short, T Base = 10, T Exponent = 0>  // TODO template guide deduction, reorder members
-struct ratio {
-    static constexpr T base = Base;
-    static constexpr T exponent = Exponent;
-    static constexpr double value = consteval_power(base, exponent);
-};
-
 [[nodiscard]]
-inline consteval double consteval_power(const double base, const int exponent) {
-    return power(base, exponent);
-}
-
-[[nodiscard]]
-constexpr double power(const double base, const int exponent) {
+constexpr double power_of(const double base, const int exponent) {
     double result = 1;
     const int limit = ((exponent >= 0) ? exponent : exponent * -1);
     for (int i = 0; i < limit; i++)
@@ -38,57 +33,59 @@ constexpr double power(const double base, const int exponent) {
     return result;
 }
 
+[[nodiscard]]
+inline consteval double consteval_power_of(const double base, const int exponent) {
+    return power_of(base, exponent);
+}
+
+
+/**
+ * Represents a power that will serve as a ratio for compare quantities
+ * with the same dimension
+ * @tparam Base
+ * @tparam Exponent
+ * @tparam BaseDenominator
+ */
+template <int Base = 10, int Exponent = 0, int BaseDenominator = 1>
+struct ratio {
+    static constexpr double base = Base / BaseDenominator;
+    static constexpr double exponent = Exponent;
+    static constexpr double value = consteval_power_of(base, exponent);
+};
+
 export namespace zero::physics {
-    using unit_r = ratio<short, 1, 1>;
+    using unit_r = ratio<1, 1>;
 
-    using yocto = ratio<short, 10, -24>;
-    using zepto = ratio<short, 10, -21>;
-    using atto = ratio<short, 10, -18>;
-    using femto = ratio<short, 10, -15>;
-    using pico = ratio<short, 10, -12>;
-    using nano = ratio<short, 10, -9>;
-    using micro = ratio<short, 10, -6>;
-    using milli = ratio<short, 10, -3>;
-    using centi = ratio<short, 10, -2>;
-    using deci = ratio<short, 10, -1>;
-    using root = ratio<short, 10, 0>;
-    using deca = ratio<short, 10, 1>;
-    using hecto = ratio<short, 10, 2>;
-    using kilo = ratio<short, 10, 3>;
-    using mega = ratio<short, 10, 6>;
-    using giga = ratio<short, 10, 9>;
-    using tera = ratio<short, 10, 12>;
-    using peta = ratio<short, 10, 15>;
-    using exa = ratio<short, 10, 18>;
-    using zetta = ratio<short, 10, 21>;
-    using yotta = ratio<short, 10, 24>;
+    using yocto = ratio<10, -24>;
+    using zepto = ratio<10, -21>;
+    using atto = ratio<10, -18>;
+    using femto = ratio<10, -15>;
+    using pico = ratio<10, -12>;
+    using nano = ratio<10, -9>;
+    using micro = ratio<10, -6>;
+    using milli = ratio<10, -3>;
+    using centi = ratio<10, -2>;
+    using deci = ratio<10, -1>;
+    using root = ratio<10, 0>;
+    using deca = ratio<10, 1>;
+    using hecto = ratio<10, 2>;
+    using kilo = ratio<10, 3>;
+    using mega = ratio<10, 6>;
+    using giga = ratio<10, 9>;
+    using tera = ratio<10, 12>;
+    using peta = ratio<10, 15>;
+    using exa = ratio<10, 18>;
+    using zetta = ratio<10, 21>;
+    using yotta = ratio<10, 24>;
 
-    using second = ratio<short, 60, 0>;
-    using hour = ratio<short, 60, 2>;
+    using second = ratio<60, 0>;
+    using minute = ratio<60, 1>;
+    using hour = ratio<60, 2>;
 
     template <typename T>
-    concept Ratio = 
-        std::is_same_v<T, unit_r> ||
-        std::is_same_v<T, yocto> ||
-        std::is_same_v<T, zepto> ||
-        std::is_same_v<T, atto> ||
-        std::is_same_v<T, femto> ||
-        std::is_same_v<T, pico> ||
-        std::is_same_v<T, nano> ||
-        std::is_same_v<T, micro> ||
-        std::is_same_v<T, milli> ||
-        std::is_same_v<T, centi> ||
-        std::is_same_v<T, root> ||
-        std::is_same_v<T, deci> ||
-        std::is_same_v<T, deca> ||
-        std::is_same_v<T, hecto> ||
-        std::is_same_v<T, kilo> ||
-        std::is_same_v<T, mega> ||
-        std::is_same_v<T, giga> ||
-        std::is_same_v<T, tera> ||
-        std::is_same_v<T, peta> ||
-        std::is_same_v<T, exa> ||
-        std::is_same_v<T, zetta> ||
-        std::is_same_v<T, second> ||
-        std::is_same_v<T, hour>;
+    concept Ratio = requires {
+        T::base;
+        T::exponent;
+        T::value;
+    };
 }
