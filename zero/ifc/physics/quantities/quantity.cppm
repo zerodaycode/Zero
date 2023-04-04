@@ -287,7 +287,7 @@ export namespace zero::physics {
             os << q.amount << " " << zero::split_str(zero::types::type_name<typename M::symbol>(), "::").back();
         else {
             std::string out;
-            ::derived_magnitude_symbols<M>(out);
+            derived_magnitude_symbols<M>(out);
             os << q.amount << out;
         }
 

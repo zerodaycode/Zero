@@ -39,6 +39,8 @@ constexpr double power(const double base, const int exponent) {
 }
 
 export namespace zero::physics {
+    using unit_r = ratio<short, 1, 1>;
+
     using yocto = ratio<short, 10, -24>;
     using zepto = ratio<short, 10, -21>;
     using atto = ratio<short, 10, -18>;
@@ -66,6 +68,7 @@ export namespace zero::physics {
 
     template <typename T>
     concept Ratio = 
+        std::is_same_v<T, unit_r> ||
         std::is_same_v<T, yocto> ||
         std::is_same_v<T, zepto> ||
         std::is_same_v<T, atto> ||
