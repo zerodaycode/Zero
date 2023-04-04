@@ -68,7 +68,7 @@ for define the symbol of kilogram, according to the `SI`
 ## Conversion
 
 We provide in the API an easy way to convert quantities of the same dimension (for the bases) or with the
-same dimensionality (for derived) with a simple template member function called `to<Magnitude Target>`.
+same dimensionality (for derived) with a simple template member function called `.to<Magnitude>()`.
 Here's an example:
 
 ```

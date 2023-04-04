@@ -1,6 +1,6 @@
 /**
  * @brief Module for design types and behavior associated with Physical Quantities.
- * 
+ *
  * A physical quantity can be understand as a real world magnitude, related with
  * their units in the international system
  */
@@ -15,7 +15,8 @@ import :ratios;
 import :dimensions;
 import :units;
 import :units.symbols;
-import :units.detail;
+import :quantities.detail;
+
 
 export namespace zero::physics {
     template <typename T>
@@ -275,30 +276,7 @@ export namespace zero::physics {
             return quantity<DM2, T2>((lhs.amount * dm1_dimensionality) / (rhs.amount * dm2_dimensionality));
     }
 
-    // TODO this template recursive function isn't linking from the details
-    // partition module, so it must be in the public API until we found a better solution
-    template<typename M, int N = 1>
-    void derived_magnitude_symbols(std::string& out) {
-        if constexpr (N == 1)
-            out += " ";
 
-        using type = typename std::tuple_element<N - 1, typename M::units>::type;
-        const auto total_elements = std::tuple_size<typename M::units>::value;
-        const int dim_exp = std::tuple_element<N - 1, typename M::derived_dimension::dimensions>::type::dimension_exp;
-
-        auto splitted = zero::split_str(zero::types::type_name<type>(), "::").back();
-        auto s_symbol = splitted.substr(0, splitted.length() - 1);
-
-        out += s_symbol;
-
-        if constexpr (dim_exp != 1)
-            out += std::to_string(dim_exp);
-        if constexpr (total_elements > N)
-            out += std::string{"*"};
-
-        if constexpr (N - 1 < total_elements - 1)
-            derived_magnitude_symbols<M, N + 1>(out);
-    }
 
     /**
      * Sends to an output stream a formatted version of some {@link quantity}
@@ -309,11 +287,10 @@ export namespace zero::physics {
             os << q.amount << " " << zero::split_str(zero::types::type_name<typename M::symbol>(), "::").back();
         else {
             std::string out;
-            derived_magnitude_symbols<M>(out);
+            ::derived_magnitude_symbols<M>(out);
             os << q.amount << out;
         }
 
         return os;
     }
 }
-

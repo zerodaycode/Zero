@@ -56,7 +56,7 @@ interfaces = [
     
     # The physics library
         # The quantities library
-        { file = 'physics/quantities/internal/units_detail.cpp', partition = { module = 'physics.quantities', partition_name = 'units.detail' } },
+        { file = 'physics/quantities/internal/quantities_detail.cpp', partition = { module = 'physics.quantities', partition_name = 'quantities.detail' } },
 
         { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics.quantities' } },
         { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics.quantities' } },

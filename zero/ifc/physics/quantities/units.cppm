@@ -11,7 +11,7 @@ import concepts;
 import :ratios;
 import :dimensions;
 import :units.symbols;
-import :units.detail;
+import :quantities.detail;
 
 using namespace quantities::__detail;
 
