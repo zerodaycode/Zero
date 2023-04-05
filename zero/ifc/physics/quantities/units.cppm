@@ -3,7 +3,7 @@
  * provided by the international system
 */
 
-export module physics:units;
+export module physics.quantities:units;
 
 import std;
 
@@ -11,9 +11,9 @@ import concepts;
 import :ratios;
 import :dimensions;
 import :units.symbols;
-import :units.detail;
+import :quantities.detail;
 
-using namespace units::__detail;
+using namespace quantities::__detail;
 
 export namespace zero::physics {
     /* Base units */
@@ -32,12 +32,6 @@ export namespace zero::physics {
         typename T::symbol;
     };
 
-    struct Kilogram: public mass<1>, public base_unit<kilo, kg> {};
-    struct Hectogram: public mass<1>, public base_unit<hecto, hg> {};
-    struct Meter: public length<1>, public base_unit<root, m> {};
-    struct Second: public time<1>, public base_unit<second, s> {};
-    struct Hour: public time<1>, public base_unit<hour, h> {};
-
     /* Derived units */
     template <typename DerivedDim, BaseUnit... BaseUnits>
         requires (DerivedDimension<DerivedDim>)
@@ -47,7 +41,7 @@ export namespace zero::physics {
 
         static constexpr double dimensionality = []<std::size_t... Is>(std::index_sequence<Is...>) {
             using dm_exp = dimensions_exponents<typename DerivedDim::dimensions>;
-            return (1.0 * ... * consteval_power(BaseUnits::ratio::value, dm_exp::value[Is]));
+            return (1.0 * ... * consteval_power_of(BaseUnits::ratio::value, dm_exp::value[Is]));
         } (std::make_index_sequence<DerivedDim::total_dimensions>{});
     };
 
@@ -57,20 +51,4 @@ export namespace zero::physics {
         typename T::derived_dimension;
         T::dimensionality;
     } && (std::is_base_of_v<derived_unit<typename T::derived_dimension, std::tuple_element_t<Is, typename T::units>>, T> && ...);
-
-    struct MetersPerSecond :
-        public derived_unit<
-            speed,
-            base_unit<root, m>,
-            base_unit<second, s>
-        >
-    {};
-
-    struct KilometersPerHour :
-        public derived_unit<
-            speed,
-            base_unit<kilo, km>,
-            base_unit<hour, h>
-        >
-    {};
 }

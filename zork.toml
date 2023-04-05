@@ -6,8 +6,14 @@ project_root = "zero"
 
 [compiler]
 cpp_compiler = "clang"
-cpp_standard = "20"
-std_lib = "LIBCPP"
+cpp_standard = "2b"
+std_lib = "STDLIBCPP"
+extra_args = [
+    '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
+    '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',
+    '-Wmisleading-indentation', '-Wnull-dereference', '-Wdouble-promotion', '-Wformat=2', '-Wimplicit-fallthrough',
+    '-Weffc++'
+]
 
 [build]
 output_dir = "./out"
@@ -49,13 +55,15 @@ interfaces = [
     { file = 'collections/collections.cppm', dependencies = ['array'] },
     
     # The physics library
-    { file = 'physics/quantities/internal/units_detail.cpp', partition = { module = 'physics', partition_name = 'units.detail' } },
+        # The quantities library
+        { file = 'physics/quantities/internal/quantities_detail.cpp', partition = { module = 'physics.quantities', partition_name = 'quantities.detail' } },
 
-    { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics' } },
-    { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics' } },
-    { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics' } },
-    { file = 'physics/quantities/units.cppm', module_name = 'units', partition = { module = 'physics' } },
-    { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics' }, dependencies = ['physics-ratios', 'physics-units', 'physics-units.symbols'] },
+        { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/units.cppm', module_name = 'units', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/physics.quantities.cppm' },
     # Root
     { file = 'physics/physics.cppm' },
 

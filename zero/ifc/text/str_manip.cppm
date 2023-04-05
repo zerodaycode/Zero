@@ -14,7 +14,8 @@ concept SplittableString =
 
 export namespace zero {
     template <SplittableString T>
-    auto split_str(T&& str, const char* delimiter) -> std::vector<std::string> {
+    [[nodiscard]]
+    constexpr auto split_str(T&& str, const char* delimiter) -> std::vector<std::string> {
         std::vector<std::string> tokens;
 
         std::istringstream iss;
