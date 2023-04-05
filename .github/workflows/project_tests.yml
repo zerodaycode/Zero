@@ -1,0 +1,45 @@
+name: Tests for the project
+
+on:
+  push:
+    branches: '*'
+  pull_request:
+    branches: '*'
+
+jobs:
+  tests:
+    name: Running the tests for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest }
+#          - { os: macos-latest }
+#          - { os: windows-latest }
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Clone Zork++
+        uses: GuillaumeFalourd/clone-github-repo-action@v2
+        with:
+          owner: 'ZeroDayCode'
+          repository: 'Zork'
+
+      - name: Download the latest possible version of Clang
+        run: |
+          sudo apt update
+          sudo apt install clang-15 --install-suggests
+          sudo apt install libc++-15-dev libc++abi-15-dev
+
+      - name: Generate a Zork++ release build
+        run: |
+          cd ./Zork/zork++
+          cargo build --release
+          cd ../..
+          mv ./Zork/zork++/target/release/zork ./Zork/zork++/target/release/zork++
+          cp ./Zork/zork++/target/release/zork++ .
+
+      - name: Running the tests for ${{ matrix.os }} with Zork++
+        run: ./zork++ --match-files gh_linux -vv -c run
