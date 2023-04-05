@@ -24,39 +24,44 @@ int main() {
     std::cout << "\nMasses addition [m/s + m/s]: " << q1 + q2 << "\n";
 
     constexpr auto kgms = quantity<Kilogram>{1.};
-    std::cout << "Converting kilograms to hectograms: " << kgms.to<Hectogram>() << "\n";
+    constexpr auto hgs = quantity<Hectogram>{10.};
+    std::cout << "  - Converting kilograms to hectograms: " << kgms.to<Hectogram>() << "\n";
+    std::cout << "  - Converting hectograms to Kilograms: " << hgs.to<Kilogram>() << "\n";
 
     constexpr auto velocity = quantity<MetersPerSecond> {300'000.};
     constexpr auto velocity2 = quantity<KilometersPerHour> {200.};
 
-    std::cout << "Velocities addition  [m/s + km/h]: " << velocity +  velocity2 << "\n";
-    std::cout << "Velocities subtraction  [km/h - m/s]: " << velocity2 - velocity << "\n";
-    std::cout << "Velocities multiplication  [m/s * km/h]: " << velocity * velocity2 << "\n";
-    std::cout << "Velocities division  [m/s / km/h]: " << velocity / velocity2 << "\n";
+    std::cout << "  - Velocities addition  [m/s + km/h]: " << velocity +  velocity2 << "\n";
+    std::cout << "  - Velocities subtraction  [km/h - m/s]: " << velocity2 - velocity << "\n";
+    std::cout << "  - Velocities multiplication  [m/s * km/h]: " << velocity * velocity2 << "\n";
+    std::cout << "  - Velocities division  [m/s / km/h]: " << velocity / velocity2 << "\n";
 
     constexpr quantity<KilometersPerHour> kmph = velocity.to<KilometersPerHour>();
     constexpr quantity<MetersPerSecond> mps = kmph.to<MetersPerSecond>();
-    std::cout << "Converting meters per second to kilometers per hour: " << kmph << "\n";
-    std::cout << "Converting kilometers per hour to meters per second: " << mps << "\n";
+    std::cout << "  - Converting meters per second to kilometers per hour: " << kmph << "\n";
+    std::cout << "  - Converting kilometers per hour to meters per second: " << mps << "\n";
 
     std::cout << "\nShowing some predefined derived magnitudes:\n";
-    std::cout << "Frequency in Hertz: " << quantity<Hertz>{3} << "\n";
-    std::cout << "Force in Newtons: " << quantity<Newton>{10} << "\n";
-    std::cout << "Energy in Joules: " << quantity<Joule>{100} << "\n";
-    std::cout << "Power in Watts: " << quantity<Watt>{5000} << "\n";
-    std::cout << "Electric Charge in Coulombs: " << quantity<Coulomb>{5000} << "\n";
-    std::cout << "Voltage in Volts: " << quantity<Volt>{240} << "\n\n";
+    std::cout << "  - Frequency in Hertz: " << quantity<Hertz>{3} << "\n";
+    std::cout << "  - Force in Newtons: " << quantity<Newton>{10} << "\n";
+    std::cout << "  - Energy in Joules: " << quantity<Joule>{100} << "\n";
+    std::cout << "  - Power in Watts: " << quantity<Watt>{5000} << "\n";
+    std::cout << "  - Electric Charge in Coulombs: " << quantity<Coulomb>{5000} << "\n";
+    std::cout << "  - Voltage in Volts: " << quantity<Volt>{240} << "\n\n";
 
-    std::cout << "\nMessing with time:\n";
-//    constexpr auto hour = quantity<Hour>{1};
-//    std::cout << "Converting one hour to minutes: " << hour.to<Minute>() << "\n";
-//    std::cout << "Converting one hour to seconds: " << hour.to<Second>() << "\n";
+    std::cout << "Messing with time:\n";
+//
+    constexpr auto secs_per_day = quantity<Second>{86400};
+    constexpr auto mins_per_day = quantity<Minute>{1440};
     constexpr auto hours_24 = quantity<Hour>{24};
     constexpr auto one_day = quantity<Day>{1};
-//    std::cout << "Representing 24 hours: " << hours_24 << "\n";
-    std::cout << "Converting 24 hours to one day: " << hours_24.to<Day>() << "\n";
-    std::cout << "Converting one day to hours: " << one_day.to<Hour>() << "\n";
-//    std::cout << "Representing one day: " << one_day << "\n\n";
+
+    std::cout << "  - Converting 86400 seconds to days: " << secs_per_day.to<Day>() << "\n";
+    std::cout << "  - Converting 1440 min to days: " << mins_per_day.to<Day>() << "\n";
+    std::cout << "  - Converting 24 hours to days: " << hours_24.to<Day>() << "\n";
+    std::cout << "  - Converting one day to hours: " << one_day.to<Hour>() << "\n";
+    std::cout << "  - Converting one day to seconds: " << one_day.to<Second>() << "\n";
+    std::cout << "  - Converting one day to minutes: " << one_day.to<Minute>() << "\n";
 
     return 0;
 }
