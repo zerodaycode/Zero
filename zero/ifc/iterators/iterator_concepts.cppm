@@ -13,16 +13,16 @@ export namespace zero::iterator::concepts {
      * @brief Enforces the requeriments over the `Category` template argument
      * of the `zero::iterator::iterator` iterator type of pass only a iterator tag 
      * defined in the standard library. This allows the code of zero to be
-     * perfectly compatible with any element that expects tag dispaching
+     * perfectly compatible with any element that expects tag dispatching
      */
     template <typename T>
     concept std_iterator_category = 
-        std::is_same<T, std::input_iterator_tag>() ||
-        std::is_same<T, std::output_iterator_tag>() ||
-        std::is_same<T, std::forward_iterator_tag>() ||
-        std::is_same<T, std::bidirectional_iterator_tag>() ||
-        std::is_same<T, std::random_access_iterator_tag>() ||
-        std::is_same<T, std::contiguous_iterator_tag>();
+        std::is_same_v<T, std::input_iterator_tag>||
+        std::is_same_v<T, std::output_iterator_tag> ||
+        std::is_same_v<T, std::forward_iterator_tag> ||
+        std::is_same_v<T, std::bidirectional_iterator_tag> ||
+        std::is_same_v<T, std::random_access_iterator_tag> ||
+        std::is_same_v<T, std::contiguous_iterator_tag>;
 
     /**
      * @brief Alias for define that a template parameter T is a reference `T = T&`
@@ -31,7 +31,7 @@ export namespace zero::iterator::concepts {
     using template_arg_as_ref = T&;
 
     /**
-     * @brief satisfied if and only if the type is referenceable (in particular, not void)
+     * @brief satisfied if and only if the type is referencable (in particular, not void)
      */
     template<typename T>
     concept can_reference = requires() { typename template_arg_as_ref<T>; };
