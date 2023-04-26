@@ -164,7 +164,7 @@ template <typename Derived>
  * on itself
  */ 
 template <typename Iter>
-    requires (std::is_base_of<zero::iterator::iterator_facade<Iter>, Iter>())
+    requires (std::is_base_of_v<zero::iterator::iterator_facade<Iter>, Iter>)
 struct std::iterator_traits<Iter> {
     static const Iter& _it;
 
