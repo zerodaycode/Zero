@@ -67,6 +67,10 @@ interfaces = [
     # Root
     { file = 'physics/physics.cppm' },
 
+    ### Math library
+    # Root
+    { file = 'math/math.cppm' },
+
     # The main interface of the project
     { file = 'zero.cppm' }
 ]
