@@ -6,6 +6,7 @@
 export module physics.quantities:units;
 
 import std;
+import math;
 
 import concepts;
 import :ratios;
@@ -14,6 +15,7 @@ import :units.symbols;
 import :quantities.detail;
 
 using namespace quantities::__detail;
+using namespace zero::math;
 
 export namespace zero::physics {
     /* Base units */
@@ -41,7 +43,9 @@ export namespace zero::physics {
 
         static constexpr double dimensionality = []<std::size_t... Is>(std::index_sequence<Is...>) {
             using dm_exp = dimensions_exponents<typename DerivedDim::dimensions>;
-            return (1.0 * ... * consteval_power_of(BaseUnits::ratio::value, dm_exp::value[Is]));
+            return (
+                1.0 * ... * consteval_power_of(BaseUnits::ratio::value, dm_exp::value[Is])
+            );
         } (std::make_index_sequence<DerivedDim::total_dimensions>{});
     };
 
