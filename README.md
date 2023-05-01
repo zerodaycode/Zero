@@ -13,7 +13,7 @@ Quick description, and links to the documentation of all the libraries of the pr
 - [Iterators](./zero/ifc/iterators/README.md) - Custom iterator interfaces, and some legacy implementation (just as examples) of the legacy ones
 - [Text](./zero/ifc/text/README.md) - Character types and manipulation operations on them
 - [Types](./zero/ifc/types/README.md) - Information about types and traits for types
-
+- [Math](./zero/ifc/math/README.md) - Mathematical operations and functions
 ## Sponsorship
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" width="100" />
