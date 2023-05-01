@@ -55,8 +55,11 @@ interfaces = [
     { file = 'collections/collections.cppm', dependencies = ['array'] },
 
     ### Math library
-        # The operationa library
-        { file = 'math/operations.cppm', partition = { module = 'math', partition_name = 'ops' } },
+        # The operations library
+        { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
+        { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
+        
+        { file = 'math/ops/math.ops.cppm' },
     # Root
     { file = 'math/math.cppm' },
 

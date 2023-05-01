@@ -1,4 +1,4 @@
-export module math:ops;
+export module math.ops:arithmetic;
 
 
 export namespace zero::math {
@@ -15,5 +15,4 @@ export namespace zero::math {
     inline consteval double consteval_power_of(const double base, const int exponent) {
         return power_of(base, exponent);
     }
-
 }

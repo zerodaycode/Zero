@@ -1,3 +1,3 @@
 export module math;
 
-export import :ops;
+export import math.ops;
