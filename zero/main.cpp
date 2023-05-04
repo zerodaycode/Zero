@@ -27,6 +27,10 @@ int main() {
     std::cout << "\nGCD of " << a << " and " << b << " is: " << zero::math::gcd(a, b) << "\n";
     std::cout << "GCD of " << a << ", " << b << " and " << c << " is: " << zero::math::gcd(a, b, c) << "\n\n";
 
+    std::cout << "\nLCM of 2, 3, 4 and 5 is: " << zero::math::lcm(2, 3, 4, 5) << "\n";
+    std::cout << "LCM of 10, 15 and 25 is: " << zero::math::lcm(10, 15, 25) << "\n";
+    std::cout << "LCM of 8 and 6 is: " << zero::math::lcm(8, 6) << "\n\n";
+
     return 0;
 }
 
