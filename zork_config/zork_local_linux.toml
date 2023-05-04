@@ -53,8 +53,18 @@ interfaces = [
     { file = 'collections/container.cppm', dependencies = ['type_info'] },
     { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
     { file = 'collections/collections.cppm', dependencies = ['array'] },
+
+    ### Math library
+        # The operations library
+        { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
+        { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
+        
+        { file = 'math/ops/math.ops.cppm' },
+    # Root
+    { file = 'math/math.cppm' },
+
     
-    # The physics library
+    ### The physics library
         # The quantities library
         { file = 'physics/quantities/internal/quantities_detail.cpp', partition = { module = 'physics.quantities', partition_name = 'quantities.detail' } },
 
