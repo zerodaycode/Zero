@@ -1,0 +1,83 @@
+[project]
+name = "Zero"
+authors = [ "Zero Day Code" ]
+compilation_db = true
+project_root = "zero"
+
+[compiler]
+cpp_compiler = "clang"
+cpp_standard = "2b"
+std_lib = "LIBCPP"
+extra_args = [
+    '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
+    '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',
+    '-Wmisleading-indentation', '-Wnull-dereference', '-Wdouble-promotion', '-Wformat=2', '-Wimplicit-fallthrough',
+    '-Weffc++'
+]
+
+[build]
+output_dir = "./out"
+
+[executable]
+executable_name = "zero"
+sources = [ "*.cpp" ]
+
+[tests]
+tests_executable_name = "zero_tests"
+sources = [ "tests/**/*.cpp" ]
+
+[modules]
+sys_modules = ['cstdio']
+base_ifcs_dir = "ifc"
+interfaces = [
+    { file = 'commons/typedefs.cppm' },    
+    { file = 'text/str_manip.cppm' },
+    { file = 'types/type_info.cppm' },
+    { file = 'types/type_traits.cppm' },
+    { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
+
+    ### Iterator library
+    { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+    { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
+    # Modern
+    { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
+    { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
+    # Legacy
+    { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
+    { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
+    { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
+    # Root
+    { file = 'iterators/iterator.cppm' },
+
+    # The collections/containers librar
+    { file = 'collections/container.cppm', dependencies = ['type_info'] },
+    { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
+    { file = 'collections/collections.cppm', dependencies = ['array'] },
+
+    ### Math library
+        # The operations library
+        { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
+        { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
+        
+        { file = 'math/ops/math.ops.cppm' },
+    # Root
+    { file = 'math/math.cppm' },
+
+    
+    ### The physics library
+        # The quantities library
+        { file = 'physics/quantities/internal/quantities_detail.cpp', partition = { module = 'physics.quantities', partition_name = 'quantities.detail' } },
+
+        { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/units.cppm', module_name = 'units', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/physics.quantities.cppm' },
+    # Root
+    { file = 'physics/physics.cppm' },
+
+    # The main interface of the project
+    { file = 'zero.cppm' }
+]
+

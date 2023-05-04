@@ -4,6 +4,7 @@
  */
 
 export module physics.quantities:ratios;
+import math;
 
 import std;
 
@@ -24,20 +25,6 @@ template <typename T>
 concept RatioV = (std::is_integral_v<T> || std::is_floating_point_v<T>)
     && !std::is_same_v<T, char>;
 
-[[nodiscard]]
-constexpr double power_of(const double base, const int exponent) {
-    double result = 1;
-    const int limit = ((exponent >= 0) ? exponent : exponent * -1);
-    for (int i = 0; i < limit; i++)
-        result *= (exponent >= 0) ? base : 1/base;
-    return result;
-}
-
-[[nodiscard]]
-inline consteval double consteval_power_of(const double base, const int exponent) {
-    return power_of(base, exponent);
-}
-
 
 /**
  * Represents a power that will serve as a ratio for compare quantities
@@ -51,7 +38,7 @@ struct ratio {
     static constexpr double base = static_cast<double>(Base);
     static constexpr double exponent = static_cast<double>(Exponent);
     static constexpr double base_denominator = static_cast<double>(BaseDenominator);
-    static constexpr double value = consteval_power_of(base, exponent);
+    static constexpr double value = zero::math::consteval_power_of(base, exponent);
 };
 
 export namespace zero::physics {
