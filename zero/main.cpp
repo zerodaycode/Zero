@@ -21,9 +21,11 @@ int main() {
     std::cout.precision(15);
 
     // Math
-    const int a = 8;
-    const int b = 6;
-    std::cout << "\nGCD of " << a << " and " << b << " is: " << zero::math::gcd(a, b) << std::endl;
+    const int a = 16;
+    const int b = 20;
+    const int c = 30;
+    std::cout << "\nGCD of " << a << " and " << b << " is: " << zero::math::gcd(a, b) << "\n";
+    std::cout << "GCD of " << a << ", " << b << " and " << c << " is: " << zero::math::gcd(a, b, c) << "\n\n";
 
     return 0;
 }
