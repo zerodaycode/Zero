@@ -5,7 +5,7 @@ export namespace zero::math {
     [[nodiscard]]
     constexpr int gcd(int a, int b) {
         while (b != 0) {
-            int t = b;
+            auto t = b;
             b = a % b;
             a = t;
         }
