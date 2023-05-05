@@ -16,7 +16,7 @@ void run_quantities_examples();
 int main() {
     // run_containers_examples();
     // run_output_iterator_examples();
-    // run_quantities_examples();
+    run_quantities_examples();
 
     std::cout.precision(15);
 
@@ -25,7 +25,7 @@ int main() {
     const int b = 20;
     const int c = 30;
     std::cout << "\nGCD of " << a << " and " << b << " is: " << zero::math::gcd(a, b) << "\n";
-    std::cout << "GCD of " << a << ", " << b << " and " << c << " is: " << zero::math::gcd(a, b, c) << "\n\n";
+    std::cout << "GCD of " << a << ", " << b << " and " << c << " is: " << zero::math::gcd(a, b, c) << "\n";
 
     std::cout << "\nLCM of 2, 3, 4 and 5 is: " << zero::math::lcm(2, 3, 4, 5) << "\n";
     std::cout << "LCM of 10, 15 and 25 is: " << zero::math::lcm(10, 15, 25) << "\n";
