@@ -44,7 +44,7 @@ export namespace zero::physics {
         static constexpr double dimensionality = []<std::size_t... Is>(std::index_sequence<Is...>) {
             using dm_exp = dimensions_exponents<typename DerivedDim::dimensions>;
             return (
-                1.0 * ... * consteval_power_of(BaseUnits::ratio::value, dm_exp::value[Is])
+                1.0 * ... * power_of(BaseUnits::ratio::value, dm_exp::value[Is])
             );
         } (std::make_index_sequence<DerivedDim::total_dimensions>{});
     };

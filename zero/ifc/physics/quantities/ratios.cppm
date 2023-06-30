@@ -38,7 +38,7 @@ struct ratio {
     static constexpr double base = static_cast<double>(Base);
     static constexpr double exponent = static_cast<double>(Exponent);
     static constexpr double base_denominator = static_cast<double>(BaseDenominator);
-    static constexpr double value = zero::math::consteval_power_of(base, exponent);
+    static constexpr double value = zero::math::power_of(base, exponent);
 };
 
 export namespace zero::physics {
