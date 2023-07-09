@@ -54,16 +54,24 @@ export {
             tsuite.uuid = oss.str();
         }
 
-        auto it = std::find_if(tsuite.cases.begin(), tsuite.cases.end(), [&](const TestCase& target) {
-            return target.name == tname;
+        auto it = std::find_if(tsuite.cases.begin(), tsuite.cases.end(), [&](const TestCase& tcase) {
+            return tcase.name == tname;
         });
 
+        /// Check that the user didn't registered a test case with the same identifier
         if (it != tsuite.cases.end())
             tsuite.cases.push_back({tname, tfunc});
         else
             // TODO Use a results structs or whatever to hold this info an-td print it later as ... warnings?!
             // Or convert the suite to a class and store them there
             std::cout << "\033[38;5;220m[Warning]\033[0m Already exists a test case with the name: " << tname << ". Skipping test case\n";
+
+        /// If this is the first time that the suite is being registered
+        auto suites_it = std::find_if(testSuites.begin(), testSuites.end(), [&](const TestSuite& suite) {
+            return suite.uuid == tsuite.uuid;
+        });
+        if (suites_it == testSuites.end()) {}
+            testSuites.push_back(tsuite);
     }
 
     // Assertion function to compare two values and throw an exception if they are not equal
@@ -87,7 +95,9 @@ export {
         std::cout << "    Passed: " << freeTestsResults.passed << std::endl;
         std::cout << "    Failed: " << freeTestsResults.failed << std::endl;
 
-        std::cout << "\nRunning test suites: " << std::endl;
+        std::cout
+            << "\nRunning test suites. Total suites: " << testSuites.size()
+            << std::endl;
         for (const auto& testSuite : testSuites) {
             TestResults suite_results;
             std::cout << "    Running test suite: " << testSuite.uuid << std::endl;
