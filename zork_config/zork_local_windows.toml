@@ -79,6 +79,8 @@ interfaces = [
 #    { file = 'physics/physics.cppm' },
 
     ### The testing suite
+        { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
+    # Root
     { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
 
     # The main interface of the project
