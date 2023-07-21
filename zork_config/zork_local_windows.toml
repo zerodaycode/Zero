@@ -7,7 +7,7 @@ project_root = "zero"
 [compiler]
 cpp_compiler = "clang"
 cpp_standard = "2b"
-std_lib = "STDLIBCPP"
+std_lib = "LIBCPP"
 extra_args = [
     '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
     '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',
@@ -27,11 +27,11 @@ tests_executable_name = "zero_tests"
 sources = [ "tests/**/*.cpp" ]
 
 [modules]
-sys_modules = ['cstdio']
 base_ifcs_dir = "ifc"
 interfaces = [
     { file = 'commons/typedefs.cppm' },    
     { file = 'text/str_manip.cppm' },
+    { file = 'text/format.cppm' },
     { file = 'types/type_info.cppm' },
     { file = 'types/type_traits.cppm' },
     { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },

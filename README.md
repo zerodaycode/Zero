@@ -11,7 +11,7 @@ Quick description, and links to the documentation of all the libraries of the pr
   - [Quantities](./zero/ifc/physics/quantities) - Compile time library for work with physical quantities acording the `SI`
 - [Collections](./zero/ifc/collections/README.md) - Custom containers, operations and interfaces
 - [Iterators](./zero/ifc/iterators/README.md) - Custom iterator interfaces, and some legacy implementation (just as examples) of the legacy ones
-- [Text](./zero/ifc/text/README.md) - Character types and manipulation operations on them
+- [Text](./zero/ifc/text/README.md) - Provides utilities for character manipulation, text operations, string formatting, and styling.
 - [Types](./zero/ifc/types/README.md) - Information about types and traits for types
 - [Math](./zero/ifc/math/README.md) - Mathematical operations and functions
 ## Sponsorship
