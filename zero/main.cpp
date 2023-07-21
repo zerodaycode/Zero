@@ -13,11 +13,13 @@ import format;
 void run_containers_examples();
 void run_output_iterator_examples();
 void run_quantities_examples();
+void run_formatter_and_stylize_examples();
 
 int main() {
     // run_containers_examples();
     // run_output_iterator_examples();
     run_quantities_examples();
+    run_formatter_and_stylize_examples();
 
     std::cout.precision(15);
 
@@ -169,3 +171,51 @@ void run_quantities_examples() {
     std::cout << "  - Converting one day to seconds: " << one_day.to<Second>() << "\n";
     std::cout << "  - Converting one day to minutes: " << one_day.to<Minute>() << "\n";
 }
+
+void run_formatter_and_stylize_examples() {
+    using namespace zero::fmt;
+    
+    std::cout << "#######Check formatter########\n\n";
+
+    std::string format_str = "x = {10, y = 20, z = {}}";
+    std::cout << formatter(format_str, 10) << std::endl;
+    
+
+    std::cout << "\n\n#######Check stylize########\n\n";
+
+
+    std::string boldText = stylize("[WARNING] This is bold text", Color::YELLOW, {Modifier::BOLD});
+    std::string faintText = stylize("[INFO] This is faint text", Color::GREEN, {Modifier::FAINT});
+    std::string italicText = stylize("[DEBUG] This is italic text", Color::BLUE, {Modifier::ITALIC});
+    std::string underlinedText = stylize("[ERROR] This is underlined text", Color::RED, {Modifier::UNDERLINE});
+    std::string blinkingText = stylize("[CRITICAL] This is blinking text", Color::PURPLE, {Modifier::BLINK});
+    std::string reversedText = stylize("[NOTICE] This is reversed text", Color::CYAN, {Modifier::REVERSE});
+    std::string hiddenText = stylize("[SECRET] This is hidden text", Color::BLACK, {Modifier::HIDDEN});
+
+    std::cout << boldText << "\n";
+    std::cout << faintText << "\n";
+    std::cout << italicText << "\n";
+    std::cout << underlinedText << "\n";
+    std::cout << blinkingText << "\n";
+    std::cout << reversedText << "\n";
+    std::cout << hiddenText << "\n";
+
+
+    std::cout << "\n\n#######Check combination full text########\n\n";
+    std::string format_str1 = "[WARNING] {} is deprecated. Please use {} instead.";
+    std::string warning_msg = formatter(format_str1, "methodA", "methodB");
+    std::string stylized_warning_msg = stylize(warning_msg, Color::YELLOW, {Modifier::BOLD});
+    std::cout << stylized_warning_msg << std::endl;
+
+    std::string format_str2 = "[ERROR] Failed to open file: {}";
+    std::string error_msg = formatter(format_str2, "/path/to/file");
+    std::string stylized_error_msg = stylize(error_msg, Color::RED, {Modifier::BOLD, Modifier::UNDERLINE});
+    std::cout << stylized_error_msg << std::endl;
+
+    std::cout << "\n\n#######Check combination partial text########\n\n";
+    std::string format_str3 = "{} Successfully connected to server: {}";
+    std::string stylized_info_msg = stylize("[INFO]", Color::GREEN, {Modifier::FAINT});
+    std::string info_msg = formatter(format_str3,stylized_info_msg, "192.168.1.1");
+    std::cout << info_msg << std::endl;
+}
+
