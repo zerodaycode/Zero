@@ -16,16 +16,21 @@ void testPtrsAddition() {
 
 // Driver code
 int main() {
-    // Register test cases using function pointers
-    TEST_CASE("Addition Test", testPtrsAddition);
+    // Free tests cases registration examples
 
-    // Register test cases using lambdas
+    // Register a new test case using a function pointer.
+    TEST_CASE("Addition Test With Pointers", testPtrsAddition);
+
+    // Users can register a new test case using lambdas, avoiding to write standalone functions
     TEST_CASE("Subtraction Test", []() {
         int result = 5 - 3;
         assertEquals(122435, result);
     });
 
-    // We can group related test into a suite
+    // Registering test cases into test suites, to group and relate tests that makes sense to exists
+    // as a part of a whole
+
+    // Instantiate a new test suite, giving it a unique identifier.
     TestSuite suite {"My Suite"};
     // Register test cases using function pointers into a test suite
     TEST_CASE(suite, "Addition Test", testAddition);
@@ -33,7 +38,8 @@ int main() {
     // exists one with the same identifier in the given suite
     TEST_CASE(suite, "Addition Test", testAddition);
 
-    runTests();
+    // Don't forget to call this free function, to run all the tests written!
+    RUN_TESTS();
 
     return 0;
 }

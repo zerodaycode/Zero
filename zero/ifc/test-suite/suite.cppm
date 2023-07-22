@@ -13,17 +13,19 @@ export import :assertions;
 
 import std;
 
+/**
+ *
+ */
 struct TestResults {
     int passed = 0;
     int failed = 0;
-    std::vector<std::string> warnings;
+    std::vector<std::string> warnings {};
 };
 
-// Forward declarations  // TODO - Split in modules, so we don't have to forward declare anything
+// Forward declarations
 export struct TestSuite;
 export struct TestCase;
 void runTest(const TestCase* testCase, TestResults& testResults);
-
 void runFreeTestCases();
 
 // Top-level containers. They hold pointers to the types to avoid:
@@ -84,7 +86,7 @@ export {
     }
 
     // Function to run all the test cases and suites
-    void runTests() {
+    void RUN_TESTS() {
         if (!freeTestCases.empty())
             runFreeTestCases();
         std::cout
