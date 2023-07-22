@@ -36,22 +36,28 @@ interfaces = [
     { file = 'types/type_traits.cppm' },
     { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
 
+    ### The testing suite
+        { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
+    # Root
+    { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
+
     ### Iterator library
-    { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
-    { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
-    # Modern
-    { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
-    # Legacy
-    { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+        { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
+        # Modern
+        { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
+        # Legacy
+        { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
     # Root
     { file = 'iterators/iterator.cppm' },
 
     # The collections/containers librar
-    { file = 'collections/container.cppm', dependencies = ['type_info'] },
-    { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
+        { file = 'collections/container.cppm', dependencies = ['type_info'] },
+        { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
+    # Root
     { file = 'collections/collections.cppm', dependencies = ['array'] },
 
     ### Math library
@@ -62,7 +68,6 @@ interfaces = [
         { file = 'math/ops/math.ops.cppm' },
     # Root
     { file = 'math/math.cppm' },
-
     
     ### The physics library
         # The quantities library
@@ -76,9 +81,6 @@ interfaces = [
         { file = 'physics/quantities/physics.quantities.cppm' },
     # Root
     { file = 'physics/physics.cppm' },
-
-    ### The testing suite
-    { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
 
     # The main interface of the project
     { file = 'zero.cppm' }

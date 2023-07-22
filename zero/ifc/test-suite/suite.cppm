@@ -36,9 +36,11 @@ export {
     struct TestSuite {
         std::string uuid;
         std::vector<TestCase*> cases {};
+        TestResults results {};
 
         constexpr TestSuite() = delete;
-        constexpr explicit TestSuite(std::string uuid) : uuid(std::move(uuid)) {}
+        constexpr explicit TestSuite(std::string uuid)
+            : uuid(std::move(uuid)) {}
 
         friend bool operator==(const TestSuite& lhs, const TestSuite& rhs) {
             return lhs.uuid == rhs.uuid;
@@ -67,9 +69,12 @@ export {
         if (it == tsuite.cases.end())
             tsuite.cases.emplace_back(new TestCase(tname, tfunc));
         else
-            // TODO Add to the suites warnings, into the results
-            std::cout << "\033[38;5;220m[Warning]\033[0m Already exists a test case with the name: " << tname
-                << " in the test suite: " << tsuite.uuid << ". Skipping test case\n";
+            tsuite.results.warnings.emplace_back(
+                "\033[38;5;220m[Warning\033[0m in suite: \033[38;5;165m" +
+                    tsuite.uuid + "\033[0m\033[38;5;220m]\033[0m "
+                       "Already exists a test case with the name: \033[38;5;117m"
+                       + tname + "\033[0m. Skipping test case."
+            );
         /// If this is the first time that the suite is being registered
         auto suites_it = std::find_if(testSuites.begin(), testSuites.end(), [&](const TestSuite* suite) {
             return suite->uuid == tsuite.uuid;
@@ -85,16 +90,18 @@ export {
         std::cout
             << "\nRunning test suites. Total suites found: " << testSuites.size()
             << std::endl;
-        for (const auto& testSuite : testSuites) {
-            TestResults suite_results;
-            std::cout << "Running test suite: " << testSuite->uuid << std::endl;
 
-            for (const auto& testCase : testSuite->cases)
-                runTest(testCase, suite_results);
+        for (const auto& test_suite : testSuites) {
+            std::cout << "Running test suite: \033[38;5;165m" << test_suite->uuid << "\033[m";
 
-            std::cout << "\nTest suite [" << testSuite->uuid << "] summary:" << std::endl;
-            std::cout << "    \033[32mPassed:\033[0m " << suite_results.passed << std::endl;
-            std::cout << "    \033[31mFailed:\033[0m " << suite_results.failed << std::endl;
+            for (const auto& warning : test_suite->results.warnings)
+                std::cout << "\n    " << warning << std::endl;
+            for (const auto& test_case : test_suite->cases)
+                runTest(test_case, test_suite->results);
+
+            std::cout << "\nTest suite [" << test_suite->uuid << "] summary:" << std::endl;
+            std::cout << "    \033[32mPassed:\033[0m " << test_suite->results.passed << std::endl;
+            std::cout << "    \033[31mFailed:\033[0m " << test_suite->results.failed << std::endl;
         }
     }
 }
