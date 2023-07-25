@@ -27,7 +27,6 @@ tests_executable_name = "zero_tests"
 sources = [ "tests/**/*.cpp" ]
 
 [modules]
-sys_modules = ['cstdio']
 base_ifcs_dir = "ifc"
 interfaces = [
     { file = 'commons/typedefs.cppm' },    
@@ -64,8 +63,10 @@ interfaces = [
         # The operations library
         { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
         { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
-        
         { file = 'math/ops/math.ops.cppm' },
+        # The linear algebra library
+        { file = 'math/linear_algebra/matrix.cppm', partition = { module = 'math.linear_algebra', partition_name = 'matrix' } },
+        { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
     # Root
     { file = 'math/math.cppm' },
     
