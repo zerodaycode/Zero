@@ -40,9 +40,19 @@ export {
         std::vector<TestCase*> cases {};
         TestResults results {};
 
-        constexpr TestSuite() = delete;
+        TestSuite() = delete;
+        /// This ctr shouldn't exists, since the std::string has a constructor
+        /// for convert cstr to std::string, but for some reason, Clang16 under windows
+        /// linking against libc++ with mingw, when the TestSuite instaciation receives
+        /// a const char* in a different file than the main file, Clang refuses to compile
+        /// saying that there's no viable ctr for TestSuite receiving a const char*
+//        constexpr explicit TestSuite(const char* uuid)
+//            : uuid(std::move(uuid)) {}
         constexpr explicit TestSuite(std::string uuid)
             : uuid(std::move(uuid)) {}
+
+        TestSuite(const TestSuite& rhs) = delete;
+        TestSuite (TestSuite&& rhs) = delete;
 
         friend bool operator==(const TestSuite& lhs, const TestSuite& rhs) {
             return lhs.uuid == rhs.uuid;

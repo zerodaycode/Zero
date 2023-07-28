@@ -1,6 +1,16 @@
 import std;
 import tsuite;
 
+void run_test_suite_example();
+
+TestSuite somesuite {"somesuite"};
+
+// Driver code
+int main() {
+    run_test_suite_example();
+    return 0;
+}
+
 // Let's define some example test functions using the assertion function
 void testAddition() {
     int result = 2 + 2;
@@ -14,8 +24,7 @@ void testPtrsAddition() {
     assertEquals(&expected, &result);
 }
 
-// Driver code
-int main() {
+void run_test_suite_example() {
     // Free tests cases registration examples
 
     // Register a new test case using a function pointer.
@@ -40,6 +49,4 @@ int main() {
 
     // Don't forget to call this free function, to run all the tests written!
     RUN_TESTS();
-
-    return 0;
 }
