@@ -3,8 +3,6 @@ import tsuite;
 
 void run_test_suite_example();
 
-TestSuite somesuite {"somesuite"};
-
 // Driver code
 int main() {
     run_test_suite_example();

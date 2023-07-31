@@ -24,7 +24,7 @@ sources = [ "*.cpp" ]
 
 [tests]
 tests_executable_name = "zero_tests"
-sources = [ "tests/**/*.cpp" ]
+sources = [ "tests/linear_algebra/*.cpp", "tests/*.cpp" ]
 
 [modules]
 base_ifcs_dir = "ifc"
@@ -37,8 +37,8 @@ interfaces = [
 #
 #    ### The testing suite
         { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
-#    # Root
-#    { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
+    # Root
+    { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
 #
 #    ### Iterator library
 #        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
@@ -60,10 +60,10 @@ interfaces = [
 #    { file = 'collections/collections.cppm', dependencies = ['array'] },
 
     ### Math library
-#        # The operations library
-#        { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
-#        { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
-#        { file = 'math/ops/math.ops.cppm' },
+        # The operations library
+        { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
+        { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
+        { file = 'math/ops/math.ops.cppm' },
         # The linear algebra library
         { file = 'math/linear_algebra/matrix.cppm', partition = { module = 'math.linear_algebra', partition_name = 'matrix' } },
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },

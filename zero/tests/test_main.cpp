@@ -7,8 +7,10 @@ import std;
 //using namespace zero;
 
 //TEST_CASE( "Base tests entry point for The Zero Project", "[Zero Project]" ) {}
+#include "./math/matrix.cpp"
 
 int main() {
+    matrix_tests();
     RUN_TESTS();
     return 0;
 }

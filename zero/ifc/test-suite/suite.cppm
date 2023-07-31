@@ -34,20 +34,27 @@ std::vector<TestSuite*> testSuites;
 std::vector<TestCase*> freeTestCases;
 
 export {
-    /// Common group of related test cases
+    /**
+     * Common group of related test cases, identified by a unique string
+     */
     struct TestSuite {
         std::string uuid;
         std::vector<TestCase*> cases {};
         TestResults results {};
 
         TestSuite() = delete;
-        /// This ctr shouldn't exists, since the std::string has a constructor
-        /// for convert cstr to std::string, but for some reason, Clang16 under windows
-        /// linking against libc++ with mingw, when the TestSuite instaciation receives
-        /// a const char* in a different file than the main file, Clang refuses to compile
-        /// saying that there's no viable ctr for TestSuite receiving a const char*
-//        constexpr explicit TestSuite(const char* uuid)
-//            : uuid(std::move(uuid)) {}
+        /**
+         * @short This ctr shouldn't exist, since {@link std::string} has a constructor
+         * for convert cstr to std::string
+         * @bug Clang16 under windows linking against libc++ with mingw,
+         * when the TestSuite new instance receives a const char* in a different file
+         * than the main file (in particular from a module), Clang refuses to compile
+         * saying that there's no viable ctr for TestSuite receiving a const char*
+         *
+         * For further @details @see https://github.com/llvm/llvm-project/issues/64211
+        */
+        constexpr explicit TestSuite(const char* uuid)
+            : uuid(std::move(uuid)) {}
         constexpr explicit TestSuite(std::string uuid)
             : uuid(std::move(uuid)) {}
 
@@ -59,11 +66,23 @@ export {
         }
     };
 
-    /// Define a struct to represent a test case
+    /**
+     * @struct Holds the data for a particular user's test case.
+     */
     struct TestCase {
         std::string name;
         std::function<void()> fn;
 
+        /**
+         * @note waiting for Clang to implement the {@link std::function] constructors as *constexpr*,
+         * so we can make the {@link TestCase] constexpr-constructible
+         *
+         * @details  constexpr constructor's 2nd parameter type 'std::function<void ()>' is not a literal type
+         * constexpr TestCase(std::string name, std::function<void()> fn)
+         *
+         * 'function<void ()>' is not literal because it is not an aggregate and has no constexpr constructors other than copy or move constructors
+         * class _LIBCPP_TEMPLATE_VIS function<_Rp(_ArgTypes...)>
+         */
         TestCase(std::string name, std::function<void()> fn)
             : name(std::move(name)), fn(std::move(fn)) {}
     };
@@ -133,7 +152,7 @@ void runFreeTestCases() {
 }
 
 void runTest(const TestCase* const testCase, TestResults& results) {
-    std::cout << "    Running test: \033[38;5;117m" << testCase->name << "\033[0m";
+    std::cout << "\n    Running test: \033[38;5;117m" << testCase->name << "\033[0m";
 
     try {
         // Call the test function
