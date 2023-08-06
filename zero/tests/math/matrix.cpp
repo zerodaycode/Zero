@@ -17,11 +17,16 @@ void matrix_tests() {
 //        };
         Matrix<3, 3, int> m {
             std::array{
-                std::array{3, 5, 8},
-                std::array{4, 7, 9},
-                std::array{9, 1, 15}
+                std::array {3, 5, 8},
+                std::array {4, 7, 9},
+                std::array {9, 1, 15}
             }
         };
+
+        /*
+         * 3, 5, 8 / 4, 7, 9, / 9, 1, 15
+         * 3, 4, 9 / 5, 7, 1 / 8, 9 15
+         */
 
         assertEquals(m.row<0>().column<0>(), 7);
     });
