@@ -6,20 +6,23 @@ import container;
 import type_info;
 import physics;
 import math;
-import format;
-
+import stylizer;
+import formatter;
+import print_utils;
 
 // Forward decls
 void run_containers_examples();
 void run_output_iterator_examples();
 void run_quantities_examples();
 void run_formatter_and_stylize_examples();
+void run_print_examples();
 
 int main() {
     // run_containers_examples();
     // run_output_iterator_examples();
     run_quantities_examples();
     run_formatter_and_stylize_examples();
+    run_print_examples();
 
     std::cout.precision(15);
 
@@ -218,4 +221,21 @@ void run_formatter_and_stylize_examples() {
     std::string info_msg = formatter(format_str3,stylized_info_msg, "192.168.1.1");
     std::cout << info_msg << std::endl;
 }
+
+void run_print_examples() {
+    using namespace zero::fmt;
+
+    println("####### Print and Println Examples ########");
+
+    // Basic print and println
+    print("This is a simple string to show a print() example.");
+    println("A println() example. The precious line use print, so this one is in the same line.");
+    println("This is a simple string to show a println() example. It is on a new line because the previous one was also a println().");
+
+    // Formatting examples with print and println
+    print("Formatted print: x = {}, y = {}, z = {}", 10, 20, 30);
+    println("Formatted println: x = {}, y = {}, z = {}", 10, 20, 30);
+    println("Another formatted println: The unseen {} is the deadliest {}", "Yasuo", ", but of course, he is on the enemy team");
+}
+
 
