@@ -9,6 +9,7 @@ import math;
 import stylizer;
 import formatter;
 import print_utils;
+import tsuite;
 
 // Forward decls
 void run_containers_examples();
@@ -16,6 +17,19 @@ void run_output_iterator_examples();
 void run_quantities_examples();
 void run_formatter_and_stylize_examples();
 void run_print_examples();
+
+// Let's define some example test functions using the assertion function
+void testAddition() {
+    int result = 2 + 2;
+    assertEquals(4, result);
+}
+
+// Passing two pointers to compare if the values that they point to are equals
+void testPtrsAddition() {
+    int result = 2 + 2;
+    int expected = 4;
+    assertEquals(&expected, &result);
+}
 
 // Driver code
 int main() {
