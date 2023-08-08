@@ -17,31 +17,36 @@ void run_quantities_examples();
 void run_formatter_and_stylize_examples();
 void run_print_examples();
 
+// Driver code
 int main() {
     // run_containers_examples();
     // run_output_iterator_examples();
-    run_quantities_examples();
+    // run_quantities_examples();
     run_formatter_and_stylize_examples();
     run_print_examples();
 
-    std::cout.precision(15);
+    // Register a new test case using a function pointer.
+    TEST_CASE("Addition Test With Pointers", testPtrsAddition);
 
-    // Math
-    const int a = 16;
-    const int b = 20;
-    const int c = 30;
+    // Users can register a new test case using lambdas, avoiding to write standalone functions
+    TEST_CASE("Subtraction Test", []() {
+        int result = 5 - 3;
+        assertEquals(122435, result);
+    });
 
-    std::cout << "\nGCD of " << a << " and " << b << " is: " << zero::math::gcd(a, b) << "\n";
-    std::cout << "GCD of " << a << ", " << b << " and " << c << " is: " << zero::math::gcd(a, b, c) << "\n";
+    // Registering test cases into test suites, to group and relate tests that makes sense to exists
+    // as a part of a whole
 
-    std::cout << "\nLCM of 2, 3, 4 and 5 is: " << zero::math::lcm(2, 3, 4, 5) << "\n";
-    std::cout << "LCM of 10, 15 and 25 is: " << zero::math::lcm(10, 15, 25) << "\n";
-    std::cout << "LCM of 8 and 6 is: " << zero::math::lcm(8, 6) << "\n";
+    // Instantiate a new test suite, giving it a unique identifier.
+    TestSuite suite {"My Suite"};
+    // Register test cases using function pointers into a test suite
+    TEST_CASE(suite, "Addition Test", testAddition);
+    // Forces a warning that alerts the user that the test will be discarded, since already
+    // exists one with the same identifier in the given suite
+    TEST_CASE(suite, "Addition Test", testAddition);
 
-    std::cout << "\nAddition of two integers: " << zero::math::add(7, 3) << "\n";
-//    std::cout << "Addition of two integer l-value references: " << zero::math::add(&a, &b) << "\n";
-    std::cout << "Subtraction of two integers: " << zero::math::minus(7, 3) << "\n";
-    std::cout << "Subtraction of two integer l-value references: " << zero::math::minus(&a, &b) << "\n\n";
+    // Don't forget to call this free function, to run all the tests written!
+    RUN_TESTS();
 
     return 0;
 }

@@ -7,7 +7,8 @@ project_root = "zero"
 [compiler]
 cpp_compiler = "clang"
 cpp_standard = "2b"
-std_lib = "LIBCPP"
+std_lib = "LIBCPP" # Care, you must have installed LIBC++, which doesn't come by default with mingw
+# Consider to use STDLIBCPP if you don't plan to use LLVM's STD library implementation
 extra_args = [
     '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
     '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',
@@ -29,7 +30,7 @@ sources = [ "tests/**/*.cpp" ]
 [modules]
 base_ifcs_dir = "ifc"
 interfaces = [
-    { file = 'commons/typedefs.cppm' },    
+    { file = 'commons/typedefs.cppm' },
     { file = 'text/str_manip.cppm' },
     { file = 'text/formatter.cppm' },
     { file = 'text/stylizer.cppm' },
@@ -38,29 +39,35 @@ interfaces = [
     { file = 'types/type_traits.cppm' },
     { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
 
+    ### The testing suite
+        { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
+    # Root
+    { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
+
     ### Iterator library
-    { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
-    { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
-    # Modern
-    { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
-    # Legacy
-    { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+        { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
+        # Modern
+        { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
+        # Legacy
+        { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
     # Root
     { file = 'iterators/iterator.cppm' },
 
-    # The collections/containers librar
-    { file = 'collections/container.cppm', dependencies = ['type_info'] },
-    { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
+    ### The collections/containers librar
+        { file = 'collections/container.cppm', dependencies = ['type_info'] },
+        { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
+    # Root
     { file = 'collections/collections.cppm', dependencies = ['array'] },
-    
+
     ### Math library
         # The operations library
         { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
         { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
-        
+
         { file = 'math/ops/math.ops.cppm' },
     # Root
     { file = 'math/math.cppm' },

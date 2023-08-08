@@ -41,16 +41,21 @@ interfaces = [
     { file = 'types/type_traits.cppm' },
     { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
 
+    ### The testing suite
+        { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
+    # Root
+    { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
+
     ### Iterator library
-    { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
-    { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
-    # Modern
-    { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
-    # Legacy
-    { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
-    { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+        { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
+        # Modern
+        { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
+        # Legacy
+        { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
     # Root
     { file = 'iterators/iterator.cppm' },
 

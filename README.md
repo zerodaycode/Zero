@@ -11,7 +11,7 @@ Quick description, and links to the documentation of all the libraries of the pr
   - [Quantities](./zero/ifc/physics/quantities) - Compile time library for work with physical quantities acording the `SI`
 - [Collections](./zero/ifc/collections/README.md) - Custom containers, operations and interfaces
 - [Iterators](./zero/ifc/iterators/README.md) - Custom iterator interfaces, and some legacy implementation (just as examples) of the legacy ones
-- [Text](./zero/ifc/text/README.md) - Offers utilities for text manipulation, string splitting, formatting, styling, and direct printing functionalities.
+- [Text](./zero/ifc/text/README.md) - Offers utilities for text manipulation, string splitting, formatting, styling, and print to console functionalities.
 - [Types](./zero/ifc/types/README.md) - Information about types and traits for types
 - [Math](./zero/ifc/math/README.md) - Mathematical operations and functions
 ## Sponsorship
@@ -25,7 +25,7 @@ You guys rocks, thanks!
 Zero's main ideas and motivations can be summarized in the search for a deeper understanding of the roots of C++ than usual. For that,
 we are aim to implement library functionalities that we are missing in the language, or that we would like to know how they must be build
 from scratch.
-One way of understand this felling, is thanks to Jason Turner, and it's incredible [C++Weekly](https://www.youtube.com/playlist?list=PLs3KjaCtOwSZ2tbuV1hx8Xz-rFZTan2J1) YouTube
+One way of understand this felling, is thanks to Jason Turner, and it's incredible [C++ Weekly](https://www.youtube.com/playlist?list=PLs3KjaCtOwSZ2tbuV1hx8Xz-rFZTan2J1) YouTube
 channel. In particular, you can checkout [this particular episode](https://youtu.be/287_oG4CNMc?list=PLs3KjaCtOwSZ2tbuV1hx8Xz-rFZTan2J1&t=378) and immediately
 you understand our feeling!
 
