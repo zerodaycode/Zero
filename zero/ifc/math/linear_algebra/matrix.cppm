@@ -3,19 +3,41 @@ export module math.linear_algebra:matrix;
 import std;
 
 export {
-    template <std::size_t Elements, typename Type>
+    template <std::size_t Elements, typename Type = int>
     struct Row {
-        std::array<Type, Elements> row {};
+        std::array<Type, Elements> row;
+
+        /// Default constructor is explicitly removed from the public API
+        Row<Elements, Type>() = delete;
+
+        /// Constructs a {@link Row} from {@link std::array}
+        constexpr Row<Elements, Type>(std::array<Type, Elements> data): row {data} {}
+
+        /// Constructor acts as if its argument were an std::initializer list
+        template <typename... Args>
+        constexpr Row<Elements, Type>(Args... args) : row {args...} {}
+
+        // TODO Same as hidden friend?
         template <std::size_t ColumnIndex>
-        // Same as hidden friend
         [[nodiscard]] constexpr auto column() -> decltype(std::get<ColumnIndex>(row)) {
             return std::get<ColumnIndex>(row);
         }
     };
 
-    template <std::size_t Elements, typename Type>
+    template <std::size_t Elements, typename Type = int>
     struct Column {
-        std::array<Type, Elements> column {};
+        std::array<Type, Elements> column;
+
+        /// Default constructor is explicitly removed from the public API
+        Column() = delete;
+
+        /// Constructs a {@link Column} from {@link std::array}
+        constexpr Column<Elements, Type>(std::array<Type, Elements> data): column {data} {}
+
+        /// Constructor acts as if its argument were an std::initializer list
+        template <typename... Args>
+        constexpr Column<Elements, Type>(Args... args) : column {args...} {}
+
         template <std::size_t RowIndex>
         [[nodiscard]] constexpr auto row() -> decltype(std::get<RowIndex>(column)) {
             return std::get<RowIndex>(column);
@@ -23,9 +45,9 @@ export {
     };
 
     /// Tag type for dispatch row based matrices
-    struct RowOrientation;
+    struct RowOrientation {};
     /// Tag type for dispatch column based matrices
-    struct ColumnOrientation;
+    struct ColumnOrientation {};
 
     template <typename T>
     concept MatrixOrientation =
@@ -39,6 +61,7 @@ export {
 
     template <std::size_t Rows, std::size_t Cols, typename T = int, MatrixOrientation Orientation = RowOrientation>
     class Matrix {
+        // BIG TODO the names for Rows and Cols size are non worth. Better MxN, so we can play with the orientation
     private:
         using DataRow = Row<Cols, T>;
         using DataCol = Column<Rows, T>;
@@ -49,37 +72,28 @@ export {
         > data;
 
     public:
+        /// Default constructor is explicitly removed from the public API
         Matrix() = delete;
-        /// Raw constructor for std::array for Orientation::ROW // Every pair of them must be SFINAED
-        // because they override the same signature
-        constexpr Matrix<Rows, Cols, T, Orientation>(
-            const std::array<std::array<T, Cols>, Rows>& data
-        ) requires (MatrixOrientation<RowOrientation>) { // TODO Convert this ctr in one of the row ctrs -> Row(std::array...)
-                                                            // and add it to the varags missed constructors from the underlying type T
-            std::vector<Row<Cols, T>> row_wrappers;
-            for (auto row : data)
-                row_wrappers.push_back(Row<Cols, T>{row});
-            this->data = row_wrappers;
-        }
-        // From the TODO above, if the user enters Row(s) or Column(s) in the future only Row-Column constructor, the
-        // orientation must be guide deduced, so there's no explicit need to declare it at call site (just optional)
-        /// Raw constructor for std::array for Orientation::COLUMN
-//        constexpr Matrix(const std::array<std::array<T, Rows>, Cols>& data) : data(data) {}
 
-        /// Constructor from zero::Row<Cols, T>
-//        constexpr explicit Matrix(const std::array<Row<Cols, T>, Rows>& data) : data(data) {}
-        // TODO std::initializer_list constructor
-        // TODO constructor from raw array?
-        // TODO constructor from vector?
-        // TODO constructor from row
-        // TODO constructor from vector (row_vector)
-        // TODO constructor from vector (column_vector)
+        /// Row Matrix constructor
+        constexpr Matrix<Rows, Cols, T>(
+            std::initializer_list<DataRow> rows
+        ) requires RowMatrix<Orientation> : data {rows} {}
+        /// Column Matrix constructor
+        constexpr Matrix<Cols, Rows, T>(
+            std::initializer_list<DataCol> columns
+        ) requires ColumnMatrix<Orientation> : data {columns} {}
+        // TODO orientation must be guide deduced, so there's no explicit
+        //  need to declare it at call site (just optional)
 
         template <std::size_t RowIndex>
-        [[nodiscard]] constexpr auto row() -> Row<Rows, T> {
-            return Row<Rows, T>{std::get<std::vector<DataRow>>(data)[RowIndex]};
+        [[nodiscard]] constexpr auto row() -> Row<Cols, T> requires (RowMatrix<Orientation>) {
+            return Row<Cols, T> { std::get<std::vector<DataRow>>(data)[RowIndex] };
         }
 
-        // template for get, with std::conditional_t based on orientation?
+        template <std::size_t ColIndex>
+        [[nodiscard]] constexpr auto column() -> Column<Rows, T> requires (ColumnMatrix<Orientation>) {
+            return Column<Rows, T> { std::get<std::vector<DataCol>>(data)[ColIndex] };
+        }
     };
 }
