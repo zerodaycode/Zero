@@ -6,8 +6,9 @@ import std;
 
 //using namespace zero;
 
+
+#include "./math/matrix_tests.h"
 //TEST_CASE( "Base tests entry point for The Zero Project", "[Zero Project]" ) {}
-#include "./math/matrix.cpp"
 
 int main() {
     matrix_tests();

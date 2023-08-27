@@ -3,7 +3,7 @@ export module math.linear_algebra:matrix;
 import std;
 
 export {
-    template <std::size_t Elements, typename Type = int>
+    template <std::size_t Elements, typename Type>
     struct Row {
         std::array<Type, Elements> row;
 
@@ -24,7 +24,7 @@ export {
         }
     };
 
-    template <std::size_t Elements, typename Type = int>
+    template <std::size_t Elements, typename Type>
     struct Column {
         std::array<Type, Elements> column;
 
@@ -83,8 +83,6 @@ export {
         constexpr Matrix<Cols, Rows, T>(
             std::initializer_list<DataCol> columns
         ) requires ColumnMatrix<Orientation> : data {columns} {}
-        // TODO orientation must be guide deduced, so there's no explicit
-        //  need to declare it at call site (just optional)
 
         template <std::size_t RowIndex>
         [[nodiscard]] constexpr auto row() -> Row<Cols, T> requires (RowMatrix<Orientation>) {
@@ -97,3 +95,11 @@ export {
         }
     };
 }
+
+/// Template guide deduction for {@link Row}
+template <typename... Args>
+Row(Args...) -> Row<sizeof...(Args), typename std::common_type<Args...>::type>;
+
+/// Template guide deduction for {@link Column}
+template <typename... Args>
+Column(Args...) -> Column<sizeof...(Args), typename std::common_type<Args...>::type>;
