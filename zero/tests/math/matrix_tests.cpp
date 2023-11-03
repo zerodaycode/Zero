@@ -4,7 +4,7 @@ TestSuite matrix_suite {"Matrix TS"};
 
 void matrix_tests() {
     TEST_CASE(matrix_suite, "Row Matrix construction and retrieve element", [] {
-        auto a = Row<3, int> {{3, 5, 8}}; // Note the double braces. It's the constructor from std::array
+        auto a = Row<3, int> {{3, 5, 8}}; // Note the double braces. It's the std::initializer_list from std::array
         auto b = Row {4, 7, 9};
         auto c = Row {9, 1, 15};
 
@@ -21,7 +21,7 @@ void matrix_tests() {
             Column {65, 1, 12}
         };
         /* Tempting to retrieve a column from a RowMatrix or a row from
-         * a column Matrix will made the concepts constrains fail like:
+         * a column Matrix will make the concepts constrains fail like:
          *
          * ...Zero/zero/ifc/math/linear_algebra/matrix.cppm:line:col: note:
          * because 'ColumnOrientation' does not satisfy 'RowMatrix'

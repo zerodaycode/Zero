@@ -7,6 +7,7 @@ project_root = "zero"
 [compiler]
 cpp_compiler = "clang"
 cpp_standard = "2b"
+driver_path = "clang++-16"
 std_lib = "LIBCPP"
 extra_args = [
     '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
@@ -24,7 +25,7 @@ sources = [ "*.cpp" ]
 
 [tests]
 tests_executable_name = "zero_tests"
-sources = [ "tests/linear_algebra/*.cpp", "tests/*.cpp" ]
+sources = [ "tests/math/*.cpp", "tests/*.cpp" ]
 
 [modules]
 base_ifcs_dir = "ifc"
