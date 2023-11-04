@@ -196,12 +196,12 @@ void run_quantities_examples() {
 
 void run_formatter_and_stylize_examples() {
     using namespace zero::fmt;
-    
+
     std::cout << "#######Check formatter########\n\n";
 
     std::string format_str = "x = {10, y = 20, z = {}}";
     std::cout << formatter(format_str, 10) << std::endl;
-    
+
 
     std::cout << "\n\n#######Check stylize########\n\n";
 
@@ -256,5 +256,3 @@ void run_print_examples() {
     println("Formatted println: x = {}, y = {}, z = {}", 10, 20, 30);
     println("Another formatted println: The unseen {} is the deadliest {}", "Yasuo", ", but of course, he is on the enemy team");
 }
-
-
