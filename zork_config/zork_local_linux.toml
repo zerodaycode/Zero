@@ -6,8 +6,8 @@ project_root = "zero"
 
 [compiler]
 cpp_compiler = "clang"
+driver_path = "clang++-16" # This binary is soft linked and included in our local path
 cpp_standard = "2b"
-driver_path = "clang++-16"
 std_lib = "LIBCPP"
 extra_args = [
     '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',

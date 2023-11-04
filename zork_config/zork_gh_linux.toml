@@ -27,13 +27,16 @@ sources = [ "*.cpp" ]
 
 [tests]
 tests_executable_name = "zero_tests"
-sources = [ "tests/**/*.cpp" ]
+sources = [ "tests/**/*.cpp", "tests/math/*.cpp", "tests/*.cpp" ]
 
 [modules]
 base_ifcs_dir = "ifc"
 interfaces = [
     { file = 'commons/typedefs.cppm' },    
     { file = 'text/str_manip.cppm' },
+    { file = 'text/formatter.cppm' },
+    { file = 'text/stylizer.cppm' },
+    { file = 'text/print_utils.cppm' },
     { file = 'types/type_info.cppm' },
     { file = 'types/type_traits.cppm' },
     { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
