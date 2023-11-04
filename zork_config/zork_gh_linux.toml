@@ -6,7 +6,7 @@ project_root = "zero"
 
 [compiler]
 cpp_compiler = "clang"
-driver_name = "clang++-15"
+driver_path = "clang++-15"
 cpp_standard = "2b"
 std_lib = "libc++"
 extra_args = [
