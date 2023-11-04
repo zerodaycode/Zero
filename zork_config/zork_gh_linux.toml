@@ -63,13 +63,15 @@ interfaces = [
     { file = 'collections/container.cppm', dependencies = ['type_info'] },
     { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
     { file = 'collections/collections.cppm', dependencies = ['array'] },
-    
+
     ### Math library
         # The operations library
         { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
         { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
-        
         { file = 'math/ops/math.ops.cppm' },
+        # The linear algebra library
+        { file = 'math/linear_algebra/matrix.cppm', partition = { module = 'math.linear_algebra', partition_name = 'matrix' } },
+        { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
     # Root
     { file = 'math/math.cppm' },
     
