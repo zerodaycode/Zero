@@ -4,6 +4,17 @@ This library aims to provide mathematical operations, operators and symbols, for
 in standalone mathematical operations or in more complex environments, like solving problems
 in diverse science fields.
 
+##  Numbers
+This module brings certain types for represents and operate with some sets of numbers that exists in maths.
+ - Natural Numbers (ℕ)
+ - Integers (ℤ)
+ - Rationals (ℚ)
+ - Irrationals ( 	)
+ - Reals (ℝ)
+ - ComplexNumbers (ℂ)
+ - Quaternions (ℍ)
+ - Primes (ℙ)
+
 ## Ops
 TODO
 

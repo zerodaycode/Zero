@@ -53,7 +53,11 @@ enum class MathSymbol {
     Integers = 0x2124,              // ℤ
     Rationals = 0x211A,             // ℚ
     Reals = 0x211D,                 // ℝ
-    ComplexNumbers = 0x2102,        // ℂ
+    Complex = 0x2102,               // ℂ
+        ImaginaryPart = 0x2111,     // ℑ
+        RealPart = 0x2111,          // ℜ
+    Quaternions = 0x2110D,          // ℍ
+    Primes = 0x2119,                // ℙ
 
     // Set Notation
     OpenCurlyBrace2 = 0x007B,       // {
@@ -123,8 +127,9 @@ enum class MathSymbol {
     MatrixTranspose = 0x22A4,       // ⊤ (Matrix Transpose)
     MatrixHermitian = 0x22B2,       // ⊲ (Matrix Hermitian)
 
-    // Degree and Greek Letters
+    // Like Letters
     Degree = 0x00B0,                // °
+    EulerNumber = 0x212F,           // ℯ
     Pi = 0x03C0,                    // π
     Sigma = 0x03A3,                 // Σ
     Delta = 0x2206,                 // ∆
