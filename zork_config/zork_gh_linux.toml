@@ -27,7 +27,7 @@ sources = [ "*.cpp" ]
 
 [tests]
 tests_executable_name = "zero_tests"
-sources = [ "tests/**/*.cpp", "tests/math/*.cpp", "tests/*.cpp" ]
+sources = [ "tests/math/*.cpp", "tests/*.cpp" ]
 
 [modules]
 base_ifcs_dir = "ifc"
