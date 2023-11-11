@@ -9,7 +9,7 @@ This module brings certain types for represents and operate with some sets of nu
  - Natural Numbers (ℕ)
  - Integers (ℤ)
  - Rationals (ℚ)
- - Irrationals ( 	)
+ - Irrationals ( /* Not yet implemented */ )
  - Reals (ℝ)
  - ComplexNumbers (ℂ)
  - Quaternions (ℍ)

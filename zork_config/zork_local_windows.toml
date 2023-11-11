@@ -73,6 +73,7 @@ interfaces = [
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
     #  General
     { file = 'math/symbols.cppm', module_name = 'math.symbols' },
+    { file = 'math/numbers.cppm', module_name = 'math.numbers' },
     # Root
     { file = 'math/math.cppm' },
 
