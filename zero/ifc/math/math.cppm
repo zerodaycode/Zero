@@ -8,4 +8,5 @@
 export module math;
 
 export import math.ops;
+export import math.symbols;
 export import math.linear_algebra;

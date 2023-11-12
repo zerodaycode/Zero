@@ -1,18 +1,21 @@
 export module print_utils;
-import std;
 import formatter;
+import std;
 
 
 export namespace zero::fmt {
 
     template<typename... Args>
-    void print(const std::string& format, Args... args) {
+    constexpr void print(const std::string& format, Args... args) {
         std::cout << formatter(format, args...);
     }
 
     template<typename... Args>
-    void println(const std::string& format, Args... args) {
+    constexpr void println(const std::string& format, Args... args) {
         print(format + "\n", args...);
     }
 
+    void newln() {
+        std::cout << "\n";
+    }
 }

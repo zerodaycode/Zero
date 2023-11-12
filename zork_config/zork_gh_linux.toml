@@ -72,6 +72,8 @@ interfaces = [
         # The linear algebra library
         { file = 'math/linear_algebra/matrix.cppm', partition = { module = 'math.linear_algebra', partition_name = 'matrix' } },
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
+    # General
+    { file = 'math/symbols.cppm', module_name = 'math.symbols' },
     # Root
     { file = 'math/math.cppm' },
     

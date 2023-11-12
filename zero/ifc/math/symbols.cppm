@@ -1,21 +1,6 @@
-# The Math library
+export module math.symbols;
 
-This library aims to provide mathematical operations, operators and symbols, for being used
-in standalone mathematical operations or in more complex environments, like solving problems
-in diverse science fields.
-
-## Ops
-TODO
-
-## Linear Algebra
-TODO
-
-## Symbols
-
-This module provides the most useful mathematical symbols to be used in string representations.
-Here is the list of the ones that are implemented as the variants of the enum `MathSymbol`:
-
-```c++
+enum class MathSymbol {
     // Basic Math Operators
     Plus = 0x002B,                  // +
     Minus = 0x2212,                 // -
@@ -157,7 +142,4 @@ Here is the list of the ones that are implemented as the variants of the enum `M
     Phi = 0x03A6,                   // Φ
     Psi = 0x03A8,                   // Ψ
     Omega = 0x03A9,                 // Ω
-```
-
-> Please, everytime that a new symbol is added to the enumerated type, remember to add
-> it to this documentation for having the complete reference of the symbols implemented in the library.
+};

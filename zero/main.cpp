@@ -42,7 +42,7 @@ int main() {
     // Register a new test case using a function pointer.
     TEST_CASE("Addition Test With Pointers", testPtrsAddition);
 
-    // Users can register a new test case using lambdas, avoiding to write standalone functions
+    // Users can register a new test case using lambdas, avoiding writing standalone functions
     TEST_CASE("Subtraction Test", []() {
         int result = 5 - 3;
         assertEquals(122435, result);
@@ -69,9 +69,9 @@ int main() {
 void run_containers_examples() {
     using namespace zero;
 
-    constexpr auto a = collections::Array<long, 5>{1L, 2L, 3L, 4L, 5L};
-    const Container<collections::Array<long, 5>>& b = collections::Array<long, 5>{1L, 2L, 3L, 4L, 5L};
-    Container<collections::Array<long, 5>>* c = new collections::Array<long, 5>{1L, 2L, 3L, 4L, 5L};
+    constexpr auto a = collections::Array<long, 5> {1L, 2L, 3L, 4L, 5L};
+    const Container<collections::Array<long, 5>>& b = collections::Array<long, 5> {1L, 2L, 3L, 4L, 5L};
+    Container<collections::Array<long, 5>>* c = new collections::Array<long, 5> {1L, 2L, 3L, 4L, 5L};
 
     std::cout << "Iterating over the values of a constexpr zero::collection!" << std::endl;
     std::cout << "decltype a: " << types::type_name<decltype(a)>() << std::endl;
@@ -222,7 +222,6 @@ void run_formatter_and_stylize_examples() {
     std::cout << reversedText << "\n";
     std::cout << hiddenText << "\n";
 
-
     std::cout << "\n\n#######Check combination full text########\n\n";
     std::string format_str1 = "[WARNING] {} is deprecated. Please use {} instead.";
     std::string warning_msg = formatter(format_str1, "methodA", "methodB");
@@ -239,6 +238,12 @@ void run_formatter_and_stylize_examples() {
     std::string stylized_info_msg = stylize("[INFO]", Color::GREEN, {Modifier::FAINT});
     std::string info_msg = formatter(format_str3,stylized_info_msg, "192.168.1.1");
     std::cout << info_msg << std::endl;
+
+    std::cout << "\n\n#######Check unicode symbols########\n";
+    std::string format_str4 = "{} Triple integral symbol: {}";
+    std::string stylized_info_msg_2 = stylize("[INFO]", Color::GREEN, {Modifier::FAINT});
+    std::string info_msg_2 = formatter(format_str4, stylized_info_msg_2, "∭");
+    std::cout << info_msg_2 << "\n\n";
 }
 
 void run_print_examples() {
@@ -254,5 +259,7 @@ void run_print_examples() {
     // Formatting examples with print and println
     print("Formatted print: x = {}, y = {}, z = {}", 10, 20, 30);
     println("Formatted println: x = {}, y = {}, z = {}", 10, 20, 30);
-    println("Another formatted println: The unseen {} is the deadliest {}", "Yasuo", ", but of course, he is on the enemy team");
+    println("Another formatted println: The unseen {} is the deadliest, {}", "Yasuo", "but of course, he is on the enemy team");
+
+    newln();
 }

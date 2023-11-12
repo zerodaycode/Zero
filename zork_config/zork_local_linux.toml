@@ -30,35 +30,38 @@ sources = [ "tests/math/*.cpp", "tests/*.cpp" ]
 [modules]
 base_ifcs_dir = "ifc"
 interfaces = [
-#    { file = 'commons/typedefs.cppm' },
-#    { file = 'text/str_manip.cppm' },
-#    { file = 'types/type_info.cppm' },
-#    { file = 'types/type_traits.cppm' },
-#    { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
-#
+    { file = 'commons/typedefs.cppm' },
+    { file = 'text/str_manip.cppm' },
+    { file = 'text/formatter.cppm' },
+    { file = 'text/stylizer.cppm' },
+    { file = 'text/print_utils.cppm' },
+    { file = 'types/type_info.cppm' },
+    { file = 'types/type_traits.cppm' },
+    { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
+
 #    ### The testing suite
         { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
     # Root
     { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
-#
-#    ### Iterator library
-#        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
-#        { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
-#        # Modern
-#        { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
-#        { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
-#        # Legacy
-#        { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
-#        { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
-#        { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
-#    # Root
-#    { file = 'iterators/iterator.cppm' },
-#
-#    # The collections/containers librar
-#        { file = 'collections/container.cppm', dependencies = ['type_info'] },
-#        { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
-#    # Root
-#    { file = 'collections/collections.cppm', dependencies = ['array'] },
+
+    ### Iterator library
+        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+        { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
+        # Modern
+        { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
+        # Legacy
+        { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
+    # Root
+    { file = 'iterators/iterator.cppm' },
+
+    # The collections/containers librar
+        { file = 'collections/container.cppm', dependencies = ['type_info'] },
+        { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
+    # Root
+    { file = 'collections/collections.cppm', dependencies = ['array'] },
 
     ### Math library
         # The operations library
@@ -68,21 +71,23 @@ interfaces = [
         # The linear algebra library
         { file = 'math/linear_algebra/matrix.cppm', partition = { module = 'math.linear_algebra', partition_name = 'matrix' } },
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
+        # General
+        { file = 'math/symbols.cppm', module_name = 'math.symbols' },
     # Root
     { file = 'math/math.cppm' },
-    
-#    ### The physics library
-#        # The quantities library
-#        { file = 'physics/quantities/internal/quantities_detail.cpp', partition = { module = 'physics.quantities', partition_name = 'quantities.detail' } },
-#
-#        { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics.quantities' } },
-#        { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics.quantities' } },
-#        { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics.quantities' } },
-#        { file = 'physics/quantities/units.cppm', module_name = 'units', partition = { module = 'physics.quantities' } },
-#        { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics.quantities' } },
-#        { file = 'physics/quantities/physics.quantities.cppm' },
-#    # Root
-#    { file = 'physics/physics.cppm' },
+
+    ### The physics library
+        # The quantities library
+        { file = 'physics/quantities/internal/quantities_detail.cpp', partition = { module = 'physics.quantities', partition_name = 'quantities.detail' } },
+
+        { file = 'physics/quantities/ratios.cppm', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/units.symbols.cppm', module_name = 'units.symbols', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/dimensions.cppm', module_name = 'dimensions', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/units.cppm', module_name = 'units', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/quantity.cppm', partition = { module = 'physics.quantities' } },
+        { file = 'physics/quantities/physics.quantities.cppm' },
+    # Root
+    { file = 'physics/physics.cppm' },
 
     # The main interface of the project
     { file = 'zero.cppm' }
