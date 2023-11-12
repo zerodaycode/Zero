@@ -2,6 +2,11 @@
 
 TestSuite numbers_suite {"Numbers TS"};
 
+/// Compile time tests for numbers
+static_assert(Number<Natural>);
+static_assert(Number<Integer>);
+static_assert(!Number<std::string>);
+
 void numbers_tests() {
     TEST_CASE(numbers_suite, "Testing the construction of a Number", [] {
         auto natural = Natural(1);

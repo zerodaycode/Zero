@@ -3,6 +3,7 @@
 export module math.numbers;
 
 import std;
+import math.symbols;
 
 export {
     // Forward declarations
@@ -13,13 +14,31 @@ export {
     class Real;
     class Complex;
 
-    // TODO concept Number
     // TODO adding the set symbols for every type
+
+    /// Concept to act as an interface for the abstract concept of 'number' in mathematics.
+    /// In particular, this interface represents a kind of number that belongs to a concrete set of numbers,
+    /// for example, the naturals, the integers, the reals, the complex numbers...
+    template <typename T>
+    concept Number = (
+        std::is_same_v<T, Natural> ||
+        std::is_same_v<T, Integer> ||
+        std::is_same_v<T, Rational> ||
+        std::is_same_v<T, Irrational> ||
+        std::is_same_v<T, Real> ||
+        std::is_same_v<T, Complex>
+    ) && requires {
+        T::symbol;  /* Check if 'T' has a static member named 'symbol' */
+        { T::symbol } -> std::same_as<const MathSymbol&>;  // Check if 'T::symbol' has the type MathSymbol
+    };
 
     /// A positive integer number
     class Natural {
+    private:
         unsigned int _number;
     public:
+        static constexpr MathSymbol symbol { MathSymbol::Naturals };
+
         [[nodiscard]] constexpr explicit Natural(unsigned int value) noexcept : _number(value) {}
 
         /// @return an {@link unsigned int}, which is the value stored in the type, being only a positive integer number
@@ -34,8 +53,11 @@ export {
 
     /// A whole real number
     class Integer {
+    private:
         signed int _number;
     public:
+        static constexpr MathSymbol symbol { MathSymbol::Integers };
+
         [[nodiscard]] constexpr explicit Integer(signed int value) noexcept : _number(value) {}
         [[nodiscard]] constexpr explicit Integer(const Natural value) noexcept
             : _number(static_cast<signed int>(value.number())) {}
@@ -106,12 +128,6 @@ export {
 //        Real imaginary;
 //    };
 
-
-//    /**
-//     * Concept to act as an interface for the abstract concept of 'number' in mathematics.
-//     * In particular, this interface represents a kind of number that belongs to a concrete set of numbers,
-//     * for example, the naturals, the integers, the reals, the complexes...
-//     *
 }
 
 // TODO move this ones to an internal module partition?? or to a module implementation better?

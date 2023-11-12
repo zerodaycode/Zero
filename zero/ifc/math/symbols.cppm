@@ -1,6 +1,6 @@
 export module math.symbols;
 
-enum class MathSymbol {
+export enum class MathSymbol {
     // Basic Math Operators
     Plus = 0x002B,                  // +
     Minus = 0x2212,                 // -
@@ -49,7 +49,7 @@ enum class MathSymbol {
     SineWave = 0x223F,              // ∿
 
     // Number Sets
-    NaturalNumbers = 0x2115,        // ℕ
+    Naturals = 0x2115,              // ℕ
     Integers = 0x2124,              // ℤ
     Rationals = 0x211A,             // ℚ
     Reals = 0x211D,                 // ℝ
