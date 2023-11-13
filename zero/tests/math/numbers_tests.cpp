@@ -1,5 +1,7 @@
 #include "numbers_tests.h"
 
+using namespace zero::math;
+
 TestSuite numbers_suite {"Numbers TS"};
 
 /// Compile time tests for numbers

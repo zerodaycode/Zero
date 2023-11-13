@@ -3,9 +3,10 @@
 export module math.numbers;
 
 import std;
+import math.ops;
 import math.symbols;
 
-export {
+export namespace zero::math {
     // Forward declarations
     class Natural;
     class Integer;
@@ -13,8 +14,6 @@ export {
     class Irrational;
     class Real;
     class Complex;
-
-    // TODO adding the set symbols for every type
 
     /// Concept to act as an interface for the abstract concept of 'number' in mathematics.
     /// In particular, this interface represents a kind of number that belongs to a concrete set of numbers,
@@ -28,8 +27,8 @@ export {
         std::is_same_v<T, Real> ||
         std::is_same_v<T, Complex>
     ) && requires {
-        T::symbol;  /* Check if 'T' has a static member named 'symbol' */
-        { T::symbol } -> std::same_as<const MathSymbol&>;  // Check if 'T::symbol' has the type MathSymbol
+            T::symbol;  /* Check if 'T' has a static member named 'symbol' */
+            { T::symbol } -> std::same_as<const MathSymbol&>;  // Check if 'T::symbol' has the type MathSymbol
     };
 
     /// A positive integer number
@@ -69,7 +68,12 @@ export {
         [[nodiscard]] inline constexpr Integer operator+(Integer rhs) const noexcept;
         [[nodiscard]] inline constexpr Integer operator-(Integer rhs) const noexcept;
         [[nodiscard]] inline constexpr Integer operator*(Integer rhs) const noexcept;
+        [[nodiscard]] inline constexpr Rational operator*(Rational rhs) const noexcept;
         [[nodiscard]] inline constexpr Rational operator/(Integer rhs) const noexcept;
+        [[nodiscard]] inline constexpr bool operator==(Integer rhs) const noexcept;
+
+        // Explicit conversion operators
+        [[nodiscard]] inline explicit operator int() const { return _number; }
     };
 
     /// @brief A type that represents rational numbers of the form: ℚ = {a, b ∈ ℤ, b ≠ 0}
@@ -107,18 +111,11 @@ export {
         /// @return a {@link Integer} with the value of the denominator for this rational
         [[nodiscard]] inline constexpr Integer denominator() const noexcept { return _denominator; }
 
-//        [[nodiscard]] inline constexpr Rational operator+(const Rational rhs) const {
-//            if constexpr (_denominator == rhs.denominator()) // TODO impl the eq of integers as constexpr for this to work
-//                return Rational(_number + rhs.number()); // Like fractions
-//            else { // Unlike fractions
-//                const auto lcm = zero::math::lcm(_denominator, rhs.denominator());
-//
-//                return Rational(_number + rhs.number());
-//            }
-//        }
+        // Arithmetic operator overloads
+        [[nodiscard]] inline constexpr Rational operator+(Rational rhs) const;
     };
 
-//
+
 //    class Real {
 //        double number; // TODO handle rationals and irrationals with std::variant?
 //    };
@@ -131,6 +128,7 @@ export {
 }
 
 // TODO move this ones to an internal module partition?? or to a module implementation better?
+using namespace zero::math;
 
             /*++++++++ Operator overloads implementations ++++++++++*/
 /*+++++++++++++++++ Naturals +++++++++++++++++*/
@@ -159,6 +157,42 @@ export {
 [[nodiscard]] inline constexpr Integer Integer::operator*(const Integer rhs) const noexcept {
     return Integer(_number * rhs.number());
 }
+[[nodiscard]] inline constexpr Rational Integer::operator*(const Rational rhs) const noexcept {
+    return {_number * rhs.numerator().number(), rhs.denominator().number()};
+}
 [[nodiscard]] inline constexpr Rational Integer::operator/(const Integer rhs) const noexcept {
     return {static_cast<signed int>(_number), static_cast<signed int>(rhs.number())};
+}
+[[nodiscard]] inline constexpr bool Integer::operator==(const Integer rhs) const noexcept {
+    return _number == rhs.number();
+}
+
+            /*+++++++++++++++++ Rationals +++++++++++++++++*/
+/// Adds the current rational number to another rational number.
+/// @param rhs The rational number to be added.
+/// @return The sum of the two rational numbers.
+///
+/// This method handles both like and unlike fractions. If the denominators of
+/// the two fractions are equal, it directly adds the numerators. Otherwise, it
+/// finds the least common multiple (LCM) of the denominators and scales the
+/// numerators to have the LCM as the common denominator before adding.
+[[nodiscard]] inline constexpr Rational Rational::operator+(const Rational rhs) const {
+    if (_denominator == rhs.denominator())
+        return {
+            static_cast<int>(_numerator) + static_cast<int>(rhs.numerator()),
+            static_cast<int>(_denominator)
+        }; // Like fractions
+    else {
+        const int lhs_numerator     = static_cast<int>(_numerator);
+        const int rhs_numerator     = static_cast<int>(rhs._numerator);
+        const int lhs_denominator   = static_cast<int>(_denominator);
+        const int rhs_denominator   = static_cast<int>(rhs._denominator);
+
+        const auto lcd = zero::math::lcm(_denominator.number(), rhs.denominator().number());
+
+        // Scale numerators to have the common denominator (lcm)
+        const int numerator = (lhs_numerator * (lcd / lhs_denominator)) + (rhs_numerator * (lcd / rhs_denominator));
+
+        return {numerator, lcd};
+    }
 }
