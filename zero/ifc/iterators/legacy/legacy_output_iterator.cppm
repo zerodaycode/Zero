@@ -29,7 +29,7 @@ export namespace zero::iterator::legacy
         struct output_iter_proxy {
             output_iter<Z> &_iter;
 
-            constexpr output_iter_proxy(output_iter<Z> &iter) noexcept : _iter(iter) {}
+            constexpr explicit output_iter_proxy(output_iter<Z> &iter) noexcept : _iter(iter) {}
 
             template <typename U>
             constexpr auto operator=(const U &val) -> output_iter_proxy& {
@@ -49,8 +49,8 @@ export namespace zero::iterator::legacy
         };
 
     public:
-        constexpr output_iter<T>() noexcept = default;
-        constexpr output_iter(T &elem) noexcept : _elem(&elem) {}
+        constexpr output_iter<T>() noexcept = default; // Left defaulted and not deleted because the legacy implementation
+        constexpr explicit output_iter(T& elem) noexcept : _elem(&elem) {}
 
         constexpr output_iter<T>(const output_iter<T> &other) = default;
         constexpr output_iter<T>(output_iter<T> &&other) noexcept = default;
@@ -88,8 +88,7 @@ export namespace zero::iterator::legacy
 
         [[nodiscard]]
         constexpr friend auto operator!=(const output_iter& lhs, const output_iter& rhs) noexcept -> bool {
-            return not (lhs == rhs);
+            return lhs != rhs;
         }
     };
-
 }

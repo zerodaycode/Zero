@@ -48,6 +48,14 @@ export namespace zero::math {
         [[nodiscard]] inline constexpr Natural operator-(Natural rhs) const noexcept;
         [[nodiscard]] inline constexpr Natural operator*(Natural rhs) const noexcept;
         [[nodiscard]] inline constexpr Rational operator/(Natural rhs) const noexcept;
+        // Comparison operator overloads
+        [[nodiscard]] inline constexpr bool operator==(Natural rhs) const noexcept;
+        [[nodiscard]] inline constexpr bool operator==(unsigned int rhs) const noexcept;
+        // Printable
+        inline constexpr friend std::ostream& operator<<(std::ostream& os, const Natural& rhs) {
+            os << rhs._number;
+            return os;
+        }
     };
 
     /// A whole real number
@@ -70,10 +78,17 @@ export namespace zero::math {
         [[nodiscard]] inline constexpr Integer operator*(Integer rhs) const noexcept;
         [[nodiscard]] inline constexpr Rational operator*(Rational rhs) const noexcept;
         [[nodiscard]] inline constexpr Rational operator/(Integer rhs) const noexcept;
+        // Comparison operator overloads
         [[nodiscard]] inline constexpr bool operator==(Integer rhs) const noexcept;
+        [[nodiscard]] inline constexpr bool operator==(int rhs) const noexcept;
 
         // Explicit conversion operators
         [[nodiscard]] inline explicit operator int() const { return _number; }
+        // Printable
+        inline constexpr friend std::ostream& operator<<(std::ostream& os, const Integer& rhs) {
+            os << rhs._number;
+            return os;
+        }
     };
 
     /// @brief A type that represents rational numbers of the form: ℚ = {a, b ∈ ℤ, b ≠ 0}
@@ -99,6 +114,8 @@ export namespace zero::math {
         Integer _numerator;      ///< The numerator of the rational number, belonging to ℤ.
         Integer _denominator;    ///< The denominator of the rational number, belonging to ℤ, NOT excluding the zero.
     public:
+        static constexpr MathSymbol symbol = MathSymbol::Rationals;
+
         [[nodiscard]] constexpr Rational(int numerator, int denominator) noexcept
             : _numerator(numerator), _denominator(denominator) {}
         [[nodiscard]] constexpr Rational(Natural numerator, Natural denominator) noexcept
@@ -113,6 +130,16 @@ export namespace zero::math {
 
         // Arithmetic operator overloads
         [[nodiscard]] inline constexpr Rational operator+(Rational rhs) const;
+        // TODO complete arithmetic overloads
+        // Comparison operator overloads
+        [[nodiscard]] inline constexpr bool operator==(Rational rhs) const noexcept;
+        // Printable
+        inline constexpr friend std::ostream& operator<<(std::ostream& os, const Rational& rhs) {
+            os << rhs._numerator;
+            os << 0x2044;
+            os << rhs._denominator;
+            return os;
+        }
     };
 
 
@@ -132,6 +159,7 @@ using namespace zero::math;
 
             /*++++++++ Operator overloads implementations ++++++++++*/
 /*+++++++++++++++++ Naturals +++++++++++++++++*/
+// Arithmetic
 [[nodiscard]] inline constexpr Natural Natural::operator+(const Natural rhs) const noexcept {
     return Natural(_number + rhs.number());
 }
@@ -146,8 +174,16 @@ using namespace zero::math;
 [[nodiscard]] inline constexpr Rational Natural::operator/(const Natural rhs) const noexcept {
     return {static_cast<signed int>(_number), static_cast<signed int>(rhs.number())};
 }
+// Equality
+[[nodiscard]] inline constexpr bool Natural::operator==(const Natural rhs) const noexcept {
+    return _number == rhs.number();
+}
+[[nodiscard]] inline constexpr bool Natural::operator==(const unsigned int rhs) const noexcept {
+    return _number == rhs;
+}
 
-            /*+++++++++++++++++ Integers +++++++++++++++++*/
+/*+++++++++++++++++ Integers +++++++++++++++++*/
+// Arithmetic
 [[nodiscard]] inline constexpr Integer Integer::operator+(const Integer rhs) const noexcept {
     return Integer(_number + rhs.number());
 }
@@ -163,11 +199,17 @@ using namespace zero::math;
 [[nodiscard]] inline constexpr Rational Integer::operator/(const Integer rhs) const noexcept {
     return {static_cast<signed int>(_number), static_cast<signed int>(rhs.number())};
 }
+// Equality
 [[nodiscard]] inline constexpr bool Integer::operator==(const Integer rhs) const noexcept {
     return _number == rhs.number();
 }
+[[nodiscard]] inline constexpr bool Integer::operator==(const int rhs) const noexcept {
+    return _number == rhs;
+}
 
             /*+++++++++++++++++ Rationals +++++++++++++++++*/
+// Arithmetic
+
 /// Adds the current rational number to another rational number.
 /// @param rhs The rational number to be added.
 /// @return The sum of the two rational numbers.
@@ -177,17 +219,18 @@ using namespace zero::math;
 /// finds the least common multiple (LCM) of the denominators and scales the
 /// numerators to have the LCM as the common denominator before adding.
 [[nodiscard]] inline constexpr Rational Rational::operator+(const Rational rhs) const {
-    if (_denominator == rhs.denominator())
+    if (_denominator == rhs.denominator())  // Like fractions
         return {
             static_cast<int>(_numerator) + static_cast<int>(rhs.numerator()),
             static_cast<int>(_denominator)
-        }; // Like fractions
-    else {
+        };
+    else {  // Unlike fractions
         const int lhs_numerator     = static_cast<int>(_numerator);
         const int rhs_numerator     = static_cast<int>(rhs._numerator);
         const int lhs_denominator   = static_cast<int>(_denominator);
         const int rhs_denominator   = static_cast<int>(rhs._denominator);
 
+        // Get their lcd by finding their lcm
         const auto lcd = zero::math::lcm(_denominator.number(), rhs.denominator().number());
 
         // Scale numerators to have the common denominator (lcm)
@@ -196,3 +239,27 @@ using namespace zero::math;
         return {numerator, lcd};
     }
 }
+
+// Equality
+
+// TODO should we check that 4/2 is the same as 2/1 right? Or we should maintain the difference and explictly
+// say that 4/2 aren't the same Rational number as 2/1?
+[[nodiscard]] inline constexpr bool Rational::operator==(const Rational rhs) const noexcept {
+    return _numerator == rhs.numerator() && _denominator == rhs.denominator();
+}
+
+            /*+++++++++++++++++ oss operator overloads (oss) +++++++++++++++++*/
+//inline constexpr std::ostream& Natural::operator<<(std::ostream& os) {
+//    os << _number;
+//    return os;
+//}
+//inline constexpr std::ostream& Integer::operator<<(std::ostream& os) {
+//    os << _number;
+//    return os;
+//}
+//inline constexpr std::ostream& Rational::operator<<(std::ostream& os) {
+//    os << _numerator;
+//    os << 0x2044;
+//    os << _denominator;
+//    return os;
+//}

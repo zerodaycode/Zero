@@ -39,13 +39,13 @@ interfaces = [
     { file = 'types/type_traits.cppm' },
     { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
 
-#    ### The testing suite
+    ### The testing suite
         { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
     # Root
     { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
 
     ### Iterator library
-        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail', internal = true } },
         { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
         # Modern
         { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
@@ -57,7 +57,7 @@ interfaces = [
     # Root
     { file = 'iterators/iterator.cppm' },
 
-    # The collections/containers librar
+    # The collections/containers library
         { file = 'collections/container.cppm', dependencies = ['type_info'] },
         { file = 'collections/array.cppm', dependencies = ['typedefs', 'concepts', 'iterator', 'container'] },
     # Root

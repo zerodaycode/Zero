@@ -7,6 +7,7 @@ TestSuite numbers_suite {"Numbers TS"};
 /// Compile time tests for numbers
 static_assert(Number<Natural>);
 static_assert(Number<Integer>);
+static_assert(Number<Rational>);
 static_assert(!Number<std::string>);
 
 void numbers_tests() {
@@ -15,23 +16,22 @@ void numbers_tests() {
         assertEquals(natural.number(), 1u);
 
         auto integer = Integer(7);
-        assertEquals(integer.number(), 7);
+        assertEquals(integer, 7);
         auto from_natural = Integer(natural);
-        assertEquals(from_natural.number(), 1);
+        assertEquals(from_natural, 1);
 
         auto rational = Rational(5, 2);
-        assertEquals(rational.numerator().number(), 5);
-        assertEquals(rational.denominator().number(), 2); // TODO simplify these when
-        // the equality operators are implemented
+        assertEquals(rational.numerator(), 5);
+        assertEquals(rational.denominator(), 2);
     });
 
     TEST_CASE(numbers_suite, "Arithmetic operations with Naturals", [] {
         auto one_natural = Natural(5);
         auto other_natural = Natural(2);
 
-        assertEquals((one_natural + other_natural).number(), 7u);
-        assertEquals((one_natural - other_natural).number(), 3u);
-        assertEquals((one_natural * other_natural).number(), 10u);
+        assertEquals(one_natural + other_natural, 7u);
+        assertEquals(one_natural - other_natural, 3u);
+        assertEquals(one_natural * other_natural, 10u);
         // TODO division
     });
 
@@ -39,9 +39,9 @@ void numbers_tests() {
         auto one_integer = Integer(10);
         auto other_integer = Integer(20);
 
-        assertEquals((one_integer + other_integer).number(), 30);
-        assertEquals((one_integer - other_integer).number(), -10);
-        assertEquals((one_integer * other_integer).number(), 200);
+        assertEquals(one_integer + other_integer, 30);
+        assertEquals(one_integer - other_integer, -10);
+        assertEquals(one_integer * other_integer, 200);
         // TODO division
     });
 }
