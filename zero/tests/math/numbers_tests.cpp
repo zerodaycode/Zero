@@ -11,7 +11,7 @@ static_assert(Number<Rational>);
 static_assert(!Number<std::string>);
 
 void numbers_tests() {
-    TEST_CASE(numbers_suite, "Testing the construction of a Number", [] {
+    TEST_CASE(numbers_suite, "Testing the Numbers types construction", [] {
         auto natural = Natural(1);
         assertEquals(natural.number(), 1u);
 
@@ -43,5 +43,17 @@ void numbers_tests() {
         assertEquals(one_integer - other_integer, -10);
         assertEquals(one_integer * other_integer, 200);
         // TODO division
+    });
+
+    TEST_CASE(numbers_suite, "Arithmetic operations with Rationals", [] {
+        auto one_rational = Rational(3, 2);
+        auto other_rational = Rational(5, 4);
+
+        auto rational_addition = one_rational + other_rational;
+        assertEquals(rational_addition, Rational(11, 4));
+
+        auto rational_subtraction = one_rational - other_rational;
+        assertEquals(rational_subtraction, Rational(1, 4));
+        assertEquals(other_rational - one_rational, Rational(-1, 4));
     });
 }

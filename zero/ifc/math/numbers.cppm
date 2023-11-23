@@ -118,30 +118,40 @@ export namespace zero::math {
 
         [[nodiscard]] constexpr Rational(int numerator, int denominator) noexcept
             : _numerator(numerator), _denominator(denominator) {}
+
         [[nodiscard]] constexpr Rational(Natural numerator, Natural denominator) noexcept
             : _numerator(static_cast<Natural>(numerator)), _denominator(static_cast<Natural>(denominator)) {}
+
         [[nodiscard]] constexpr Rational(Integer numerator, Integer denominator) noexcept
             : _numerator(numerator), _denominator(denominator) {}
 
         /// @return a {@link Integer} with the value of the numerator for this rational
         [[nodiscard]] inline constexpr Integer numerator() const noexcept { return _numerator; }
+
         /// @return a {@link Integer} with the value of the denominator for this rational
         [[nodiscard]] inline constexpr Integer denominator() const noexcept { return _denominator; }
 
+        // TODO Add a method to reduce fractions
+
         // Arithmetic operator overloads
-        [[nodiscard]] inline constexpr Rational operator+(Rational rhs) const;
+        [[nodiscard]] inline constexpr Rational operator+(const Rational &rhs) const;
+        [[nodiscard]] inline constexpr Rational operator-(const Rational &rhs) const;
+
         // TODO complete arithmetic overloads
         // Comparison operator overloads
         [[nodiscard]] inline constexpr bool operator==(Rational rhs) const noexcept;
+
         // Printable
-        inline constexpr friend std::ostream& operator<<(std::ostream& os, const Rational& rhs) {
+        inline friend std::ostream &operator<<(std::ostream& os, const Rational& rhs) {
             os << rhs._numerator;
-            os << 0x2044;
+            os << MathSymbol::DivisionSlash;
             os << rhs._denominator;
             return os;
         }
-    };
 
+    private:
+        [[nodiscard]] inline constexpr Rational sum_or_subtract(const Rational &rhs, int sign) const;
+    };
 
 //    class Real {
 //        double number; // TODO handle rationals and irrationals with std::variant?
@@ -210,23 +220,34 @@ using namespace zero::math;
             /*+++++++++++++++++ Rationals +++++++++++++++++*/
 // Arithmetic
 
-/// Adds the current rational number to another rational number.
-/// @param rhs The rational number to be added.
+// Addition operator
+[[nodiscard]] inline constexpr Rational Rational::operator+(const Rational& rhs) const {
+    return this->sum_or_subtract(rhs, 1);
+}
+
+// Subtraction operator
+[[nodiscard]] inline constexpr Rational Rational::operator-(const Rational& rhs) const {
+    return this->sum_or_subtract(rhs, -1);
+}
+
+/// Private helper function to perform the common logic for addition and subtraction
+/// @param rhs The rational number to be added or subtracted.
+/// \param sign
 /// @return The sum of the two rational numbers.
 ///
 /// This method handles both like and unlike fractions. If the denominators of
 /// the two fractions are equal, it directly adds the numerators. Otherwise, it
 /// finds the least common multiple (LCM) of the denominators and scales the
 /// numerators to have the LCM as the common denominator before adding.
-[[nodiscard]] inline constexpr Rational Rational::operator+(const Rational rhs) const {
-    if (_denominator == rhs.denominator())  // Like fractions
-        return {
-            static_cast<int>(_numerator) + static_cast<int>(rhs.numerator()),
+// TODO move to the future impl module
+[[nodiscard]] inline constexpr Rational Rational::sum_or_subtract(const Rational& rhs, int sign) const {
+    if (_denominator == rhs.denominator()) {  // Like fractions
+        return {static_cast<int>(_numerator) + sign * static_cast<int>(rhs.numerator()),
             static_cast<int>(_denominator)
         };
-    else {  // Unlike fractions
+    } else {  // Unlike fractions
         const int lhs_numerator     = static_cast<int>(_numerator);
-        const int rhs_numerator     = static_cast<int>(rhs._numerator);
+        const int rhs_numerator     = sign * static_cast<int>(rhs._numerator);
         const int lhs_denominator   = static_cast<int>(_denominator);
         const int rhs_denominator   = static_cast<int>(rhs._denominator);
 
@@ -234,7 +255,7 @@ using namespace zero::math;
         const auto lcd = zero::math::lcm(_denominator.number(), rhs.denominator().number());
 
         // Scale numerators to have the common denominator (lcm)
-        const int numerator = (lhs_numerator * (lcd / lhs_denominator)) + (rhs_numerator * (lcd / rhs_denominator));
+        const int numerator = (lhs_numerator * (lcd / lhs_denominator)) + (sign * rhs_numerator * (lcd / rhs_denominator));
 
         return {numerator, lcd};
     }
@@ -242,24 +263,8 @@ using namespace zero::math;
 
 // Equality
 
-// TODO should we check that 4/2 is the same as 2/1 right? Or we should maintain the difference and explictly
+// TODO should we check that 4/2 is the same as 2/1 right? Or we should maintain the difference and explicitly
 // say that 4/2 aren't the same Rational number as 2/1?
 [[nodiscard]] inline constexpr bool Rational::operator==(const Rational rhs) const noexcept {
     return _numerator == rhs.numerator() && _denominator == rhs.denominator();
 }
-
-            /*+++++++++++++++++ oss operator overloads (oss) +++++++++++++++++*/
-//inline constexpr std::ostream& Natural::operator<<(std::ostream& os) {
-//    os << _number;
-//    return os;
-//}
-//inline constexpr std::ostream& Integer::operator<<(std::ostream& os) {
-//    os << _number;
-//    return os;
-//}
-//inline constexpr std::ostream& Rational::operator<<(std::ostream& os) {
-//    os << _numerator;
-//    os << 0x2044;
-//    os << _denominator;
-//    return os;
-//}

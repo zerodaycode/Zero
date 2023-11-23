@@ -1,150 +1,312 @@
 export module math.symbols;
 
+import std;
+
 export enum class MathSymbol {
     // Basic Math Operators
-    Plus = 0x002B,                  // +
-    Minus = 0x2212,                 // -
-    Multiply = 0x00D7,              // ×
-    Divide = 0x00F7,                // ÷
+    Plus,                  // +
+    Minus,                 // -
+    Multiply,              // ×
+    Divide,                // ÷
 
     // General
-    Implies = 0x21D2,               // ⇒
-    NotImplies = 0x21CF,            // ⇏
-    IfAndOnlyIf = 0x21CF,           // ⇔
-    Increment = 0x2206,             // ∆
+    Implies,               // ⇒
+    NotImplies,            // ⇏
+    IfAndOnlyIf,           // ⇔
+    Increment,             // ∆
 
     // Relation
-    Equals = 0x003D,                // =
-    NotEquals = 0x2260,             // ≠
-    AlmostEqualsTo = 0x2248,        // ≈
-    PlusMinus = 0x00B1,             // ±
-    LessThan = 0x003C,              // <
-    GreaterThan = 0x003E,           // >
-    LessThanOrEqual = 0x2264,       // ≤
-    GreaterThanOrEqual = 0x2265,    // ≥
-    ProportionalTo = 0x221D,        // ∝
-    ApproximatelyEqual = 0x2248,    // ≈
+    Equals,                // =
+    NotEquals,             // ≠
+    AlmostEqualsTo,        // ≈
+    PlusMinus,             // ±
+    LessThan,              // <
+    GreaterThan,           // >
+    LessThanOrEqual,       // ≤
+    GreaterThanOrEqual,    // ≥
+    ProportionalTo,        // ∝
+    ApproximatelyEqual,    // ≈
 
     // Geometry
-    Parallel = 0x2225,              // ∥
-    NotParallel = 0x2226,           // ∦
+    Parallel,              // ∥
+    NotParallel,           // ∦
 
     // Root Symbols
-    SquareRoot = 0x221A,            // √
-    CubeRoot = 0x221B,              // ∛
-    FourthRoot = 0x221C,            // ∜
+    SquareRoot,            // √
+    CubeRoot,              // ∛
+    FourthRoot,            // ∜
 
     // Summation and Integral
-    Summation = 0x2211,             // ∑
-    Integral = 0x222B,              // ∫
-    DoubleIntegral = 0x222C,        // ∬
-    TripleIntegral = 0x222D,        // ∭
-    ContourIntegral = 0x222E,       // ∮
-    SurfaceIntegral = 0x222F,       // ∯
-    VolumeIntegral = 0x2230,        // ∰
+    Summation,             // ∑
+    Integral,              // ∫
+    DoubleIntegral,        // ∬
+    TripleIntegral,        // ∭
+    ContourIntegral,       // ∮
+    SurfaceIntegral,       // ∯
+    VolumeIntegral,        // ∰
 
     // Miscellaneous
-    Tilde = 0x223C,                 // ∼
-    RingOperator = 0x2218,          // ∘
-    SineWave = 0x223F,              // ∿
+    Tilde,                 // ∼
+    RingOperator,          // ∘
+    SineWave,              // ∿
 
     // Number Sets
-    Naturals = 0x2115,              // ℕ
-    Integers = 0x2124,              // ℤ
-    Rationals = 0x211A,             // ℚ
-    Reals = 0x211D,                 // ℝ
-    Complex = 0x2102,               // ℂ
-        ImaginaryPart = 0x2111,     // ℑ
-        RealPart = 0x2111,          // ℜ
-    Quaternions = 0x2110D,          // ℍ
-    Primes = 0x2119,                // ℙ
+    Naturals,              // ℕ
+    Integers,              // ℤ
+    Rationals,             // ℚ
+    Reals,                 // ℝ
+    Complex,               // ℂ
+        ImaginaryPart,     // ℑ
+        RealPart,          // ℜ
+    Quaternions,          // ℍ
+    Primes,                // ℙ
 
     // Set Notation
-    OpenCurlyBrace2 = 0x007B,       // {
-    CloseCurlyBrace2 = 0x007D,      // }
-    Exists = 0x2203,                // ∃ (Exists)
-    ForAll = 0x2200,                // ∀ (For All)
-    ElementOf = 0x2208,             // ∈
-    NotElementOf = 0x2209,          // ∉
-    ContainsAsMember = 0x220B,      // ∋ (As member)
-    NotContainsAsMember = 0x220C,   // ∌ (As member)
-    Subset = 0x2282,                // ⊂
-    SubsetOrEqualTo = 0x2286,       // ⊆
-    NotASubset = 0x2284,            // ⊄
-    Superset = 0x2285,              // ⊃
-    SupersetOrEqualTo = 0x2287,     // ⊇
-    NotASuperset = 0x2285,          // ⊅
-    EmptySet = 0x2205,              // ∅
-    Therefore = 0x2234,             // ∴
-    Because = 0x2235,               // ∵
-    Intersection = 0x2229,          // ∩
-    Union = 0x222A,                 // ∪
-    SuchThat = 0x2223,              // ∣
-    DivisionSlash = 0x2044,         // ⁄ (Division Slash)
-    OpenSquareBrace = 0x005B,       // [
-    CloseSquareBrace = 0x005D,      // ]
+    OpenCurlyBrace2,       // {
+    CloseCurlyBrace2,      // }
+    Exists,                // ∃ (Exists)
+    ForAll,                // ∀ (For All)
+    ElementOf,             // ∈
+    NotElementOf,          // ∉
+    ContainsAsMember,      // ∋ (As member)
+    NotContainsAsMember,   // ∌ (As member)
+    Subset,                // ⊂
+    SubsetOrEqualTo,       // ⊆
+    NotASubset,            // ⊄
+    Superset,              // ⊃
+    SupersetOrEqualTo,     // ⊇
+    NotASuperset,          // ⊅
+    EmptySet,              // ∅
+    Therefore,             // ∴
+    Because,               // ∵
+    Intersection,          // ∩
+    Union,                 // ∪
+    SuchThat,              // ∣
+    DivisionSlash,         // ⁄ (Division Slash)
+    OpenSquareBrace,       // [
+    CloseSquareBrace,      // ]
 
     // Logical Operators
-    LogicalAnd = 0x2227,            // ∧
-    LogicalOr = 0x2228,             // ∨
-    LogicalNot = 0x00AC,            // ¬
+    LogicalAnd,            // ∧
+    LogicalOr,             // ∨
+    LogicalNot,            // ¬
 
     // Infinity and Special Symbols
-    Infinity = 0x221E,              // ∞
-    MinusInfinity = 0x2212,         // -∞
+    Infinity,              // ∞
+    MinusInfinity,         // -∞
 
     // Aleph and Parentheses
-    Aleph = 0x2135,                 // ℵ
-    OpenParenthesis = 0x0028,       // (
-    CloseParenthesis = 0x0029,      // )
+    Aleph,                 // ℵ
+    OpenParenthesis,       // (
+    CloseParenthesis,      // )
 
     // Superscript and Subscript
-    SuperscriptN = 0x207F,          // ⁿ (Superscript n)
-    Superscript1 = 0x00B9,          // ¹ (Superscript 1)
-    Superscript2 = 0x00B2,          // ² (Superscript 2)
-    Superscript3 = 0x00B3,          // ³ (Superscript 3)
-    SuperscriptPlus = 0x207A,       // ⁺ (Superscript Plus)
-    SuperscriptMinus = 0x207B,      // ⁻ (Superscript Minus)
-    Subscript1 = 0x2081,            // ₁ (Subscript 1)
-    Subscript2 = 0x2082,            // ₂ (Subscript 2)
-    Subscript3 = 0x2083,            // ₃ (Subscript 3)
+    SuperscriptN,          // ⁿ (Superscript n)
+    Superscript1,          // ¹ (Superscript 1)
+    Superscript2,          // ² (Superscript 2)
+    Superscript3,          // ³ (Superscript 3)
+    SuperscriptPlus,       // ⁺ (Superscript Plus)
+    SuperscriptMinus,      // ⁻ (Superscript Minus)
+    Subscript1,            // ₁ (Subscript 1)
+    Subscript2,            // ₂ (Subscript 2)
+    Subscript3,            // ₃ (Subscript 3)
 
     // Derivative Symbols
-    Derivative = 0x2146,            // ⅆ (Derivative of)
-    PartialDerivative = 0x2202,     // ∂ (Partial Derivative)
-    Nabla = 0x2207,                 // ∇ (Nabla)
-    DelSquared = 0x2207,            // ∇² (Del Squared)
-    VectorDiv = 0x2207,             // ∇ · (Divergence)
-    Laplace = 0x2207,               // ∇² (Laplace Operator)
+    Derivative,            // ⅆ (Derivative of)
+    PartialDerivative,     // ∂ (Partial Derivative)
+    Nabla,                 // ∇ (Nabla)
+    DelSquared,            // ∇² (Del Squared)
+    VectorDiv,             // ∇ · (Divergence)
+    Laplace,               // ∇² (Laplace Operator)
 
     // Vector Symbols
-    VectorArrow = 0x2192,           // → (Vector Arrow)
-    CrossProduct = 0x00D7,          // × (Cross Product)
-    DotProduct = 0x22C5,            // ⋅ (Dot Product)
+    VectorArrow,           // → (Vector Arrow)
+    CrossProduct,          // × (Cross Product)
+    DotProduct,            // ⋅ (Dot Product)
 
     // Matrices Symbols // TODO complete
-    Matrix = 0x23A0,                // ⎠ (Matrix)
-    MatrixTranspose = 0x22A4,       // ⊤ (Matrix Transpose)
-    MatrixHermitian = 0x22B2,       // ⊲ (Matrix Hermitian)
+    Matrix,                // ⎠ (Matrix)
+    MatrixTranspose,       // ⊤ (Matrix Transpose)
+    MatrixHermitian,       // ⊲ (Matrix Hermitian)
 
     // Like Letters
-    Degree = 0x00B0,                // °
-    EulerNumber = 0x212F,           // ℯ
-    Pi = 0x03C0,                    // π
-    Sigma = 0x03A3,                 // Σ
-    Delta = 0x2206,                 // ∆
-    Alpha = 0x03B1,                 // α
-    Beta = 0x03B2,                  // β
-    Gamma = 0x03B3,                 // γ
-    Epsilon = 0x03B5,               // ε
-    Zeta = 0x03B6,                  // ζ
-    Eta = 0x03B7,                   // η
-    Mu = 0x03BC,                    // μ
-    Nu = 0x03BD,                    // ν
-    Xi = 0x039E,                    // Ξ
-    Rho = 0x03C1,                   // ρ
-    Tau = 0x03C4,                   // τ
-    Phi = 0x03A6,                   // Φ
-    Psi = 0x03A8,                   // Ψ
-    Omega = 0x03A9,                 // Ω
+    Degree,                // °
+    EulerNumber,           // ℯ
+    Pi,                    // π
+    Sigma,                 // Σ
+    Delta,                 // ∆
+    Alpha,                 // α
+    Beta,                  // β
+    Gamma,                 // γ
+    Epsilon,               // ε
+    Zeta,                  // ζ
+    Eta,                   // η
+    Mu,                    // μ
+    Nu,                    // ν
+    Xi,                    // Ξ
+    Rho,                   // ρ
+    Tau,                   // τ
+    Phi,                   // Φ
+    Psi,                   // Ψ
+    Omega                  // Ω
 };
+
+constexpr const char* to_string(const MathSymbol symbol) {
+    switch (symbol) {
+            // Basic Math Operators
+        case MathSymbol::Plus: return "+";
+        case MathSymbol::Minus: return "-";
+        case MathSymbol::Multiply: return "×";
+        case MathSymbol::Divide: return "÷";
+
+            // General
+        case MathSymbol::Implies: return "⇒";
+        case MathSymbol::NotImplies: return "⇏";
+        case MathSymbol::IfAndOnlyIf: return "⇔";
+        case MathSymbol::Increment: return "∆";
+
+            // Relation
+        case MathSymbol::Equals: return "=";
+        case MathSymbol::NotEquals: return "≠";
+        case MathSymbol::AlmostEqualsTo: return "≈";
+        case MathSymbol::PlusMinus: return "±";
+        case MathSymbol::LessThan: return "<";
+        case MathSymbol::GreaterThan: return ">";
+        case MathSymbol::LessThanOrEqual: return "≤";
+        case MathSymbol::GreaterThanOrEqual: return "≥";
+        case MathSymbol::ProportionalTo: return "∝";
+        case MathSymbol::ApproximatelyEqual: return "≈";
+
+            // Geometry
+        case MathSymbol::Parallel: return "∥";
+        case MathSymbol::NotParallel: return "∦";
+
+            // Root Symbols
+        case MathSymbol::SquareRoot: return "√";
+        case MathSymbol::CubeRoot: return "∛";
+        case MathSymbol::FourthRoot: return "∜";
+
+            // Summation and Integral
+        case MathSymbol::Summation: return "∑";
+        case MathSymbol::Integral: return "∫";
+        case MathSymbol::DoubleIntegral: return "∬";
+        case MathSymbol::TripleIntegral: return "∭";
+        case MathSymbol::ContourIntegral: return "∮";
+        case MathSymbol::SurfaceIntegral: return "∯";
+        case MathSymbol::VolumeIntegral: return "∰";
+
+            // Miscellaneous
+        case MathSymbol::Tilde: return "∼";
+        case MathSymbol::RingOperator: return "∘";
+        case MathSymbol::SineWave: return "∿";
+
+            // Number Sets
+        case MathSymbol::Naturals: return "ℕ";
+        case MathSymbol::Integers: return "ℤ";
+        case MathSymbol::Rationals: return "ℚ";
+        case MathSymbol::Reals: return "ℝ";
+        case MathSymbol::Complex: return "ℂ";
+        case MathSymbol::ImaginaryPart: return "ℑ";
+        case MathSymbol::RealPart: return "ℜ";
+        case MathSymbol::Quaternions: return "ℍ";
+        case MathSymbol::Primes: return "ℙ";
+
+            // Set Notation
+        case MathSymbol::OpenCurlyBrace2: return "{";
+        case MathSymbol::CloseCurlyBrace2: return "}";
+        case MathSymbol::Exists: return "∃";
+        case MathSymbol::ForAll: return "∀";
+        case MathSymbol::ElementOf: return "∈";
+        case MathSymbol::NotElementOf: return "∉";
+        case MathSymbol::ContainsAsMember: return "∋";
+        case MathSymbol::NotContainsAsMember: return "∌";
+        case MathSymbol::Subset: return "⊂";
+        case MathSymbol::SubsetOrEqualTo: return "⊆";
+        case MathSymbol::NotASubset: return "⊄";
+        case MathSymbol::Superset: return "⊃";
+        case MathSymbol::SupersetOrEqualTo: return "⊇";
+        case MathSymbol::NotASuperset: return "⊅";
+        case MathSymbol::EmptySet: return "∅";
+        case MathSymbol::Therefore: return "∴";
+        case MathSymbol::Because: return "∵";
+        case MathSymbol::Intersection: return "∩";
+        case MathSymbol::Union: return "∪";
+        case MathSymbol::SuchThat: return "∣";
+        case MathSymbol::DivisionSlash: return "⁄";
+        case MathSymbol::OpenSquareBrace: return "[";
+        case MathSymbol::CloseSquareBrace: return "]";
+
+            // Logical Operators
+        case MathSymbol::LogicalAnd: return "∧";
+        case MathSymbol::LogicalOr: return "∨";
+        case MathSymbol::LogicalNot: return "¬";
+
+            // Infinity and Special Symbols
+        case MathSymbol::Infinity: return "∞";
+        case MathSymbol::MinusInfinity: return "-∞";
+
+            // Aleph and Parentheses
+        case MathSymbol::Aleph: return "ℵ";
+        case MathSymbol::OpenParenthesis: return "(";
+        case MathSymbol::CloseParenthesis: return ")";
+
+            // Superscript and Subscript
+        case MathSymbol::SuperscriptN: return "ⁿ";
+        case MathSymbol::Superscript1: return "¹";
+        case MathSymbol::Superscript2: return "²";
+        case MathSymbol::Superscript3: return "³";
+        case MathSymbol::SuperscriptPlus: return "⁺";
+        case MathSymbol::SuperscriptMinus: return "⁻";
+        case MathSymbol::Subscript1: return "₁";
+        case MathSymbol::Subscript2: return "₂";
+        case MathSymbol::Subscript3: return "₃";
+
+            // Derivative Symbols
+        case MathSymbol::Derivative: return "ⅆ";
+        case MathSymbol::PartialDerivative: return "∂";
+        case MathSymbol::Nabla: return "∇";
+        case MathSymbol::DelSquared: return "∇²";
+        case MathSymbol::VectorDiv: return "∇ ·";
+        case MathSymbol::Laplace: return "∇²";
+
+            // Vector Symbols
+        case MathSymbol::VectorArrow: return "→";
+        case MathSymbol::CrossProduct: return "×";
+        case MathSymbol::DotProduct: return "⋅";
+
+            // Matrices Symbols // TODO complete
+        case MathSymbol::Matrix: return "⎠";
+        case MathSymbol::MatrixTranspose: return "⊤";
+        case MathSymbol::MatrixHermitian: return "⊲";
+
+            // Like Letters
+        case MathSymbol::Degree: return "°";
+        case MathSymbol::EulerNumber: return "ℯ";
+        case MathSymbol::Pi: return "π";
+        case MathSymbol::Sigma: return "Σ";
+        case MathSymbol::Delta: return "∆";
+        case MathSymbol::Alpha: return "α";
+        case MathSymbol::Beta: return "β";
+        case MathSymbol::Gamma: return "γ";
+        case MathSymbol::Epsilon: return "ε";
+        case MathSymbol::Zeta: return "ζ";
+        case MathSymbol::Eta: return "η";
+        case MathSymbol::Mu: return "μ";
+        case MathSymbol::Nu: return "ν";
+        case MathSymbol::Xi: return "Ξ";
+        case MathSymbol::Rho: return "ρ";
+        case MathSymbol::Tau: return "τ";
+        case MathSymbol::Phi: return "Φ";
+        case MathSymbol::Psi: return "Ψ";
+        case MathSymbol::Omega: return "Ω";
+    }
+
+    return "Unknown";
+}
+
+
+
+export inline std::ostream& operator<<(std::ostream& os, const MathSymbol& symbol) {
+    os << to_string(symbol);
+    return os;
+}
