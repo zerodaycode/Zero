@@ -42,4 +42,4 @@ jobs:
           cp ./Zork/zork++/target/release/zork++ .
 
       - name: Running the tests for ${{ matrix.os }} with Zork++
-        run: ./zork++ --match-files gh_linux -vv -c run
+        run: ./zork++ --match-files gh_linux -vv -c test

@@ -34,7 +34,7 @@ void testPtrsAddition() {
 // Driver code
 int main() {
     // run_containers_examples();
-    // run_output_iterator_examples();
+     run_output_iterator_examples();
     // run_quantities_examples();
     run_formatter_and_stylize_examples();
     run_print_examples();
@@ -206,15 +206,18 @@ void run_formatter_and_stylize_examples() {
     std::cout << "\n\n#######Check stylize########\n\n";
 
 
-    std::string boldText = stylize("[WARNING] This is bold text", Color::YELLOW, {Modifier::BOLD});
-    std::string faintText = stylize("[INFO] This is faint text", Color::GREEN, {Modifier::FAINT});
-    std::string italicText = stylize("[DEBUG] This is italic text", Color::BLUE, {Modifier::ITALIC});
-    std::string underlinedText = stylize("[ERROR] This is underlined text", Color::RED, {Modifier::UNDERLINE});
-    std::string blinkingText = stylize("[CRITICAL] This is blinking text", Color::PURPLE, {Modifier::BLINK});
-    std::string reversedText = stylize("[NOTICE] This is reversed text", Color::CYAN, {Modifier::REVERSE});
-    std::string hiddenText = stylize("[SECRET] This is hidden text", Color::BLACK, {Modifier::HIDDEN});
+    std::string default_text = stylize("[WARNING] This is bold text without color");
+    std::string bold_text = stylize("[WARNING] This is bold text", Color::YELLOW, Modifier::BOLD);
+    std::string bold_default_text = stylize("[WARNING] This is bold text without color", Color::DEFAULT, Modifier::BOLD);
+    std::string faintText = stylize("[INFO] This is faint text", Color::GREEN, Modifier::FAINT);
+    std::string italicText = stylize("[DEBUG] This is italic text", Color::BLUE, Modifier::ITALIC);
+    std::string underlinedText = stylize("[ERROR] This is underlined text", Color::RED, Modifier::UNDERLINE);
+    std::string blinkingText = stylize("[CRITICAL] This is blinking text", Color::PURPLE, Modifier::BLINK);
+    std::string reversedText = stylize("[NOTICE] This is reversed text", Color::CYAN, Modifier::REVERSE);
+    std::string hiddenText = stylize("[SECRET] This is hidden text", Color::BLACK, Modifier::HIDDEN);
 
-    std::cout << boldText << "\n";
+    std::cout << bold_text << "\n";
+    std::cout << bold_default_text << "\n";
     std::cout << faintText << "\n";
     std::cout << italicText << "\n";
     std::cout << underlinedText << "\n";
@@ -225,23 +228,23 @@ void run_formatter_and_stylize_examples() {
     std::cout << "\n\n#######Check combination full text########\n\n";
     std::string format_str1 = "[WARNING] {} is deprecated. Please use {} instead.";
     std::string warning_msg = formatter(format_str1, "methodA", "methodB");
-    std::string stylized_warning_msg = stylize(warning_msg, Color::YELLOW, {Modifier::BOLD});
+    std::string stylized_warning_msg = stylize(warning_msg, Color::YELLOW, Modifier::BOLD);
     std::cout << stylized_warning_msg << std::endl;
 
     std::string format_str2 = "[ERROR] Failed to open file: {}";
     std::string error_msg = formatter(format_str2, "/path/to/file");
-    std::string stylized_error_msg = stylize(error_msg, Color::RED, {Modifier::BOLD, Modifier::UNDERLINE});
+    std::string stylized_error_msg = stylize(error_msg, Color::RED, Modifier::BOLD, Modifier::UNDERLINE);
     std::cout << stylized_error_msg << std::endl;
 
     std::cout << "\n\n#######Check combination partial text########\n\n";
     std::string format_str3 = "{} Successfully connected to server: {}";
-    std::string stylized_info_msg = stylize("[INFO]", Color::GREEN, {Modifier::FAINT});
+    std::string stylized_info_msg = stylize("[INFO]", Color::GREEN, Modifier::FAINT);
     std::string info_msg = formatter(format_str3,stylized_info_msg, "192.168.1.1");
     std::cout << info_msg << std::endl;
 
     std::cout << "\n\n#######Check unicode symbols########\n";
     std::string format_str4 = "{} Triple integral symbol: {}";
-    std::string stylized_info_msg_2 = stylize("[INFO]", Color::GREEN, {Modifier::FAINT});
+    std::string stylized_info_msg_2 = stylize("[INFO]", Color::GREEN, Modifier::FAINT);
     std::string info_msg_2 = formatter(format_str4, stylized_info_msg_2, "∭");
     std::cout << info_msg_2 << "\n\n";
 }

@@ -27,7 +27,7 @@ sources = [ "*.cpp" ]
 
 [tests]
 tests_executable_name = "zero_tests"
-sources = [ "tests/**/*.cpp", "tests/math/*.cpp", "tests/*.cpp" ]
+sources = [ "tests/math/*.cpp", "tests/*.cpp" ]
 
 [modules]
 base_ifcs_dir = "ifc"
@@ -74,6 +74,7 @@ interfaces = [
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
     # General
     { file = 'math/symbols.cppm', module_name = 'math.symbols' },
+    { file = 'math/numbers.cppm', module_name = 'math.numbers' },
     # Root
     { file = 'math/math.cppm' },
     

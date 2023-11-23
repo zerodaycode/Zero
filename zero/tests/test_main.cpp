@@ -8,10 +8,13 @@ import std;
 
 
 #include "./math/matrix_tests.h"
+#include "./math/numbers_tests.h"
 //TEST_CASE( "Base tests entry point for The Zero Project", "[Zero Project]" ) {}
 
 int main() {
     matrix_tests();
+    numbers_tests();
+
     RUN_TESTS();
     return 0;
 }
