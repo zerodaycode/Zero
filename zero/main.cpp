@@ -95,7 +95,7 @@ int main() {
     TEST_CASE(anotherSuite, "Multiplication Test", testMultiplication);
 
     // Don't forget to call this free function, to run all the tests written!
-    RUN_TESTS(FAIL_NUC);
+    RUN_TESTS();
 
     return 0;
 }
