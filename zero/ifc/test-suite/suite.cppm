@@ -152,10 +152,7 @@ export {
     // Function to run all the test cases and suites
     void RUN_TESTS(const TestRunBehavior behavior = ABORT_ALL_ON_FAIL) {
         if (!freeTestCases.empty()) {
-            if (runFreeTestCases(behavior) && behavior == ABORT_ALL_ON_FAIL){
-                std::cout << "\n\033[38;5;196m[Abort]\033[0m All further tests are aborted due to a failure in free tests.\n";
-                return;
-            }
+            if (runFreeTestCases(behavior) && behavior == ABORT_ALL_ON_FAIL) return;
         }
         std::cout
             << "\nRunning test suites. Total suites found: " << testSuites.size()
@@ -190,21 +187,32 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
     bool anyFailed = false;
     TestResults freeTestsResults;
     std::cout << "Running free tests: " << std::endl;
-     for (const auto& testCase : freeTestCases) {
+
+    for (const auto& testCase : freeTestCases) {
         if (!runTest(testCase, freeTestsResults)) {
             anyFailed = true;
-            if (behavior == HALT_SUITE_ON_FAIL){
-                std::cout << "\n    Free tests summary:" << std::endl;
-                std::cout << "    \033[32mPassed:\033[0m " << freeTestsResults.passed << std::endl;
-                std::cout << "    \033[31mFailed:\033[0m " << freeTestsResults.failed << std::endl;
+            if (behavior == ABORT_ALL_ON_FAIL || behavior == HALT_SUITE_ON_FAIL) {
                 break;
-            } 
+            }
         }
+    }
 
-    std::cout << "\n    Free tests summary:" << std::endl;
+    std::cout << "\nFree tests summary:" << std::endl;
     std::cout << "    \033[32mPassed:\033[0m " << freeTestsResults.passed << std::endl;
     std::cout << "    \033[31mFailed:\033[0m " << freeTestsResults.failed << std::endl;
+
+    if (anyFailed) {
+        if (behavior == HALT_SUITE_ON_FAIL) {
+            std::cout << "\n\033[1;38;5;214m================================================\n";
+            std::cout << "[Halt Free Tests] Stopping further free tests due to a failure.\n";
+            std::cout << "================================================\033[0m\n";
+        } else if (behavior == ABORT_ALL_ON_FAIL) {
+            std::cout << "\n\033[1;38;5;196m================================================\n";
+            std::cout << "[Abort] All further tests are aborted due to a failure in free tests.\n";
+            std::cout << "================================================\033[0m\n";
+        }
     }
+
     return anyFailed;
 }
 
