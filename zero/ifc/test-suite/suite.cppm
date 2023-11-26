@@ -152,8 +152,10 @@ export {
     // Function to run all the test cases and suites
     void RUN_TESTS(const TestRunBehavior behavior = ABORT_ALL_ON_FAIL) {
         if (!freeTestCases.empty()) {
-            if (runFreeTestCases(behavior) && behavior == ABORT_ALL_ON_FAIL) 
+            if (runFreeTestCases(behavior) && behavior == ABORT_ALL_ON_FAIL){
+                std::cout << "\n\033[38;5;196m[Abort]\033[0m All further tests are aborted due to a failure in free tests.\n";
                 return;
+            }
         }
         std::cout
             << "\nRunning test suites. Total suites found: " << testSuites.size()
