@@ -152,7 +152,7 @@ export {
     // Function to run all the test cases and suites
     void RUN_TESTS(const TestRunBehavior behavior = ABORT_ALL_ON_FAIL) {
         if (!freeTestCases.empty()) {
-            if (runFreeTestCases(behavior) && behavior == FAIL_NUC) 
+            if (runFreeTestCases(behavior) && behavior == ABORT_ALL_ON_FAIL) 
                 return;
         }
         std::cout
@@ -167,8 +167,8 @@ export {
                 std::cout << "\n    " << warning << std::endl;
             for (const auto& test_case : test_suite->cases) {
                 if (!runTest(test_case, test_suite->results)) {
-                    if (behavior == FAIL_FAST) break;
-                    if (behavior == FAIL_NUC) {
+                    if (behavior == HALT_SUITE_ON_FAIL) break;
+                    if (behavior == ABORT_ALL_ON_FAIL) {
                     std::cout << "\nTest suite [" << test_suite->uuid << "] summary:" << std::endl;
                     std::cout << "    \033[32mPassed:\033[0m " << test_suite->results.passed << std::endl;
                     std::cout << "    \033[31mFailed:\033[0m " << test_suite->results.failed << std::endl;
@@ -191,7 +191,7 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
      for (const auto& testCase : freeTestCases) {
         if (!runTest(testCase, freeTestsResults)) {
             anyFailed = true;
-            if (behavior == FAIL_FAST){
+            if (behavior == HALT_SUITE_ON_FAIL){
                 std::cout << "\n    Free tests summary:" << std::endl;
                 std::cout << "    \033[32mPassed:\033[0m " << freeTestsResults.passed << std::endl;
                 std::cout << "    \033[31mFailed:\033[0m " << freeTestsResults.failed << std::endl;
