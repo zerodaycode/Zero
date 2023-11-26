@@ -61,6 +61,7 @@ export enum TestRunBehavior {
 };
 bool runTest(const TestCase* testCase, TestResults& testResults);
 bool runFreeTestCases(const TestRunBehavior behavior);
+void runSuiteTestCases(const TestRunBehavior behavior);
 
 // Top-level containers. They hold pointers to the types to avoid:
 // `arithmetic on a pointer to an incomplete type`
@@ -154,34 +155,40 @@ export {
         if (!freeTestCases.empty()) {
             if (runFreeTestCases(behavior) && behavior == ABORT_ALL_ON_FAIL) return;
         }
-        std::cout
-            << "\nRunning test suites. Total suites found: " << testSuites.size()
-            << std::endl;
-        
+        runSuiteTestCases(behavior);
+    }   
+}
 
-        for (const auto& test_suite : testSuites) {
-            std::cout << "Running test suite: \033[38;5;165m" << test_suite->uuid << "\033[m";
+void runSuiteTestCases(const TestRunBehavior behavior) {
+std::cout
+        << "\nRunning test suites. Total suites found: " << testSuites.size()
+        << std::endl;
+    
 
-            for (const auto& warning : test_suite->results.warnings)
-                std::cout << "\n    " << warning << std::endl;
-            for (const auto& test_case : test_suite->cases) {
-                if (!runTest(test_case, test_suite->results)) {
-                    if (behavior == HALT_SUITE_ON_FAIL) break;
-                    if (behavior == ABORT_ALL_ON_FAIL) {
-                    std::cout << "\nTest suite [" << test_suite->uuid << "] summary:" << std::endl;
-                    std::cout << "    \033[32mPassed:\033[0m " << test_suite->results.passed << std::endl;
-                    std::cout << "    \033[31mFailed:\033[0m " << test_suite->results.failed << std::endl;
-                    return;
-                    }
+    for (const auto& test_suite : testSuites) {
+        std::cout << "Running test suite: \033[38;5;165m" << test_suite->uuid << "\033[m";
+
+        for (const auto& warning : test_suite->results.warnings)
+            std::cout << "\n    " << warning << std::endl;
+        for (const auto& test_case : test_suite->cases) {
+            if (!runTest(test_case, test_suite->results)) {
+                if (behavior == HALT_SUITE_ON_FAIL) break;
+                if (behavior == ABORT_ALL_ON_FAIL) {
+                std::cout << "\nTest suite [" << test_suite->uuid << "] summary:" << std::endl;
+                std::cout << "    \033[32mPassed:\033[0m " << test_suite->results.passed << std::endl;
+                std::cout << "    \033[31mFailed:\033[0m " << test_suite->results.failed << std::endl;
+                return;
                 }
             }
-
-            std::cout << "\nTest suite [" << test_suite->uuid << "] summary:" << std::endl;
-            std::cout << "    \033[32mPassed:\033[0m " << test_suite->results.passed << std::endl;
-            std::cout << "    \033[31mFailed:\033[0m " << test_suite->results.failed << std::endl;
         }
+
+        std::cout << "\nTest suite [" << test_suite->uuid << "] summary:" << std::endl;
+        std::cout << "    \033[32mPassed:\033[0m " << test_suite->results.passed << std::endl;
+        std::cout << "    \033[31mFailed:\033[0m " << test_suite->results.failed << std::endl;
     }
 }
+
+
 
 bool runFreeTestCases(const TestRunBehavior behavior) {
     bool anyFailed = false;
