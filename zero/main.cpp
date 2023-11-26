@@ -22,7 +22,27 @@ void run_print_examples();
 void testAddition() {
     int result = 2 + 2;
     assertEquals(4, result);
+    assertEquals(4, result);
+    assertEquals(4, result);
 }
+
+// Let's define some more example test functions using the assertion function
+void testSubtraction() {
+    int result = 3 - 2;
+    assertEquals(1, result);
+    assertEquals(23, result);
+    assertEquals(1, result);
+}
+
+
+// Let's define even more example test functions using the assertion function
+void testMultiplication() {
+    int result = 2 * 2;
+    assertEquals(4, result);
+    assertEquals(4, result);
+    assertEquals(4, result);
+}
+
 
 // Passing two pointers to compare if the values that they point to are equals
 void testPtrsAddition() {
@@ -46,7 +66,6 @@ int main() {
     TEST_CASE("Subtraction Test", []() {
         int result = 5 - 3;
         assertEquals(2, result);
-        assertEquals(122435, result);
         assertEquals(2, result);
     });
 
@@ -60,9 +79,23 @@ int main() {
     // Forces a warning that alerts the user that the test will be discarded, since already
     // exists one with the same identifier in the given suite
     TEST_CASE(suite, "Addition Test", testAddition);
+    // Register a test case designed to fail, useful for testing the behavior 
+    // of RUN_TESTS with different failure modes.
+    TEST_CASE(suite, "Subtraction Test", testSubtraction);
+
+    // Register additional test cases to verify the functionality of RUN_TESTS
+    // under different conditions.
+    TEST_CASE(suite, "Multiplication Test", testMultiplication);
+
+    // Create another test suite to further validate the behavior of RUN_TESTS
+    // with multiple suites, especially under different failure modes.
+    TestSuite anotherSuite {"Another Suite"};
+    TEST_CASE(anotherSuite, "Addition Test", testAddition);
+    TEST_CASE(anotherSuite, "Subtraction Test", testSubtraction);
+    TEST_CASE(anotherSuite, "Multiplication Test", testMultiplication);
 
     // Don't forget to call this free function, to run all the tests written!
-    RUN_TESTS(FAIL_FAST);
+    RUN_TESTS(FAIL_NUC);
 
     return 0;
 }
