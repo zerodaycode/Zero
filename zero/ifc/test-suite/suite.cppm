@@ -150,7 +150,7 @@ export {
     }
 
     // Function to run all the test cases and suites
-    void RUN_TESTS(const TestRunBehavior behavior) {
+    void RUN_TESTS(const TestRunBehavior behavior = ABORT_ALL_ON_FAIL) {
         if (!freeTestCases.empty()) {
             if (runFreeTestCases(behavior) && behavior == FAIL_NUC) 
                 return;
