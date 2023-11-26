@@ -25,13 +25,18 @@ struct TestResults {
 // Forward declarations
 export struct TestSuite;
 export struct TestCase;
-void runTest(const TestCase* testCase, TestResults& testResults);
-void runFreeTestCases();
+export enum TestRunBehavior {
+    FAIL_FAST, // Abort current test suite or free tests upon a single failure
+    FAIL_NUC   // Abort all tests and suites upon a single failure
+};
+bool runTest(const TestCase* testCase, TestRunBehavior behavior, TestResults& testResults);
+bool runFreeTestCases(TestRunBehavior behavior);
 
 // Top-level containers. They hold pointers to the types to avoid:
 // `arithmetic on a pointer to an incomplete type`
 std::vector<TestSuite*> testSuites;
 std::vector<TestCase*> freeTestCases;
+
 
 export {
     /**
@@ -115,12 +120,15 @@ export {
     }
 
     // Function to run all the test cases and suites
-    void RUN_TESTS() {
-        if (!freeTestCases.empty())
-            runFreeTestCases();
+    void RUN_TESTS(TestRunBehavior behavior) {
+        if (!freeTestCases.empty()) {
+            if (runFreeTestCases(behavior) && behavior == FAIL_NUC) 
+                return;
+        }
         std::cout
             << "\nRunning test suites. Total suites found: " << testSuites.size()
             << std::endl;
+        
 
         for (const auto& test_suite : testSuites) {
             std::cout << "Running test suite: \033[38;5;165m" << test_suite->uuid << "\033[m";
@@ -128,7 +136,7 @@ export {
             for (const auto& warning : test_suite->results.warnings)
                 std::cout << "\n    " << warning << std::endl;
             for (const auto& test_case : test_suite->cases)
-                runTest(test_case, test_suite->results);
+                runTest(test_case, behavior,  test_suite->results);
 
             std::cout << "\nTest suite [" << test_suite->uuid << "] summary:" << std::endl;
             std::cout << "    \033[32mPassed:\033[0m " << test_suite->results.passed << std::endl;
@@ -137,21 +145,24 @@ export {
     }
 }
 
-void runFreeTestCases() {
+bool runFreeTestCases(TestRunBehavior behavior) {
+    bool anyFailed = false;
     TestResults freeTestsResults;
     std::cout << "Running free tests: " << std::endl;
-    for (const auto& testCase : freeTestCases) {
-        runTest(testCase, freeTestsResults);
-        std::cout << std::endl;
-    }
+     for (const auto& testCase : freeTestCases) {
+        if (!runTest(testCase, behavior, freeTestsResults)) {
+            anyFailed = true;
+            if (behavior == FAIL_FAST) {break;}
+        }
 
     std::cout << "Free tests summary:" << std::endl;
     std::cout << "    \033[32mPassed:\033[0m " << freeTestsResults.passed << std::endl;
     std::cout << "    \033[31mFailed:\033[0m " << freeTestsResults.failed << std::endl;
-
+    }
+    return anyFailed;
 }
 
-void runTest(const TestCase* const testCase, TestResults& results) {
+bool runTest(const TestCase* const testCase, TestResults& results) {
     std::cout << "\n    Running test: \033[38;5;117m" << testCase->name << "\033[0m";
 
     try {
@@ -159,8 +170,10 @@ void runTest(const TestCase* const testCase, TestResults& results) {
         testCase->fn();
         std::cout << " ... Result => \033[32mPassed!\033[0m";
         results.passed++;
+        return true;
     } catch (const std::exception& ex) {
         std::cout << " ... Result => \033[31mFailed\033[0m: " << ex.what();
         results.failed++;
+         return false;
     }
 }

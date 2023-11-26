@@ -36,8 +36,8 @@ int main() {
     // run_containers_examples();
     // run_output_iterator_examples();
     // run_quantities_examples();
-    run_formatter_and_stylize_examples();
-    run_print_examples();
+    // run_formatter_and_stylize_examples();
+    // run_print_examples();
 
     // Register a new test case using a function pointer.
     TEST_CASE("Addition Test With Pointers", testPtrsAddition);
@@ -45,7 +45,9 @@ int main() {
     // Users can register a new test case using lambdas, avoiding writing standalone functions
     TEST_CASE("Subtraction Test", []() {
         int result = 5 - 3;
+        assertEquals(2, result);
         assertEquals(122435, result);
+        assertEquals(2, result);
     });
 
     // Registering test cases into test suites, to group and relate tests that makes sense to exists
@@ -60,7 +62,7 @@ int main() {
     TEST_CASE(suite, "Addition Test", testAddition);
 
     // Don't forget to call this free function, to run all the tests written!
-    RUN_TESTS();
+    RUN_TESTS(FAIL_FAST);
 
     return 0;
 }
