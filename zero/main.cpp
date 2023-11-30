@@ -48,7 +48,9 @@ void testMultiplication() {
 void testPtrsAddition() {
     int result = 2 + 2;
     int expected = 4;
+    int wrongExpected = 16;
     assertEquals(&expected, &result);
+    assertEquals(&wrongExpected, &result);
 }
 
 // Driver code
@@ -58,6 +60,13 @@ int main() {
     // run_quantities_examples();
     // run_formatter_and_stylize_examples();
     // run_print_examples();
+
+    TEST_CASE("Multiplication Test", []() {
+        int result = 5 * 3;
+        assertEquals(15, result);
+        assertEquals(15, result);
+    });
+
 
     // Register a new test case using a function pointer.
     TEST_CASE("Addition Test With Pointers", testPtrsAddition);
@@ -95,7 +104,7 @@ int main() {
     TEST_CASE(anotherSuite, "Multiplication Test", testMultiplication);
 
     // Don't forget to call this free function, to run all the tests written!
-    RUN_TESTS();
+    RUN_TESTS(CONTINUE_ON_ERROR);
 
     return 0;
 }
