@@ -69,7 +69,8 @@ int main() {
 
 
     // Register a new test case using a function pointer.
-    TEST_CASE("Addition Test With Pointers", testPtrsAddition);
+    // Comment this line if you don't want failed tests in the freetests
+    // TEST_CASE("Addition Test With Pointers", testPtrsAddition);
 
     // Users can register a new test case using lambdas, avoiding writing standalone functions
     TEST_CASE("Subtraction Test", []() {
@@ -104,7 +105,8 @@ int main() {
     TEST_CASE(anotherSuite, "Multiplication Test", testMultiplication);
 
     // Don't forget to call this free function, to run all the tests written!
-    RUN_TESTS(CONTINUE_ON_ERROR);
+    // Options are: CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL, ABORT_ALL_ON_FAIL
+    RUN_TESTS();
 
     return 0;
 }
