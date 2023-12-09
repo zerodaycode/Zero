@@ -216,6 +216,16 @@ void runSuiteTestCases(const TestRunBehavior behavior) {
 							  << test_suite->results.passed << std::endl;
 					std::cout << "    \033[31mFailed:\033[0m "
 							  << test_suite->results.failed << std::endl;
+
+					std::cout << "\n\033[1;38;5;196m==========================="
+								 "=============="
+								 "=======\n";
+					std::cout << "[Abort] All further tests are aborted due to "
+								 "a failure in "
+								 "a test in this suite.\n";
+					std::cout << "============================================="
+								 "===\033[0m\n";
+					return;
 				}
 			}
 		}
