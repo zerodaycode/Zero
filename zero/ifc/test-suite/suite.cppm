@@ -13,11 +13,6 @@ export import :assertions;
 
 import std;
 
-class TestSuiteException : public std::runtime_error {
-  public:
-	TestSuiteException(const std::string &message)
-		: std::runtime_error(message) {}
-};
 
 /**
  *
@@ -279,7 +274,7 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
 				   "free tests.\n";
 			std::cout
 				<< "================================================\033[0m\n";
-			throw TestSuiteException("Tests aborted due to failure.");
+			std::exit(1);
 		}
 	}
 
@@ -303,11 +298,12 @@ bool runTest(const TestCase *const testCase, TestResults &results) {
 	}
 }
 
+
 void checkForTestErrors(const bool freeTestsErrors) {
+	
 	bool suiteTestsErrors = std::any_of(
 		testSuites.begin(), testSuites.end(),
 		[](const TestSuite *suite) { return suite->results.failed > 0; });
-
-	if (suiteTestsErrors || freeTestsErrors)
-		throw TestSuiteException("There are some errors in the tests");
+	std::cout << freeTestsErrors << " " << suiteTestsErrors;
+	if (suiteTestsErrors || freeTestsErrors) std::exit(1);
 }
