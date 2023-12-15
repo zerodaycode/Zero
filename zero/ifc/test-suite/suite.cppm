@@ -15,7 +15,24 @@ import std;
 
 
 /**
+ * @struct TestResults
+ * @brief Holds the results of test execution.
  *
+ * This structure is used to track the outcomes of a series of tests, 
+ * including the number of passed and failed tests, along with any warnings 
+ * that might have been generated during test execution.
+ *
+ * @var passed
+ * The count of tests that have successfully passed.
+ *
+ * @var failed
+ * The count of tests that have failed.
+ *
+ * @var warnings
+ * A list of warning messages generated during test execution. Warnings are
+ * used to notify about non-critical issues or potential problems in the tests,
+ * which do not necessarily constitute test failures. For example, a warning
+ * can be used to indicate the duplication of a test case.
  */
 struct TestResults {
 	int passed = 0;
