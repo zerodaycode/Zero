@@ -85,6 +85,28 @@ export enum TestRunBehavior {
 bool runTest(const TestCase *testCase, TestResults &testResults);
 bool runFreeTestCases(const TestRunBehavior behavior);
 void runSuiteTestCases(const TestRunBehavior behavior);
+
+/**
+ * @brief Checks for errors post test execution based on test run behavior.
+ *
+ * This function is designed to be called after all tests have been executed under
+ * certain TestRunBehaviors (CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL). It determines if 
+ * any errors occurred during the test runs. 
+ * 
+ * In scenarios where tests are allowed to continue despite failures (CONTINUE_ON_ERROR)
+ * or where test execution is halted only for the current suite upon failure 
+ * (HALT_SUITE_ON_FAIL), this function provides a final check to ascertain if any errors
+ * were encountered during the entire testing process.
+ *
+ * The function evaluates two sources of potential errors:
+ * 1. Free test errors, indicated by the boolean parameter 'freeTestsErrors'.
+ * 2. Suite test errors, determined by examining all test suites for any failures.
+ *
+ * If errors are found in either free tests or test suites, the function terminates the
+ * program with an exit code of 1, signaling an error condition.
+ *
+ * @param freeTestsErrors Boolean indicating if there were errors in the free tests.
+ */
 void checkForTestErrors(const bool freeTestsErrors);
 
 // Top-level containers. They hold pointers to the types to avoid:
