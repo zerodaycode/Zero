@@ -82,8 +82,49 @@ export enum TestRunBehavior {
 	 */
 	ABORT_ALL_ON_FAIL
 };
+
+/**
+ * @brief Executes a single test case and updates the test results.
+ *
+ * This function runs an individual test case and captures its success or failure.
+ * It updates the passed and failed count in the provided TestResults object.
+ * If the test case throws an exception, it is caught and treated as a test failure.
+ *
+ * @param testCase Pointer to the @ref TestCase to be executed.
+ * @param testResults Reference to a @ref TestResults object where the outcome (pass/fail) 
+ *                    of the test will be recorded.
+ * @return Returns true if the test case passed, false if it failed.
+ */
 bool runTest(const TestCase *testCase, TestResults &testResults);
+
+/**
+ * @brief Executes all free-standing test cases based on the specified behavior.
+ *
+ * A "free-standing test" refers to a test case that is not part of any test suite. 
+ * These are individual tests executed independently, without being grouped in a suite.
+ * This function iterates over and executes all such free-standing test cases. The behavior
+ * of the function upon encountering a failed test is determined by the @ref TestRunBehavior 
+ * parameter. It can either continue running the remaining tests or halt/abort execution.
+ *
+ * @param behavior The @ref TestRunBehavior (e.g., CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL, 
+ *                 ABORT_ALL_ON_FAIL) that determines the function's response to test 
+ *                 failures.
+ * @return Returns true if any test case failed, false otherwise.
+ */
 bool runFreeTestCases(const TestRunBehavior behavior);
+
+/**
+ * @brief Executes all test cases within test suites based on the specified behavior.
+ *
+ * This function iterates over all registered test suites, executing the test cases 
+ * within each suite. The execution behavior upon encountering a test failure is 
+ * governed by the @ref TestRunBehavior parameter. Depending on this parameter, the function 
+ * can continue with the next tests/suites, halt the current suite, or abort all tests.
+ *
+ * @param behavior The @ref TestRunBehavior (e.g., CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL, 
+ *                 ABORT_ALL_ON_FAIL) that influences the function's handling of test 
+ *                 failures.
+ */
 void runSuiteTestCases(const TestRunBehavior behavior);
 
 /**
