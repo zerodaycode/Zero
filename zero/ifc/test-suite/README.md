@@ -65,6 +65,21 @@ Test cases within a suite can be registered using the `TEST_CASE(...)` function,
 just like standalone tests, but choosing the overload that receives as its first parameter
 a reference to the test suite.
 
+### **Test Modes**
+In the pursuit of flexibility and control over the test execution process, our testing framework offers different modes of operation. These modes determine the test runner's behavior in response to test failures, allowing users to tailor the testing process according to their specific needs or the nature of the tests being run.
+
+1. **CONTINUE_ON_ERROR**
+   - **Description**: This mode ensures that all tests are executed regardless of any failures encountered. It's ideal for comprehensive error analysis or understanding the full extent of issues in the codebase.
+   - **Use Case**: Opt for this mode when a complete analysis of the system's state is required, particularly to identify all potential problems in a single test run.
+
+2. **HALT_SUITE_ON_FAIL**
+   - **Description**: In this mode, the test suite halts the execution of the current suite or free tests upon encountering a failure, then proceeds to the next suite or free test. It allows for a quick bypass of problematic tests while still performing remaining tests.
+   - **Use Case**: Useful for scenarios where quickly identifying and addressing failures is important, without getting bogged down by tests in a problematic suite.
+
+3. **ABORT_ALL_ON_FAIL (Default mode)**
+   - **Description**: This mode adopts a zero-tolerance approach towards test failures. As soon as any test fails, it immediately halts all further testing activities.
+   - **Use Case**: Use this mode to avoid wasting time on further tests when there's already a known issue that needs fixing.
+   
 ## **Example of usage**
 
 Here's an example of how to use the custom test-suite to write and run test cases:
