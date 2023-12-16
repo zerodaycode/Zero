@@ -65,6 +65,21 @@ Test cases within a suite can be registered using the `TEST_CASE(...)` function,
 just like standalone tests, but choosing the overload that receives as its first parameter
 a reference to the test suite.
 
+### **Test Modes**
+In the pursuit of flexibility and control over the test execution process, our testing framework offers different modes of operation. These modes determine the test runner's behavior in response to test failures, allowing users to tailor the testing process according to their specific needs or the nature of the tests being run.
+
+1. **CONTINUE_ON_ERROR**
+   - **Description**: This mode ensures that all tests are executed regardless of any failures encountered. It's ideal for comprehensive error analysis or understanding the full extent of issues in the codebase.
+   - **Use Case**: Opt for this mode when a complete analysis of the system's state is required, particularly to identify all potential problems in a single test run.
+
+2. **HALT_SUITE_ON_FAIL**
+   - **Description**: In this mode, the test suite halts the execution of the current suite or free tests upon encountering a failure, then proceeds to the next suite or free test. It allows for a quick bypass of problematic tests while still performing remaining tests.
+   - **Use Case**: Useful for scenarios where quickly identifying and addressing failures is important, without getting bogged down by tests in a problematic suite.
+
+3. **ABORT_ALL_ON_FAIL (Default mode)**
+   - **Description**: This mode adopts a zero-tolerance approach towards test failures. As soon as any test fails, it immediately halts all further testing activities.
+   - **Use Case**: Use this mode to avoid wasting time on further tests when there's already a known issue that needs fixing.
+   
 ## **Example of usage**
 
 Here's an example of how to use the custom test-suite to write and run test cases:
@@ -76,52 +91,104 @@ import std;  // Should be ready on all the major compilers for C++23. But until 
 // with the `Zork++` out of the box solution based on Clang modulemaps.
 import tsuite;
 
-// Define test functions. Should be void functions that later w'd be registered in a suite.
+// Let's define some example test functions using the assertion function
 void testAddition() {
     int result = 2 + 2;
     assertEquals(4, result);
+    assertEquals(4, result);
+    assertEquals(4, result);
 }
+
+// Let's define some more example test functions using the assertion function
+void testSubtraction() {
+    int result = 3 - 2;
+    assertEquals(1, result);
+    assertEquals(23, result);
+    assertEquals(1, result);
+}
+
+
+// Let's define even more example test functions using the assertion function
+void testMultiplication() {
+    int result = 2 * 2;
+    assertEquals(4, result);
+    assertEquals(4, result);
+    assertEquals(4, result);
+}
+
 
 // Passing two pointers to compare if the values that they point to are equals
 void testPtrsAddition() {
     int result = 2 + 2;
     int expected = 4;
+    int wrongExpected = 16;
     assertEquals(&expected, &result);
+    assertEquals(&wrongExpected, &result);
 }
 
 // Driver code
 int main() {
-    // Free tests cases registration examples
-    
+
+    TEST_CASE("Multiplication Test", []() {
+        int result = 5 * 3;
+        assertEquals(15, result);
+        assertEquals(15, result);
+    });
+
+
     // Register a new test case using a function pointer.
     TEST_CASE("Addition Test With Pointers", testPtrsAddition);
-    
-    // Users can register a new test case using lambdas, avoiding to write standalone functions
+
+    // Users can register a new test case using lambdas, avoiding writing standalone functions
     TEST_CASE("Subtraction Test", []() {
         int result = 5 - 3;
-        assertEquals(122435, result);
+        assertEquals(2, result);
+        assertEquals(2, result);
     });
-    
+
     // Registering test cases into test suites, to group and relate tests that makes sense to exists
     // as a part of a whole
-    
+
     // Instantiate a new test suite, giving it a unique identifier.
     TestSuite suite {"My Suite"};
     // Register test cases using function pointers into a test suite
     TEST_CASE(suite, "Addition Test", testAddition);
-    // Force a warning that alerts the user that the test will be discarded, since already
+    // Forces a warning that alerts the user that the test will be discarded, since already
     // exists one with the same identifier in the given suite
     TEST_CASE(suite, "Addition Test", testAddition);
-    
+    // Register a test case designed to fail, useful for testing the behavior 
+    // of RUN_TESTS with different failure modes.
+    TEST_CASE(suite, "Subtraction Test", testSubtraction);
+
+    // Register additional test cases to verify the functionality of RUN_TESTS
+    // under different conditions.
+    TEST_CASE(suite, "Multiplication Test", testMultiplication);
+
+    // Create another test suite to further validate the behavior of RUN_TESTS
+    // with multiple suites, especially under different failure modes.
+    TestSuite anotherSuite {"Another Suite"};
+    TEST_CASE(anotherSuite, "Addition Test", testAddition);
+    TEST_CASE(anotherSuite, "Subtraction Test", testSubtraction);
+    TEST_CASE(anotherSuite, "Multiplication Test", testMultiplication);
+
     // Don't forget to call this free function, to run all the tests written!
+    // Options are: CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL, ABORT_ALL_ON_FAIL (default)
     RUN_TESTS();
 
     return 0;
 }
 ```
 
-With these example, you will see this result:
-![img.png](../../assets/tsuite_results.png)
+With these examples, you will see different results depending on the mode used:
+
+1. **ABORT_ALL_ON_FAIL** mode (Default):
+   ![Abort All on Fail Mode](../../assets/tsuite_results_ABORT_ALL_ON_FAIL_mode.png)
+
+2. **HALT_SUITE_ON_FAIL** mode:
+   ![Halt Suite on Fail Mode](../../assets/tsuite_results_HALT_SUITE_ON_FAIL_mode.png)
+
+3. **CONTINUE_ON_ERROR** mode:
+   ![Continue on Error Mode](../../assets/tsuite_results_CONTINUE_ON_ERROR_mode.png)
 
 ## Funny facts
 

@@ -22,13 +22,35 @@ void run_print_examples();
 void testAddition() {
     int result = 2 + 2;
     assertEquals(4, result);
+    assertEquals(4, result);
+    assertEquals(4, result);
 }
+
+// Let's define some more example test functions using the assertion function
+void testSubtraction() {
+    int result = 3 - 2;
+    assertEquals(1, result);
+    assertEquals(23, result);
+    assertEquals(1, result);
+}
+
+
+// Let's define even more example test functions using the assertion function
+void testMultiplication() {
+    int result = 2 * 2;
+    assertEquals(4, result);
+    assertEquals(4, result);
+    assertEquals(4, result);
+}
+
 
 // Passing two pointers to compare if the values that they point to are equals
 void testPtrsAddition() {
     int result = 2 + 2;
     int expected = 4;
+    int wrongExpected = 16;
     assertEquals(&expected, &result);
+    assertEquals(&wrongExpected, &result);
 }
 
 // Driver code
@@ -36,16 +58,25 @@ int main() {
     // run_containers_examples();
     // run_output_iterator_examples();
     // run_quantities_examples();
-    run_formatter_and_stylize_examples();
-    run_print_examples();
+    // run_formatter_and_stylize_examples();
+    // run_print_examples();
+
+    TEST_CASE("Multiplication Test", []() {
+        int result = 5 * 3;
+        assertEquals(15, result);
+        assertEquals(15, result);
+    });
+
 
     // Register a new test case using a function pointer.
-    TEST_CASE("Addition Test With Pointers", testPtrsAddition);
+    // Comment this line if you don't want failed tests in the freetests
+    // TEST_CASE("Addition Test With Pointers", testPtrsAddition);
 
     // Users can register a new test case using lambdas, avoiding writing standalone functions
     TEST_CASE("Subtraction Test", []() {
         int result = 5 - 3;
-        assertEquals(122435, result);
+        assertEquals(2, result);
+        assertEquals(2, result);
     });
 
     // Registering test cases into test suites, to group and relate tests that makes sense to exists
@@ -58,8 +89,23 @@ int main() {
     // Forces a warning that alerts the user that the test will be discarded, since already
     // exists one with the same identifier in the given suite
     TEST_CASE(suite, "Addition Test", testAddition);
+    // Register a test case designed to fail, useful for testing the behavior 
+    // of RUN_TESTS with different failure modes.
+    TEST_CASE(suite, "Subtraction Test", testSubtraction);
+
+    // Register additional test cases to verify the functionality of RUN_TESTS
+    // under different conditions.
+    TEST_CASE(suite, "Multiplication Test", testMultiplication);
+
+    // Create another test suite to further validate the behavior of RUN_TESTS
+    // with multiple suites, especially under different failure modes.
+    TestSuite anotherSuite {"Another Suite"};
+    TEST_CASE(anotherSuite, "Addition Test", testAddition);
+    TEST_CASE(anotherSuite, "Subtraction Test", testSubtraction);
+    TEST_CASE(anotherSuite, "Multiplication Test", testMultiplication);
 
     // Don't forget to call this free function, to run all the tests written!
+    // Options are: CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL, ABORT_ALL_ON_FAIL
     RUN_TESTS();
 
     return 0;

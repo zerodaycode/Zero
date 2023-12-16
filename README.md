@@ -14,6 +14,7 @@ Quick description, and links to the documentation of all the libraries of the pr
 - [Text](./zero/ifc/text/README.md) - Offers utilities for text manipulation, string splitting, formatting, styling, and print to console functionalities.
 - [Types](./zero/ifc/types/README.md) - Information about types and traits for types
 - [Math](./zero/ifc/math/README.md) - Mathematical operations and functions
+- [Test Suite](./zero/ifc/test-suite/README.md)  - A flexible and simple test-suite.
 
 ## Sponsorship
 
@@ -47,16 +48,6 @@ The last but not least, is using `Zero` as a platform for showing our [`Zork++`]
 system in a real world environment, so people can profit by taking examples of how we set-up things with `Zork++`
 in a big scale project. Also, we introduce the changes of the latest releases available here, so it serves as well as
 a kind of latest up-to-date guide.
-
-## Testing tools
-
-We are using [`catch2`](https://github.com/catchorg/Catch2) as the testing suite for `Zero`, in its *header-only* version.
-
-We made a try to replace it with `boost::ut`, that spots that is compatible with modules, but we are getting all kind of errors in the process of convert the provided header to a precompiled module, so we will stay
-with `catch2` for now.
-
-Also, we are looking for generate a precompiled header of the Catch's suite in order to decrement
-the tests compilation time.
 
 ## General guidelines and API design
 
