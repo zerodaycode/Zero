@@ -113,11 +113,6 @@ void testPtrsAddition() {
 
 // Driver code
 int main() {
-    // run_containers_examples();
-    // run_output_iterator_examples();
-    // run_quantities_examples();
-    // run_formatter_and_stylize_examples();
-    // run_print_examples();
 
     TEST_CASE("Multiplication Test", []() {
         int result = 5 * 3;
