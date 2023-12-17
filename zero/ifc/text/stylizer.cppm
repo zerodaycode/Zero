@@ -118,7 +118,20 @@ export namespace zero::fmt {
     };
 
     std::string stylize(const std::string& text, Color color, const std::vector<Modifier>& modifiers) {
-        std::string colorCode = color == Color::DEFAULT ? "" : "\033[38;5;" + std::to_string(static_cast<int>(color)) + "m";
+        // The color code will depend on whether we are using a standard ANSI color
+        // or an extended color from the 256-color palette.
+        std::string colorCode = "";
+        if (static_cast<int>(color) >= 30 && static_cast<int>(color) <= 37) {
+            // Standard ANSI colors are within the range of 30-37.
+            // These are directly used following the escape sequence "\033[".
+            colorCode = "\033[" + std::to_string(static_cast<int>(color)) + "m";
+        } else {
+            // Colors outside the range of standard ANSI colors are treated as part of
+            // the extended 256-color palette. They require a prefix "38;5;" which
+            // signals the terminal to interpret the following number as a 256-palette index.
+            colorCode = "\033[38;5;" + std::to_string(static_cast<int>(color)) + "m";
+        }
+
         std::string modifierCodes = "";
 
         for (const auto& modifier : modifiers) {
