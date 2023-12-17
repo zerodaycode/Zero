@@ -274,11 +274,11 @@ void runSuiteTestCases(const TestRunBehavior behavior) {
 	println("\nRunning test suites. Total suites found: {}", testSuites.size());
 
 	for (const auto &test_suite : testSuites) {
-		println("Running test suite:" + stylize(" {}", Color::EXT_PURPLE, {}),
+		print("Running test suite:" + stylize(" {}", Color::EXT_PURPLE, {}),
 				test_suite->uuid);
 
 		for (const auto &warning : test_suite->results.warnings)
-			println("\n    {}", warning);
+			print("\n    {}", warning);
 		for (const auto &test_case : test_suite->cases) {
 			if (!runTest(test_case, test_suite->results)) {
 
@@ -373,7 +373,7 @@ bool runTest(const TestCase *const testCase, TestResults &results) {
 		results.passed++;
 		return true;
 	} catch (const std::exception &ex) {
-		println(" ... Result => {}: {}", stylize("Failed", Color::RED, {}),
+		print(" ... Result => {}: {}", stylize("Failed", Color::RED, {}),
 				ex.what());
 		results.failed++;
 		return false;
