@@ -256,7 +256,7 @@ void run_formatter_and_stylize_examples() {
     std::string faintText = stylize("[INFO] This is faint text", Color::GREEN, {Modifier::FAINT});
     std::string italicText = stylize("[DEBUG] This is italic text", Color::BLUE, {Modifier::ITALIC});
     std::string underlinedText = stylize("[ERROR] This is underlined text", Color::RED, {Modifier::UNDERLINE});
-    std::string blinkingText = stylize("[CRITICAL] This is blinking text", Color::PURPLE, {Modifier::BLINK});
+    std::string blinkingText = stylize("[CRITICAL] This is blinking text", Color::EXT_PURPLE, {Modifier::BLINK});
     std::string reversedText = stylize("[NOTICE] This is reversed text", Color::CYAN, {Modifier::REVERSE});
     std::string hiddenText = stylize("[SECRET] This is hidden text", Color::BLACK, {Modifier::HIDDEN});
 

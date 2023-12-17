@@ -12,14 +12,18 @@ export module tsuite;
 export import :assertions;
 
 import std;
+import stylizer;
+import formatter;
+import print_utils;
 
+using namespace zero::fmt;
 
 /**
  * @struct TestResults
  * @brief Holds the results of test execution.
  *
- * This structure is used to track the outcomes of a series of tests, 
- * including the number of passed and failed tests, along with any warnings 
+ * This structure is used to track the outcomes of a series of tests,
+ * including the number of passed and failed tests, along with any warnings
  * that might have been generated during test execution.
  *
  * @var passed
@@ -86,13 +90,14 @@ export enum TestRunBehavior {
 /**
  * @brief Executes a single test case and updates the test results.
  *
- * This function runs an individual test case and captures its success or failure.
- * It updates the passed and failed count in the provided TestResults object.
- * If the test case throws an exception, it is caught and treated as a test failure.
+ * This function runs an individual test case and captures its success or
+ * failure. It updates the passed and failed count in the provided TestResults
+ * object. If the test case throws an exception, it is caught and treated as a
+ * test failure.
  *
  * @param testCase Pointer to the @ref TestCase to be executed.
- * @param testResults Reference to a @ref TestResults object where the outcome (pass/fail) 
- *                    of the test will be recorded.
+ * @param testResults Reference to a @ref TestResults object where the outcome
+ * (pass/fail) of the test will be recorded.
  * @return Returns true if the test case passed, false if it failed.
  */
 bool runTest(const TestCase *testCase, TestResults &testResults);
@@ -100,53 +105,59 @@ bool runTest(const TestCase *testCase, TestResults &testResults);
 /**
  * @brief Executes all free-standing test cases based on the specified behavior.
  *
- * A "free-standing test" refers to a test case that is not part of any test suite. 
- * These are individual tests executed independently, without being grouped in a suite.
- * This function iterates over and executes all such free-standing test cases. The behavior
- * of the function upon encountering a failed test is determined by the @ref TestRunBehavior 
- * parameter. It can either continue running the remaining tests or halt/abort execution.
+ * A "free-standing test" refers to a test case that is not part of any test
+ * suite. These are individual tests executed independently, without being
+ * grouped in a suite. This function iterates over and executes all such
+ * free-standing test cases. The behavior of the function upon encountering a
+ * failed test is determined by the @ref TestRunBehavior parameter. It can
+ * either continue running the remaining tests or halt/abort execution.
  *
- * @param behavior The @ref TestRunBehavior (e.g., CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL, 
- *                 ABORT_ALL_ON_FAIL) that determines the function's response to test 
- *                 failures.
+ * @param behavior The @ref TestRunBehavior (e.g., CONTINUE_ON_ERROR,
+ * HALT_SUITE_ON_FAIL, ABORT_ALL_ON_FAIL) that determines the function's
+ * response to test failures.
  * @return Returns true if any test case failed, false otherwise.
  */
 bool runFreeTestCases(const TestRunBehavior behavior);
 
 /**
- * @brief Executes all test cases within test suites based on the specified behavior.
+ * @brief Executes all test cases within test suites based on the specified
+ * behavior.
  *
- * This function iterates over all registered test suites, executing the test cases 
- * within each suite. The execution behavior upon encountering a test failure is 
- * governed by the @ref TestRunBehavior parameter. Depending on this parameter, the function 
- * can continue with the next tests/suites, halt the current suite, or abort all tests.
+ * This function iterates over all registered test suites, executing the test
+ * cases within each suite. The execution behavior upon encountering a test
+ * failure is governed by the @ref TestRunBehavior parameter. Depending on this
+ * parameter, the function can continue with the next tests/suites, halt the
+ * current suite, or abort all tests.
  *
- * @param behavior The @ref TestRunBehavior (e.g., CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL, 
- *                 ABORT_ALL_ON_FAIL) that influences the function's handling of test 
- *                 failures.
+ * @param behavior The @ref TestRunBehavior (e.g., CONTINUE_ON_ERROR,
+ * HALT_SUITE_ON_FAIL, ABORT_ALL_ON_FAIL) that influences the function's
+ * handling of test failures.
  */
 void runSuiteTestCases(const TestRunBehavior behavior);
 
 /**
  * @brief Checks for errors post test execution based on test run behavior.
  *
- * This function is designed to be called after all tests have been executed under
- * certain TestRunBehaviors (CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL). It determines if 
- * any errors occurred during the test runs. 
- * 
- * In scenarios where tests are allowed to continue despite failures (CONTINUE_ON_ERROR)
- * or where test execution is halted only for the current suite upon failure 
- * (HALT_SUITE_ON_FAIL), this function provides a final check to ascertain if any errors
- * were encountered during the entire testing process.
+ * This function is designed to be called after all tests have been executed
+ * under certain TestRunBehaviors (CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL). It
+ * determines if any errors occurred during the test runs.
+ *
+ * In scenarios where tests are allowed to continue despite failures
+ * (CONTINUE_ON_ERROR) or where test execution is halted only for the current
+ * suite upon failure (HALT_SUITE_ON_FAIL), this function provides a final check
+ * to ascertain if any errors were encountered during the entire testing
+ * process.
  *
  * The function evaluates two sources of potential errors:
  * 1. Free test errors, indicated by the boolean parameter 'freeTestsErrors'.
- * 2. Suite test errors, determined by examining all test suites for any failures.
+ * 2. Suite test errors, determined by examining all test suites for any
+ * failures.
  *
- * If errors are found in either free tests or test suites, the function terminates the
- * program with an exit code of 1, signaling an error condition.
+ * If errors are found in either free tests or test suites, the function
+ * terminates the program with an exit code of 1, signaling an error condition.
  *
- * @param freeTestsErrors Boolean indicating if there were errors in the free tests.
+ * @param freeTestsErrors Boolean indicating if there were errors in the free
+ * tests.
  */
 void checkForTestErrors(const bool freeTestsErrors);
 
@@ -232,11 +243,12 @@ export {
 			tsuite.cases.emplace_back(new TestCase(tname, tfunc));
 		else
 			tsuite.results.warnings.emplace_back(
-				"\033[38;5;220m[Warning\033[0m in suite: \033[38;5;165m" +
-				tsuite.uuid +
-				"\033[0m\033[38;5;220m]\033[0m "
-				"Already exists a test case with the name: \033[38;5;117m" +
-				tname + "\033[0m. Skipping test case.");
+				stylize("[Warning in suite: ", Color::YELLOW, {}) +
+				stylize(tsuite.uuid, Color::EXT_PURPLE, {}) +
+				stylize("] Already exists a test case with the name: ",
+						Color::YELLOW, {}) +
+				stylize(tname, Color::EXT_SKY_BLUE, {}) +
+				stylize(". Skipping test case.", Color::YELLOW, {}));
 		/// If this is the first time that the suite is being registered
 		auto suites_it = std::find_if(
 			testSuites.begin(), testSuites.end(),
@@ -258,66 +270,62 @@ export {
 }
 
 void runSuiteTestCases(const TestRunBehavior behavior) {
-	std::cout << "\nRunning test suites. Total suites found: "
-			  << testSuites.size() << std::endl;
+	println("\nRunning test suites. Total suites found: {}", testSuites.size());
 
 	for (const auto &test_suite : testSuites) {
-		std::cout << "Running test suite: \033[38;5;165m" << test_suite->uuid
-				  << "\033[m";
+		print("Running test suite:" + stylize(" {}", Color::EXT_PURPLE, {}),
+				test_suite->uuid);
 
 		for (const auto &warning : test_suite->results.warnings)
-			std::cout << "\n    " << warning << std::endl;
+			print("\n    {}", warning);
 		for (const auto &test_case : test_suite->cases) {
 			if (!runTest(test_case, test_suite->results)) {
 
 				if (behavior == HALT_SUITE_ON_FAIL) {
-					std::cout << "\n\033[1;38;5;214m==========================="
-								 "=============="
-								 "=======\n";
-					std::cout << "[Halt Suite Tests] Stopping further tests of "
-								 "the suite "
-								 "\033[38;5;165m"
-							  << test_suite->uuid
-							  << "\033[0m\033[1;38;5;214m due to a failure.\n";
-					std::cout << "============================================="
-								 "===\033[0m\n";
+					println(
+						stylize("\n========================================"
+								"\n[Halt Suite Tests] Stopping further tests "
+								"of the suite ",
+								Color::EXT_LIGHT_ORANGE, {Modifier::BOLD}) +
+							stylize("{} ", Color::EXT_PURPLE, {}) +
+							stylize(
+								"due to a failure."
+								"\n========================================",
+								Color::EXT_LIGHT_ORANGE, {Modifier::BOLD}),
+						test_suite->uuid);
 					break;
 				}
 
 				if (behavior == ABORT_ALL_ON_FAIL) {
-					std::cout << "\nTest suite [" << test_suite->uuid
-							  << "] summary:" << std::endl;
-					std::cout << "    \033[32mPassed:\033[0m "
-							  << test_suite->results.passed << std::endl;
-					std::cout << "    \033[31mFailed:\033[0m "
-							  << test_suite->results.failed << std::endl;
+					println("Test suite [{}] summary:", test_suite->uuid);
+					println(stylize("    Passed: {}", Color::GREEN, {}),
+							test_suite->results.passed);
+					println(stylize("    Failed: {}", Color::RED, {}),
+							test_suite->results.failed);
 
-					std::cout << "\n\033[1;38;5;196m==========================="
-								 "=============="
-								 "=======\n";
-					std::cout << "[Abort] All further tests are aborted due to "
-								 "a failure in "
-								 "a test in this suite.\n";
-					std::cout << "============================================="
-								 "===\033[0m\n";
+					println(
+						stylize("\n========================================"
+								"\n[Abort] All further tests are aborted due "
+								"to a failure in a test in this suite."
+								"\n========================================",
+								Color::RED, {Modifier::BOLD}));
 					return;
 				}
 			}
 		}
 
-		std::cout << "\nTest suite [" << test_suite->uuid
-				  << "] summary:" << std::endl;
-		std::cout << "    \033[32mPassed:\033[0m " << test_suite->results.passed
-				  << std::endl;
-		std::cout << "    \033[31mFailed:\033[0m " << test_suite->results.failed
-				  << std::endl;
+		println("Test suite [{}] summary:", test_suite->uuid);
+		println(stylize("    Passed: {}", Color::GREEN, {}),
+				test_suite->results.passed);
+		println(stylize("    Failed: {}", Color::RED, {}),
+				test_suite->results.failed);
 	}
 }
 
 bool runFreeTestCases(const TestRunBehavior behavior) {
 	bool anyFailed = false;
 	TestResults freeTestsResults;
-	std::cout << "Running free tests: " << std::endl;
+	println("Running free tests:");
 
 	for (const auto &testCase : freeTestCases) {
 		if (!runTest(testCase, freeTestsResults)) {
@@ -329,31 +337,24 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
 		}
 	}
 
-	std::cout << "\nFree tests summary:" << std::endl;
-	std::cout << "    \033[32mPassed:\033[0m " << freeTestsResults.passed
-			  << std::endl;
-	std::cout << "    \033[31mFailed:\033[0m " << freeTestsResults.failed
-			  << std::endl;
+	println("\nFree tests summary:");
+	println(stylize("    Passed: {}", Color::GREEN, {}),
+			freeTestsResults.passed);
+	println(stylize("    Failed: {}", Color::RED, {}), freeTestsResults.failed);
 
 	if (anyFailed) {
 		if (behavior == HALT_SUITE_ON_FAIL) {
-			std::cout
-				<< "\n\033[1;38;5;214m========================================="
-				   "=======\n";
-			std::cout
-				<< "[Halt Free Tests] Stopping further free tests due to a "
-				   "failure.\n";
-			std::cout
-				<< "================================================\033[0m\n";
+			println(stylize("\n========================================"
+							"\n[Halt Free Tests] Stopping further free tests "
+							"due to a failure."
+							"\n========================================",
+							Color::EXT_LIGHT_ORANGE, {Modifier::BOLD}));
 		} else if (behavior == ABORT_ALL_ON_FAIL) {
-			std::cout
-				<< "\n\033[1;38;5;196m========================================="
-				   "=======\n";
-			std::cout
-				<< "[Abort] All further tests are aborted due to a failure in "
-				   "free tests.\n";
-			std::cout
-				<< "================================================\033[0m\n";
+			println(stylize("\n========================================"
+							"\n[Abort] All further tests are aborted due to a "
+							"failure in free tests."
+							"\n========================================",
+							Color::RED, {Modifier::BOLD}));
 			std::exit(1);
 		}
 	}
@@ -362,28 +363,28 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
 }
 
 bool runTest(const TestCase *const testCase, TestResults &results) {
-	std::cout << "\n    Running test: \033[38;5;117m" << testCase->name
-			  << "\033[0m";
-
+	print("\n    Running test: {}",
+		  stylize(testCase->name, Color::EXT_SKY_BLUE, {}));
 	try {
 		// Call the test function
 		testCase->fn();
-		std::cout << " ... Result => \033[32mPassed!\033[0m";
+		print(" ... Result => {}", stylize("Passed!", Color::GREEN, {}));
 		results.passed++;
 		return true;
 	} catch (const std::exception &ex) {
-		std::cout << " ... Result => \033[31mFailed\033[0m: " << ex.what();
+		print(" ... Result => {}: {}", stylize("Failed", Color::RED, {}),
+				ex.what());
 		results.failed++;
 		return false;
 	}
 }
 
-
 void checkForTestErrors(const bool freeTestsErrors) {
-	
+
 	bool suiteTestsErrors = std::any_of(
 		testSuites.begin(), testSuites.end(),
 		[](const TestSuite *suite) { return suite->results.failed > 0; });
 	std::cout << freeTestsErrors << " " << suiteTestsErrors;
-	if (suiteTestsErrors || freeTestsErrors) std::exit(1);
+	if (suiteTestsErrors || freeTestsErrors)
+		std::exit(1);
 }
