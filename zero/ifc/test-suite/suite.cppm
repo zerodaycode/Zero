@@ -12,7 +12,6 @@ export module tsuite;
 export import :assertions;
 
 import std;
-import zero;
 import stylizer;
 import formatter;
 import print_utils;
