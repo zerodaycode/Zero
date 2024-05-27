@@ -1,6 +1,12 @@
 export module math.linear_algebra:matrix;
 
-import std.compat;
+#ifdef __clang__
+    import std;
+#elif defined(__GNUC__)
+    import <cstdio>;
+#elif defined(_MSC_VER)
+    import std.compat;
+#endif
 
 export {
     template <std::size_t Elements, typename Type>

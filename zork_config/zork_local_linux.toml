@@ -21,14 +21,14 @@ output_dir = "./out"
 
 [executable]
 executable_name = "zero"
-sources = [ "*.cpp" ]
+sources = [ "zero/*.cpp" ]
 
 [tests]
 tests_executable_name = "zero_tests"
 sources = [ "tests/math/*.cpp", "tests/*.cpp" ]
 
 [modules]
-base_ifcs_dir = "ifc"
+base_ifcs_dir = "zero/ifc"
 interfaces = [
     { file = 'commons/typedefs.cppm' },
     { file = 'text/str_manip.cppm' },
