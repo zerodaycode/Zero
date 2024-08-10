@@ -2,7 +2,7 @@
 name = "Zero"
 authors = [ "Zero Day Code" ]
 compilation_db = true
-project_root = "zero"
+code_root = "zero"
 
 [compiler]
 cpp_compiler = "clang"
@@ -19,12 +19,12 @@ extra_args = [
 [build]
 output_dir = "./out"
 
-[executable]
-executable_name = "zero"
+[targets.executable]
+output_name = "zero"
 sources = [ "*.cpp" ]
 
-[tests]
-tests_executable_name = "zero_tests"
+[targets.tests]
+output_name = "zero_tests"
 sources = [ "tests/math/*.cpp", "tests/*.cpp" ]
 
 [modules]
