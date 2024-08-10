@@ -149,8 +149,8 @@ export namespace zero::math {
             return os;
         }
 
-    private:
-        [[nodiscard]] inline constexpr Rational sum_or_subtract(const Rational &rhs, int sign) const;
+    private: // TODO: move to an standalone helper
+        [[nodiscard]] constexpr Rational sum_or_subtract(const Rational &rhs, int sign) const;
     };
 
 //    class Real {
@@ -221,14 +221,15 @@ using namespace zero::math;
 // Arithmetic
 
 // Addition operator
-[[nodiscard]] inline constexpr Rational Rational::operator+(const Rational& rhs) const {
+[[nodiscard]] constexpr Rational Rational::operator+(const Rational& rhs) const {
     return this->sum_or_subtract(rhs, 1);
 }
 
 // Subtraction operator
-[[nodiscard]] inline constexpr Rational Rational::operator-(const Rational& rhs) const {
+[[nodiscard]] constexpr Rational Rational::operator-(const Rational& rhs) const {
     return this->sum_or_subtract(rhs, -1);
 }
+
 
 /// Private helper function to perform the common logic for addition and subtraction
 /// @param rhs The rational number to be added or subtracted.
@@ -239,8 +240,8 @@ using namespace zero::math;
 /// the two fractions are equal, it directly adds the numerators. Otherwise, it
 /// finds the least common multiple (LCM) of the denominators and scales the
 /// numerators to have the LCM as the common denominator before adding.
-// TODO move to the future impl module
-[[nodiscard]] inline constexpr Rational Rational::sum_or_subtract(const Rational& rhs, int sign) const {
+// TODO: move to the future impl module
+[[nodiscard]] constexpr Rational Rational::sum_or_subtract(const Rational& rhs, int sign) const {
     if (_denominator == rhs.denominator()) {  // Like fractions
         return {static_cast<int>(_numerator) + sign * static_cast<int>(rhs.numerator()),
             static_cast<int>(_denominator)
@@ -255,7 +256,7 @@ using namespace zero::math;
         const auto lcd = zero::math::lcm(_denominator.number(), rhs.denominator().number());
 
         // Scale numerators to have the common denominator (lcm)
-        const int numerator = (lhs_numerator * (lcd / lhs_denominator)) + (sign * rhs_numerator * (lcd / rhs_denominator));
+        const int numerator = (lhs_numerator * (lcd / lhs_denominator)) + (rhs_numerator * (lcd / rhs_denominator));
 
         return {numerator, lcd};
     }
