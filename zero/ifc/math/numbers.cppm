@@ -31,6 +31,10 @@ export namespace zero::math {
             { T::symbol } -> std::same_as<const MathSymbol&>;  // Check if 'T::symbol' has the type MathSymbol
     };
 
+    // TODO: Create individual concepts per Number type that allows to check more complex behaviour,
+    // like overflows (is this possible with a concept??!), that they can be constructible from certain types
+    // which allows us to reduce to only one template constructor per type instead of having lots of them
+
     /// A positive integer number
     class Natural {
     private:
@@ -58,7 +62,7 @@ export namespace zero::math {
         }
     };
 
-    /// A whole real number
+    /// A whole (non decimal nor fraction) real number
     class Integer {
     private:
         signed int _number;
@@ -77,7 +81,7 @@ export namespace zero::math {
         [[nodiscard]] inline constexpr Integer operator-(Integer rhs) const noexcept;
         [[nodiscard]] inline constexpr Integer operator*(Integer rhs) const noexcept;
         [[nodiscard]] inline constexpr Rational operator*(Rational rhs) const noexcept;
-        [[nodiscard]] inline constexpr Rational operator/(Integer rhs) const noexcept;
+        [[nodiscard]] inline constexpr Rational operator/(Integer rhs) const noexcept; // TODO: this can't be noexcept
         // Comparison operator overloads
         [[nodiscard]] inline constexpr bool operator==(Integer rhs) const noexcept;
         [[nodiscard]] inline constexpr bool operator==(int rhs) const noexcept;
@@ -134,15 +138,17 @@ export namespace zero::math {
         // TODO Add a method to reduce fractions
 
         // Arithmetic operator overloads
-        [[nodiscard]] inline constexpr Rational operator+(const Rational &rhs) const;
-        [[nodiscard]] inline constexpr Rational operator-(const Rational &rhs) const;
+        [[nodiscard]] inline constexpr Rational operator+(const Rational rhs) const;
+        [[nodiscard]] inline constexpr Rational operator-(const Rational rhs) const;
+        [[nodiscard]] inline constexpr Rational operator*(const Integer rhs) const;
+        [[nodiscard]] inline constexpr Rational operator*(const Rational rhs) const;
 
         // TODO complete arithmetic overloads
         // Comparison operator overloads
         [[nodiscard]] inline constexpr bool operator==(Rational rhs) const noexcept;
 
         // Printable
-        inline friend std::ostream &operator<<(std::ostream& os, const Rational& rhs) {
+        friend std::ostream &operator<<(std::ostream& os, const Rational& rhs) {
             os << rhs._numerator;
             os << MathSymbol::DivisionSlash;
             os << rhs._denominator;
@@ -168,6 +174,7 @@ export namespace zero::math {
 using namespace zero::math;
 
             /*++++++++ Operator overloads implementations ++++++++++*/
+
 /*+++++++++++++++++ Naturals +++++++++++++++++*/
 // Arithmetic
 [[nodiscard]] inline constexpr Natural Natural::operator+(const Natural rhs) const noexcept {
@@ -206,7 +213,7 @@ using namespace zero::math;
 [[nodiscard]] inline constexpr Rational Integer::operator*(const Rational rhs) const noexcept {
     return {_number * rhs.numerator().number(), rhs.denominator().number()};
 }
-[[nodiscard]] inline constexpr Rational Integer::operator/(const Integer rhs) const noexcept {
+[[nodiscard]] inline constexpr Rational Integer::operator/(const Integer rhs) const noexcept { // TODO: wrong impl, this always should return a Rational?
     return {static_cast<signed int>(_number), static_cast<signed int>(rhs.number())};
 }
 // Equality
@@ -221,15 +228,21 @@ using namespace zero::math;
 // Arithmetic
 
 // Addition operator
-[[nodiscard]] constexpr Rational Rational::operator+(const Rational& rhs) const {
+[[nodiscard]] constexpr Rational Rational::operator+(const Rational rhs) const {
     return this->sum_or_subtract(rhs, 1);
 }
-
 // Subtraction operator
-[[nodiscard]] constexpr Rational Rational::operator-(const Rational& rhs) const {
+[[nodiscard]] constexpr Rational Rational::operator-(const Rational rhs) const {
     return this->sum_or_subtract(rhs, -1);
 }
-
+[[nodiscard]] constexpr Rational Rational::operator*(const Integer rhs) const {
+    return Rational(_numerator * rhs, _denominator);
+}
+[[nodiscard]] constexpr Rational Rational::operator*(const Rational rhs) const {
+    return Rational(
+        _numerator * rhs.numerator(), _denominator * rhs.denominator()
+    );
+}
 
 /// Private helper function to perform the common logic for addition and subtraction
 /// @param rhs The rational number to be added or subtracted.

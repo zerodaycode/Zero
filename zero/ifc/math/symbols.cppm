@@ -304,8 +304,6 @@ constexpr const char* to_string(const MathSymbol symbol) {
     return "Unknown";
 }
 
-
-
 export inline std::ostream& operator<<(std::ostream& os, const MathSymbol& symbol) {
     os << to_string(symbol);
     return os;

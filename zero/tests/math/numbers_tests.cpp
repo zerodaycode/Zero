@@ -54,6 +54,9 @@ void numbers_tests() {
 
         auto rational_subtraction = one_rational - other_rational;
         assertEquals(Rational(4, 2), rational_subtraction);
+
+        auto rational_multiplication = one_rational * other_rational;
+        assertEquals(Rational(32, 4), rational_multiplication);
     });
 
     TEST_CASE(numbers_suite, "Arithmetic operations with Rationals (unlike fractions)", [] {
@@ -61,9 +64,18 @@ void numbers_tests() {
         auto other_rational = Rational(5, 4);
 
         auto rational_addition = one_rational + other_rational;
-        assertEquals(Rational(11, 4), rational_addition) ;
+        assertEquals(Rational(11, 4), rational_addition);
 
         auto rational_subtraction = one_rational - other_rational;
         assertEquals(Rational(1, 4), rational_subtraction);
+
+        auto rational_multiplication = one_rational * other_rational;
+        assertEquals(Rational(15, 8), rational_multiplication);
+
+        auto integer_times_rational = Integer(3) * other_rational;
+        assertEquals(Rational(15, 4), integer_times_rational);
+        
+        auto rational_times_integer = one_rational * Integer(7);
+        assertEquals(Rational(21, 2), rational_times_integer);
     });
 }
