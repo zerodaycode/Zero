@@ -55,7 +55,7 @@ export namespace zero::math {
         // Comparison operator overloads
         [[nodiscard]] inline constexpr bool operator==(Natural rhs) const noexcept;
         [[nodiscard]] inline constexpr bool operator==(unsigned int rhs) const noexcept;
-        // Printable
+        // Printable // TODO: please, add a concept for this operators
         inline constexpr friend std::ostream& operator<<(std::ostream& os, const Natural& rhs) {
             os << rhs._number;
             return os;

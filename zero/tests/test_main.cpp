@@ -15,6 +15,6 @@ int main() {
     matrix_tests();
     numbers_tests();
 
-    RUN_TESTS();
+    RUN_TESTS(TestRunBehavior::CONTINUE_ON_ERROR);
     return 0;
 }

@@ -22,30 +22,61 @@ void run_print_examples();
 void testAddition() {
     int result = 2 + 2;
     assertEquals(4, result);
+    assertEquals(4, result);
+    assertEquals(4, result);
 }
+
+// Let's define some more example test functions using the assertion function
+void testSubtraction() {
+    int result = 3 - 2;
+    assertEquals(1, result);
+    assertEquals(23, result);
+    assertEquals(1, result);
+}
+
+
+// Let's define even more example test functions using the assertion function
+void testMultiplication() {
+    int result = 2 * 2;
+    assertEquals(4, result);
+    assertEquals(4, result);
+    assertEquals(4, result);
+}
+
 
 // Passing two pointers to compare if the values that they point to are equals
 void testPtrsAddition() {
     int result = 2 + 2;
     int expected = 4;
+    int wrongExpected = 16;
     assertEquals(&expected, &result);
+    assertEquals(&wrongExpected, &result);
 }
 
 // Driver code
 int main() {
     // run_containers_examples();
-     run_output_iterator_examples();
+    // run_output_iterator_examples();
     // run_quantities_examples();
     run_formatter_and_stylize_examples();
     run_print_examples();
 
+    TEST_CASE("Multiplication Test", []() {
+        int result = 5 * 3;
+        assertEquals(15, result);
+        assertEquals(15, result);
+    });
+
+
     // Register a new test case using a function pointer.
-    TEST_CASE("Addition Test With Pointers", testPtrsAddition);
+    // Comment this line if you don't want failed tests in the freetests
+    // TEST_CASE("Addition Test With Pointers", testPtrsAddition);
 
     // Users can register a new test case using lambdas, avoiding writing standalone functions
     TEST_CASE("Subtraction Test", []() {
         int result = 5 - 3;
-        assertEquals(122435, result);
+        assertEquals(2, result);
+        assertEquals(2, result);
     });
 
     // Registering test cases into test suites, to group and relate tests that makes sense to exists
@@ -58,8 +89,23 @@ int main() {
     // Forces a warning that alerts the user that the test will be discarded, since already
     // exists one with the same identifier in the given suite
     TEST_CASE(suite, "Addition Test", testAddition);
+    // Register a test case designed to fail, useful for testing the behavior 
+    // of RUN_TESTS with different failure modes.
+    TEST_CASE(suite, "Subtraction Test", testSubtraction);
+
+    // Register additional test cases to verify the functionality of RUN_TESTS
+    // under different conditions.
+    TEST_CASE(suite, "Multiplication Test", testMultiplication);
+
+    // Create another test suite to further validate the behavior of RUN_TESTS
+    // with multiple suites, especially under different failure modes.
+    TestSuite anotherSuite {"Another Suite"};
+    TEST_CASE(anotherSuite, "Addition Test", testAddition);
+    TEST_CASE(anotherSuite, "Subtraction Test", testSubtraction);
+    TEST_CASE(anotherSuite, "Multiplication Test", testMultiplication);
 
     // Don't forget to call this free function, to run all the tests written!
+    // Options are: CONTINUE_ON_ERROR, HALT_SUITE_ON_FAIL, ABORT_ALL_ON_FAIL
     RUN_TESTS();
 
     return 0;
@@ -206,18 +252,15 @@ void run_formatter_and_stylize_examples() {
     std::cout << "\n\n#######Check stylize########\n\n";
 
 
-    std::string default_text = stylize("[WARNING] This is bold text without color");
-    std::string bold_text = stylize("[WARNING] This is bold text", Color::YELLOW, Modifier::BOLD);
-    std::string bold_default_text = stylize("[WARNING] This is bold text without color", Color::DEFAULT, Modifier::BOLD);
-    std::string faintText = stylize("[INFO] This is faint text", Color::GREEN, Modifier::FAINT);
-    std::string italicText = stylize("[DEBUG] This is italic text", Color::BLUE, Modifier::ITALIC);
-    std::string underlinedText = stylize("[ERROR] This is underlined text", Color::RED, Modifier::UNDERLINE);
-    std::string blinkingText = stylize("[CRITICAL] This is blinking text", Color::PURPLE, Modifier::BLINK);
-    std::string reversedText = stylize("[NOTICE] This is reversed text", Color::CYAN, Modifier::REVERSE);
-    std::string hiddenText = stylize("[SECRET] This is hidden text", Color::BLACK, Modifier::HIDDEN);
+    std::string boldText = stylize("[WARNING] This is bold text", Color::YELLOW, {Modifier::BOLD});
+    std::string faintText = stylize("[INFO] This is faint text", Color::GREEN, {Modifier::FAINT});
+    std::string italicText = stylize("[DEBUG] This is italic text", Color::BLUE, {Modifier::ITALIC});
+    std::string underlinedText = stylize("[ERROR] This is underlined text", Color::RED, {Modifier::UNDERLINE});
+    std::string blinkingText = stylize("[CRITICAL] This is blinking text", Color::EXT_PURPLE, {Modifier::BLINK});
+    std::string reversedText = stylize("[NOTICE] This is reversed text", Color::CYAN, {Modifier::REVERSE});
+    std::string hiddenText = stylize("[SECRET] This is hidden text", Color::BLACK, {Modifier::HIDDEN});
 
-    std::cout << bold_text << "\n";
-    std::cout << bold_default_text << "\n";
+    std::cout << boldText << "\n";
     std::cout << faintText << "\n";
     std::cout << italicText << "\n";
     std::cout << underlinedText << "\n";
@@ -228,23 +271,23 @@ void run_formatter_and_stylize_examples() {
     std::cout << "\n\n#######Check combination full text########\n\n";
     std::string format_str1 = "[WARNING] {} is deprecated. Please use {} instead.";
     std::string warning_msg = formatter(format_str1, "methodA", "methodB");
-    std::string stylized_warning_msg = stylize(warning_msg, Color::YELLOW, Modifier::BOLD);
+    std::string stylized_warning_msg = stylize(warning_msg, Color::YELLOW, {Modifier::BOLD});
     std::cout << stylized_warning_msg << std::endl;
 
     std::string format_str2 = "[ERROR] Failed to open file: {}";
     std::string error_msg = formatter(format_str2, "/path/to/file");
-    std::string stylized_error_msg = stylize(error_msg, Color::RED, Modifier::BOLD, Modifier::UNDERLINE);
+    std::string stylized_error_msg = stylize(error_msg, Color::RED, {Modifier::BOLD, Modifier::UNDERLINE});
     std::cout << stylized_error_msg << std::endl;
 
     std::cout << "\n\n#######Check combination partial text########\n\n";
     std::string format_str3 = "{} Successfully connected to server: {}";
-    std::string stylized_info_msg = stylize("[INFO]", Color::GREEN, Modifier::FAINT);
+    std::string stylized_info_msg = stylize("[INFO]", Color::GREEN, {Modifier::FAINT});
     std::string info_msg = formatter(format_str3,stylized_info_msg, "192.168.1.1");
     std::cout << info_msg << std::endl;
 
     std::cout << "\n\n#######Check unicode symbols########\n";
     std::string format_str4 = "{} Triple integral symbol: {}";
-    std::string stylized_info_msg_2 = stylize("[INFO]", Color::GREEN, Modifier::FAINT);
+    std::string stylized_info_msg_2 = stylize("[INFO]", Color::GREEN, {Modifier::FAINT});
     std::string info_msg_2 = formatter(format_str4, stylized_info_msg_2, "∭");
     std::cout << info_msg_2 << "\n\n";
 }
