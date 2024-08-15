@@ -17,13 +17,13 @@ namespace iterator::__detail {
     struct arrow_proxy {
         Reference r;
 
-        arrow_proxy(Reference&& value) : r(std::move(value)) {}
+        explicit arrow_proxy(Reference&& value) : r(std::move(value)) {}
         Reference* operator->() const { return &r; }
     };
 
     /**
      * @brief The iterator declares itself a single pass iterator.
-     * input or output iterators  must meet this requirement
+     * input or output iterators must meet this requirement
      */
     template <typename T>
     concept is_single_pass = bool(T::single_pass_iterator);
@@ -62,7 +62,7 @@ namespace iterator::__detail {
     template <typename T>
     using infer_difference_type_t = typename infer_difference_type<T>::type;
 
-    /// Partial template speciallizations to allow us to deduce the
+    /// Partial template specializations to allow us to deduce the
     /// iterator mandatory `value:type`
     template <typename T>
     requires requires { typename T::value_type; }
@@ -102,7 +102,7 @@ namespace iterator::__detail {
 
     /// Helper concept to declare a later-deduced parameter type,
     /// but that type is still constrained to be a type that we
-    ///don’t yet know
+    /// don’t yet know
     template <typename Arg, typename Iter>
     concept difference_type_arg =
         std::convertible_to<Arg, infer_difference_type_t<Iter>>;

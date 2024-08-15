@@ -161,6 +161,11 @@ void runSuiteTestCases(const TestRunBehavior behavior);
  */
 void checkForTestErrors(const bool freeTestsErrors);
 
+/*
+ * Litte helper for a visual separator tab
+ */
+void print_separator(const Color color = Color::EXT_SKY_BLUE);
+
 // Top-level containers. They hold pointers to the types to avoid:
 // `arithmetic on a pointer to an incomplete type`
 std::vector<TestSuite *> testSuites;
@@ -248,12 +253,15 @@ export {
 				stylize("] Already exists a test case with the name: ",
 						Color::YELLOW, {}) +
 				stylize(tname, Color::EXT_SKY_BLUE, {}) +
-				stylize(". Skipping test case.", Color::YELLOW, {}));
-		/// If this is the first time that the suite is being registered
+				stylize(". Skipping test case.", Color::YELLOW, {})
+            );
+		
+        /// If this is the first time that the suite is being registered
 		auto suites_it = std::find_if(
 			testSuites.begin(), testSuites.end(),
 			[&](const TestSuite *suite) { return suite->uuid == tsuite.uuid; });
-		if (suites_it == testSuites.end())
+		
+        if (suites_it == testSuites.end())
 			testSuites.push_back(&tsuite);
 	}
 
@@ -270,14 +278,19 @@ export {
 }
 
 void runSuiteTestCases(const TestRunBehavior behavior) {
-	println("\nRunning test suites. Total suites found: {}", testSuites.size());
+    println(
+        stylize("\n============================= ZERO TEST SUITE  =============================", Color::GREEN, Modifier::BOLD)
+    );
+	println("- Running test suites. Total suites found: {}", testSuites.size());
+    print_separator(Color::GREEN);
+    newln();
 
 	for (const auto &test_suite : testSuites) {
-		print("Running test suite:" + stylize(" {}", Color::EXT_PURPLE, {}),
-				test_suite->uuid);
+        print_separator();
+		println("- Running test suite:" + stylize(" {}", Color::EXT_PURPLE, {}), test_suite->uuid);
 
 		for (const auto &warning : test_suite->results.warnings)
-			print("\n    {}", warning);
+			println("    {}", warning);
 		for (const auto &test_case : test_suite->cases) {
 			if (!runTest(test_case, test_suite->results)) {
 
@@ -314,11 +327,11 @@ void runSuiteTestCases(const TestRunBehavior behavior) {
 			}
 		}
 
-		println("Test suite [{}] summary:", test_suite->uuid);
-		println(stylize("    Passed: {}", Color::GREEN, {}),
-				test_suite->results.passed);
-		println(stylize("    Failed: {}", Color::RED, {}),
-				test_suite->results.failed);
+		println("- Test suite [{}] summary:", test_suite->uuid);
+		println(stylize("\tPassed: {}", Color::GREEN, {}), test_suite->results.passed);
+		println(stylize("\tFailed: {}", Color::RED, {}), test_suite->results.failed); // TODO:
+                                                      // Add the names of the FAILED test cases?
+        print_separator();
 	}
 }
 
@@ -363,17 +376,15 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
 }
 
 bool runTest(const TestCase *const testCase, TestResults &results) {
-	print("\n    Running test: {}",
-		  stylize(testCase->name, Color::EXT_SKY_BLUE, {}));
+	print("    [[Test]]: {}", stylize(testCase->name, Color::EXT_SKY_BLUE, {}));
 	try {
 		// Call the test function
 		testCase->fn();
-		print(" ... Result => {}", stylize("Passed!", Color::GREEN, {}));
+		println(" ... => {}", stylize("Passed!", Color::GREEN, {}));
 		results.passed++;
 		return true;
 	} catch (const std::exception &ex) {
-		print(" ... Result => {}: {}", stylize("Failed", Color::RED, {}),
-				ex.what());
+		println(" ...  => {}:\n\t{}", stylize("Failed", Color::RED, {}), ex.what());
 		results.failed++;
 		return false;
 	}
@@ -387,4 +398,10 @@ void checkForTestErrors(const bool freeTestsErrors) {
 	std::cout << freeTestsErrors << " " << suiteTestsErrors;
 	if (suiteTestsErrors || freeTestsErrors)
 		std::exit(1);
+}
+
+void print_separator(const Color color) {
+    println(
+        stylize("============================================================================", color, {Modifier::BOLD})
+    );
 }

@@ -2,29 +2,22 @@
 name = "Zero"
 authors = [ "Zero Day Code" ]
 compilation_db = true
-project_root = "zero"
+code_root = "zero"
 
 [compiler]
-cpp_compiler = "clang"
-cpp_standard = "2b"
-std_lib = "LIBCPP" # Care, you must have installed LIBC++, which doesn't come by default with mingw
-# Consider to use STDLIBCPP if you don't plan to use LLVM's STD library implementation
-extra_args = [
-    '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
-    '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',
-    '-Wmisleading-indentation', '-Wnull-dereference', '-Wdouble-promotion', '-Wformat=2', '-Wimplicit-fallthrough',
-    '-Weffc++'
-]
+cpp_compiler = "msvc"
+cpp_standard = "latest"
+# extra_args = [ ]
 
 [build]
 output_dir = "./out"
 
-[executable]
-executable_name = "zero"
+[targets.executable]
+output_name = "zero"
 sources = [ "*.cpp" ]
 
-[tests]
-tests_executable_name = "zero_tests"
+[targets.tests]
+output_name = "zero_tests"
 sources = [ "tests/math/*.cpp", "tests/*.cpp" ]
 
 [modules]
@@ -73,6 +66,7 @@ interfaces = [
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
     #  General
     { file = 'math/symbols.cppm', module_name = 'math.symbols' },
+    { file = 'math/numbers.cppm', module_name = 'math.numbers' },
     # Root
     { file = 'math/math.cppm' },
 

@@ -1,6 +1,6 @@
 export module print_utils;
-import formatter;
 import std;
+import formatter;
 
 
 export namespace zero::fmt {
