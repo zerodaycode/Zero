@@ -4,7 +4,6 @@ import formatter;
 
 
 export namespace zero::fmt {
-
     template<typename... Args>
     constexpr void print(const std::string& format, Args... args) {
         std::cout << formatter(format, args...);

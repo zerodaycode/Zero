@@ -248,12 +248,11 @@ export {
 			tsuite.cases.emplace_back(new TestCase(tname, tfunc));
 		else
 			tsuite.results.warnings.emplace_back(
-				stylize("[Warning in suite: ", Color::YELLOW, {}) +
-				stylize(tsuite.uuid, Color::EXT_PURPLE, {}) +
-				stylize("] Already exists a test case with the name: ",
-						Color::YELLOW, {}) +
-				stylize(tname, Color::EXT_SKY_BLUE, {}) +
-				stylize(". Skipping test case.", Color::YELLOW, {})
+				stylize("[Warning in suite: ", Color::YELLOW) +
+				stylize(tsuite.uuid, Color::EXT_PURPLE) +
+				stylize("] Already exists a test case with the name: ", Color::YELLOW) +
+				stylize(tname, Color::EXT_SKY_BLUE) +
+				stylize(". Skipping test case.", Color::YELLOW)
             );
 		
         /// If this is the first time that the suite is being registered
@@ -287,7 +286,7 @@ void runSuiteTestCases(const TestRunBehavior behavior) {
 
 	for (const auto &test_suite : testSuites) {
         print_separator();
-		println("- Running test suite:" + stylize(" {}", Color::EXT_PURPLE, {}), test_suite->uuid);
+		println("- Running test suite:" + stylize(" {}", Color::EXT_PURPLE), test_suite->uuid);
 
 		for (const auto &warning : test_suite->results.warnings)
 			println("    {}", warning);
@@ -300,7 +299,7 @@ void runSuiteTestCases(const TestRunBehavior behavior) {
 								"\n[Halt Suite Tests] Stopping further tests "
 								"of the suite ",
 								Color::EXT_LIGHT_ORANGE, {Modifier::BOLD}) +
-							stylize("{} ", Color::EXT_PURPLE, {}) +
+							stylize("{} ", Color::EXT_PURPLE) +
 							stylize(
 								"due to a failure."
 								"\n========================================",
@@ -311,9 +310,9 @@ void runSuiteTestCases(const TestRunBehavior behavior) {
 
 				if (behavior == ABORT_ALL_ON_FAIL) {
 					println("Test suite [{}] summary:", test_suite->uuid);
-					println(stylize("    Passed: {}", Color::GREEN, {}),
+					println(stylize("    Passed: {}", Color::GREEN),
 							test_suite->results.passed);
-					println(stylize("    Failed: {}", Color::RED, {}),
+					println(stylize("    Failed: {}", Color::RED),
 							test_suite->results.failed);
 
 					println(
@@ -321,15 +320,15 @@ void runSuiteTestCases(const TestRunBehavior behavior) {
 								"\n[Abort] All further tests are aborted due "
 								"to a failure in a test in this suite."
 								"\n========================================",
-								Color::RED, {Modifier::BOLD}));
+								Color::RED, Modifier::BOLD));
 					return;
 				}
 			}
 		}
 
 		println("- Test suite [{}] summary:", test_suite->uuid);
-		println(stylize("\tPassed: {}", Color::GREEN, {}), test_suite->results.passed);
-		println(stylize("\tFailed: {}", Color::RED, {}), test_suite->results.failed); // TODO:
+		println(stylize("\tPassed: {}", Color::GREEN), test_suite->results.passed);
+		println(stylize("\tFailed: {}", Color::RED), test_suite->results.failed); // TODO:
                                                       // Add the names of the FAILED test cases?
         print_separator();
 	}
@@ -351,9 +350,9 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
 	}
 
 	println("\nFree tests summary:");
-	println(stylize("    Passed: {}", Color::GREEN, {}),
+	println(stylize("    Passed: {}", Color::GREEN),
 			freeTestsResults.passed);
-	println(stylize("    Failed: {}", Color::RED, {}), freeTestsResults.failed);
+	println(stylize("    Failed: {}", Color::RED), freeTestsResults.failed);
 
 	if (anyFailed) {
 		if (behavior == HALT_SUITE_ON_FAIL) {
@@ -376,15 +375,15 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
 }
 
 bool runTest(const TestCase *const testCase, TestResults &results) {
-	print("    [[Test]]: {}", stylize(testCase->name, Color::EXT_SKY_BLUE, {}));
+	print("    [[Test]]: {}", stylize(testCase->name, Color::EXT_SKY_BLUE));
 	try {
 		// Call the test function
 		testCase->fn();
-		println(" ... => {}", stylize("Passed!", Color::GREEN, {}));
+		println(" ... => {}", stylize("Passed!", Color::GREEN));
 		results.passed++;
 		return true;
 	} catch (const std::exception &ex) {
-		println(" ...  => {}:\n\t{}", stylize("Failed", Color::RED, {}), ex.what());
+		println(" ...  => {}:\n\t{}", stylize("Failed", Color::RED), ex.what());
 		results.failed++;
 		return false;
 	}
