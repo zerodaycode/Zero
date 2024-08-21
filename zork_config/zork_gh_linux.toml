@@ -11,7 +11,6 @@ cpp_standard = "23"
 std_lib = "libc++"
 std_lib_installed_dir = "/usr/lib/llvm-19/share/libc++/v1"
 extra_args = [
-    "-fmodules",
     '-Wno-error=unused-command-line-argument',
     '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
     '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',
