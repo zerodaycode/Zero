@@ -9,6 +9,7 @@ cpp_compiler = "clang"
 driver_path = "clang++"
 cpp_standard = "23"
 std_lib = "libc++"
+std_lib_installed_dir = "/usr/lib/llvm-19/share"
 extra_args = [
     "-fmodules",
     '-Wno-error=unused-command-line-argument',
