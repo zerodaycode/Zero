@@ -5,6 +5,7 @@
 export module stylizer;
 
 import std;
+import std.compat;
 
 export namespace zero::fmt {
 
