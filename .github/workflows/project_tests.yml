@@ -47,7 +47,7 @@ jobs:
           sudo ln -s /usr/bin/clang++-${{ matrix.clang_version }} /usr/bin/clang++
         
           # Find the system libc++ installations
-          find /usr -type d \( -name 'libc++*' -o -name 'llvm*' -o -name 'clang*' \) -exec echo "libc++ at: {}" \;
+          find /usr -type f \( -name 'std.cppm' -o -name 'std.compat.cppm' \) -exec echo "Found: {}" \;
 
       - name: Generate a Zork++ release build
         run: |
