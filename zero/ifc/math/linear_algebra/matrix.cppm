@@ -5,7 +5,7 @@ export module math.linear_algebra:matrix;
 #elif defined(__GNUC__)
     import <cstdio>;
 #elif defined(_MSC_VER)
-    import std.compat;
+    import std;
 #endif
 
 export {

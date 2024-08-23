@@ -2,7 +2,7 @@
 name = "Zero"
 authors = [ "Zero Day Code" ]
 compilation_db = true
-project_root = "zero"
+code_root = "zero"
 
 [compiler]
 cpp_compiler = "msvc"
@@ -13,16 +13,16 @@ cpp_standard = "latest"
 [build]
 output_dir = "./out"
 
-[executable]
-executable_name = "zero"
-sources = [ "zero/*.cpp" ]
+[targets.executable]
+output_name = "zero"
+sources = [ "*.cpp" ]
 
-[tests]
-tests_executable_name = "zero_tests"
+[targets.tests]
+output_name = "zero_tests"
 sources = [ "tests/math/*.cpp", "tests/*.cpp" ]
 
 [modules]
-base_ifcs_dir = "zero/ifc"
+base_ifcs_dir = "ifc"
 interfaces = [
     { file = 'commons/typedefs.cppm' },
     { file = 'text/str_manip.cppm' },
@@ -38,18 +38,18 @@ interfaces = [
     # Root
     { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
 
-    # ### Iterator library
-    #     { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail', is_internal_partition = true } },
-    #     { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
-    #     # Modern
-    #     { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
-    #     { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
-    #     # Legacy
-    #     { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
-    #     { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
-    #     { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
-    # # Root
-    # { file = 'iterators/iterator.cppm' },
+    ### Iterator library
+        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail', is_internal_partition = true } },
+        { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
+        # Modern
+        { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/input_iterator.cppm', partition = { module = 'iterator' } },
+        # Legacy
+        { file = 'iterators/legacy/legacy_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_input_iterator.cppm', partition = { module = 'iterator' } },
+        { file = 'iterators/legacy/legacy_output_iterator.cppm', partition = { module = 'iterator' } },
+    # Root
+    { file = 'iterators/iterator.cppm' },
 
     ### The collections/containers librar
         { file = 'collections/container.cppm', dependencies = ['type_info'] },
