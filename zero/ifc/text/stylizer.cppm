@@ -5,7 +5,6 @@
 export module stylizer;
 
 import std;
-import std.compat;
 
 export namespace zero::fmt {
 
@@ -145,7 +144,7 @@ export namespace zero::fmt {
         }
 
         std::string resetCodes = "";
-        for (size_t i = 0; i < modifiers.size(); ++i) {
+        for (std::size_t i = 0; i < modifiers.size(); ++i) {
             resetCodes += "\033[0m";
         }
 
