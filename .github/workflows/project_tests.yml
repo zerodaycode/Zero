@@ -1,4 +1,4 @@
-name: Tests for the project on Linux
+name: Tests for the project
 
 on:
   push:
@@ -8,42 +8,46 @@ on:
 
 jobs:
   tests:
-    name: Running the project tests on Linux 
-    runs-on: ubuntu-latest
+    name: Running the tests for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, clang_version: 19 }
+#          - { os: macos-latest }
+#          - { os: windows-latest }
+
     steps:
       - uses: actions/checkout@v3
 
       - name: Clone Zork++
-        uses: GuillaumeFalourd/clone-github-repo-action@v2
+        uses: GuillaumeFalourd/clone-github-repo-action@v2.3
         with:
           owner: 'ZeroDayCode'
           repository: 'Zork'
+          branch: 'feature/GH-127-clang-upgrades'
 
-      - name: Download the latest working version of Clang
+      - name: Installing LLVM ${{ matrix.clang_version }}
         run: |
           # Exit on error
           set -e
           # Download and execute the LLVM installation script for the specified Clang version
-          echo "-----> Downloading and executing the LLVM installation script for Clang 16"
+          echo "-----> Downloading and executing the LLVM installation script for Clang ${{ matrix.clang_version }}"
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 16
+          sudo ./llvm.sh ${{ matrix.clang_version }}
 
           echo "-----> Installing libc++"
-          sudo apt-get install -y libc++-16-dev libc++abi-16-dev libunwind-16 libunwind-16-dev libc6 libzstd1
+          sudo apt-get install -y libc++-${{ matrix.clang_version }}-dev libc++abi-${{ matrix.clang_version }}-dev libunwind-${{ matrix.clang_version }} libunwind-${{ matrix.clang_version }}-dev libc6 libzstd1
 
           # Update the symbolic link to point to the newly installed Clang version
-          echo "-----> Updating the symbolic link to point to Clang 16"
+          echo "-----> Updating the symbolic link to point to Clang ${{ matrix.clang_version }}"
           sudo rm -f /usr/bin/clang++
-          sudo ln -s /usr/bin/clang++-16 /usr/bin/clang++
-
-          # Display the installation directory and version of the installed Clang
-          echo "-----> Clang-16 was installed on:"
-          which clang-16
-          echo "-----> Clang++ was installed on:"
-          which clang++-16
+          sudo ln -s /usr/bin/clang++-${{ matrix.clang_version }} /usr/bin/clang++
+        
+          # Find the system libc++ installations
+          find /usr -type f \( -name 'std.cppm' -o -name 'std.compat.cppm' \) -exec echo "Found: {}" \;
 
       - name: Generate a Zork++ release build
         run: |
@@ -54,4 +58,4 @@ jobs:
           cp ./Zork/zork++/target/release/zork++ .
 
       - name: Running the tests for ${{ matrix.os }} with Zork++
-        run: ./zork++ --match-files gh_linux -vv test
+        run: ./zork++ --match-files gh_linux -vv -c test
