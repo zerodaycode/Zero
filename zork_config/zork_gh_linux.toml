@@ -65,7 +65,7 @@ interfaces = [
     { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
 
     ### Iterator library
-    { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+    { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail', is_internal_partition = true } },
     { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
     # Modern
     { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },

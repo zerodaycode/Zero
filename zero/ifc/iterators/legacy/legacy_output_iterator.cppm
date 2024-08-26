@@ -16,7 +16,7 @@ export namespace zero::iterator::legacy
     template <typename T>
     struct output_iter : base_it<T> {
     private:
-        T *_elem;
+        T *_ptr;
 
         // TODO move this to the details partition
         /** 
@@ -50,7 +50,7 @@ export namespace zero::iterator::legacy
 
     public:
         constexpr output_iter<T>() noexcept = default; // Left defaulted and not deleted because the legacy implementation
-        constexpr explicit output_iter(T& elem) noexcept : _elem(&elem) {}
+        constexpr explicit output_iter(T& elem) noexcept : _ptr(&elem) {}
 
         constexpr output_iter<T>(const output_iter<T> &other) = default;
         constexpr output_iter<T>(output_iter<T> &&other) noexcept = default;
@@ -58,11 +58,11 @@ export namespace zero::iterator::legacy
         template <typename U>
         constexpr auto operator=(const U &val) -> output_iter & {
             if constexpr (std::is_base_of_v<std::ostream, std::remove_reference_t<T>>)
-                *_elem << val;
+                *_ptr << val;
             else if constexpr (zero::concepts::has_push_back<std::remove_reference_t<T>, const U &>)
-                _elem->push_back(val);
+                _ptr->push_back(val);
             else
-                *_elem++ = val;
+                *_ptr++ = val;
             return *this;
         }
 
