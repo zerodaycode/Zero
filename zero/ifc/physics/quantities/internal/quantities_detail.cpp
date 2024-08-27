@@ -4,14 +4,14 @@
  * units module.
  */
 
-module physics.quantities:quantities.detail;
+export module physics.quantities:quantities.detail;
 
 import std;
 
 import type_info;
 import str_manip;
 
-export namespace quantities::__detail {
+namespace quantities::__detail {
     template<typename T>
     struct dimensions_exponents;
 

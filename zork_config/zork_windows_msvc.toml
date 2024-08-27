@@ -58,6 +58,8 @@ interfaces = [
     { file = 'collections/collections.cppm', dependencies = ['array'] },
 
     ### Math library
+        # Symbols
+        { file = 'math/symbols.cppm', module_name = 'math.symbols' },
         # The operations library
         { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
         { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
@@ -65,9 +67,15 @@ interfaces = [
         # The linear algebra library
         { file = 'math/linear_algebra/matrix.cppm', partition = { module = 'math.linear_algebra', partition_name = 'matrix' } },
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
-    #  General
-    { file = 'math/symbols.cppm', module_name = 'math.symbols' },
-    # Root
+        # Numbers
+        { file = 'math/numbers/naturals/general.cppm', partition = { module = 'math.numbers', partition_name = 'general' } },
+        { file = 'math/numbers/naturals/numbers_concepts.cppm', partition = { module = 'math.numbers', partition_name = 'numbers.concepts' } },
+        { file = 'math/numbers/naturals/naturals.cppm', partition = { module = 'math.numbers', partition_name = 'naturals' } },
+        { file = 'math/numbers/naturals/integers.cppm', partition = { module = 'math.numbers', partition_name = 'integers' } },
+        { file = 'math/numbers/naturals/rationals.cppm', partition = { module = 'math.numbers', partition_name = 'rationals' } },
+        { file = 'math/numbers/naturals/detail.cpp', partition = { module = 'math.numbers', partition_name = 'detail', is_internal_partition = true } },
+        { file = 'math/numbers/numbers.cppm', module_name = 'math.numbers' },
+   # Root
     { file = 'math/math.cppm' },
 
     ### The physics library

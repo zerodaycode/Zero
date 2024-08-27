@@ -1,12 +1,6 @@
 export module math.linear_algebra:matrix;
 
-#ifdef __clang__
-    import std;
-#elif defined(__GNUC__)
-    import <cstdio>;
-#elif defined(_MSC_VER)
-    import std;
-#endif
+import std;
 
 export {
     template <std::size_t Elements, typename Type>
@@ -65,7 +59,7 @@ export {
     template <typename T>
     concept ColumnMatrix = std::is_same_v<T, ColumnOrientation>;
 
-    template <typename T = int, MatrixOrientation Orientation = RowOrientation, std::size_t Rows = 3, std::size_t Cols = 3>
+    template <std::size_t Rows, std::size_t Cols, typename T = int, MatrixOrientation Orientation = RowOrientation>
     class Matrix {
         // BIG TODO the names for Rows and Cols size are non worth. Better MxN, so we can play with the orientation
     private:
@@ -84,11 +78,11 @@ export {
         /// Row Matrix constructor
         constexpr Matrix(
             std::initializer_list<DataRow> rows
-        ) requires RowMatrix<RowOrientation> : data {rows} {}
+        ) requires RowMatrix<Orientation> : data {rows} {}
         /// Column Matrix constructor
         constexpr Matrix(
             std::initializer_list<DataCol> columns
-        ) requires ColumnMatrix<ColumnOrientation> : data {columns} {}
+        ) requires ColumnMatrix<Orientation> : data {columns} {}
 
         template <std::size_t RowIndex>
         [[nodiscard]] constexpr auto row() -> Row<Cols, T> requires (RowMatrix<Orientation>) {

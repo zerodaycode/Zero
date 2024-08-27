@@ -21,12 +21,10 @@
 
 export module typedefs;
 
-#ifdef __clang__
+#if defined(__clang__) || defined(_MSC_VER)
     import std;
 #elif defined(__GNUC__)
     import <cstdio>;
-#elif defined(_MSC_VER)
-    import std.compat;
 #endif
 
 export namespace zero {
