@@ -1,4 +1,4 @@
-export module math.numbers:integers;
+export module math:numbers.integers;
 
 import std;
 import math.ops;
@@ -6,7 +6,7 @@ import math.symbols;
 
 import :general;
 import :numbers.concepts;
-import :naturals;
+import :numbers.naturals;
 
 export namespace zero::math {
     /// A whole (non decimal nor fraction) real number

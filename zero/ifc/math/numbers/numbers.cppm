@@ -1,18 +1,17 @@
 /// This module provides strong types over the most common sets of numbers in mathematics
 
-export module math.numbers;
+export module math:numbers;
 
 import std;
-import math.ops;
 import math.symbols;
 
 export import :numbers.concepts;
-import :general;
-import :detail;
+import :numbers.general;
+import :numbers.detail;
 
-export import :naturals;
-export import :integers;
-export import :rationals;
+export import :numbers.naturals;
+export import :numbers.integers;
+export import :numbers.rationals;
 
 export namespace zero::math {
     // TODO: Create individual concepts per Number type that allows to check more complex behaviour,

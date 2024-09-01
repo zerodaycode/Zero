@@ -1,4 +1,4 @@
-export module math.numbers:rationals;
+export module math:numbers.rationals;
 
 import std;
 import math.ops;
@@ -7,8 +7,8 @@ import math.symbols;
 import :general;
 import :numbers.concepts;
 
-import :naturals;
-import :integers;
+import :numbers.naturals;
+import :numbers.integers;
 
 export namespace zero::math {
     /// @brief A type that represents rational numbers of the form: ℚ = {a, b ∈ ℤ, b ≠ 0}

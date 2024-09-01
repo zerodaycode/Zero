@@ -1,4 +1,4 @@
-export module math.numbers:numbers.concepts;
+export module math:numbers.concepts;
 
 import std;
 import math.symbols;
