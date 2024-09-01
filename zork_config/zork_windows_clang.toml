@@ -9,7 +9,7 @@ cpp_compiler = "clang"
 driver_path = "clang++" # This binary is soft linked and included in our local path
 cpp_standard = "23"
 std_lib = "LIBCPP"
-std_lib_installed_dir = "/usr/local/share/libc++/v1"
+std_lib_installed_dir = "C:/msys64/clang64/share/libc++/v1"
 extra_args = [
     '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
     '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',
@@ -19,7 +19,7 @@ extra_args = [
 ]
 
 [build]
-output_dir = "out"
+output_dir = "./out"
 
 [targets.executable]
 output_name = "zero"
@@ -42,7 +42,7 @@ interfaces = [
     { file = 'commons/concepts.cppm', dependencies = ['typedefs'] },
 
     ### The testing suite
-        { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
+    { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
     # Root
     { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
 
@@ -68,8 +68,6 @@ interfaces = [
     ### Math library
         # Symbols 
         { file = 'math/symbols.cppm', module_name = 'math.symbols' },
-        # Numbers - shared
-        { file = 'math/general.cppm', partition = { module = 'math', partition_name = 'general' } },
         # The operations library
         { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
         { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
@@ -77,13 +75,14 @@ interfaces = [
         # The linear algebra library
         { file = 'math/linear_algebra/matrix.cppm', partition = { module = 'math.linear_algebra', partition_name = 'matrix' } },
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
-        # Numbers - Core
-        { file = 'math/numbers/general.cppm', partition = { module = 'math', partition_name = 'numbers.general' } },
-        { file = 'math/numbers/naturals.cppm', partition = { module = 'math', partition_name = 'numbers.naturals' } },
-        { file = 'math/numbers/integers.cppm', partition = { module = 'math', partition_name = 'numbers.integers' } },
-        { file = 'math/numbers/rationals.cppm', partition = { module = 'math', partition_name = 'numbers.rationals' } },
-        { file = 'math/numbers/detail.cpp', partition = { module = 'math', partition_name = 'numbers.detail', is_internal_partition = true } },
-        { file = 'math/numbers/numbers.cppm', partition = { module = 'math', partition_name = 'numbers' } },
+        # Numbers
+        { file = 'math/numbers/naturals/general.cppm', partition = { module = 'math.numbers', partition_name = 'general' } },
+        { file = 'math/numbers/naturals/numbers_concepts.cppm', partition = { module = 'math.numbers', partition_name = 'numbers.concepts' } },
+        { file = 'math/numbers/naturals/naturals.cppm', partition = { module = 'math.numbers', partition_name = 'naturals' } },
+        { file = 'math/numbers/naturals/integers.cppm', partition = { module = 'math.numbers', partition_name = 'integers' } },
+        { file = 'math/numbers/naturals/rationals.cppm', partition = { module = 'math.numbers', partition_name = 'rationals' } },
+        { file = 'math/numbers/naturals/detail.cpp', partition = { module = 'math.numbers', partition_name = 'detail', is_internal_partition = true } },
+        { file = 'math/numbers/numbers.cppm', module_name = 'math.numbers' },
     # Root
     { file = 'math/math.cppm' },
 
@@ -103,4 +102,3 @@ interfaces = [
     # The main interface of the project
     { file = 'zero.cppm' }
 ]
-

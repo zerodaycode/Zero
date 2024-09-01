@@ -5,7 +5,7 @@
 
 export module iterator;
 
-export import :concepts;
+export import :concepts;                ///< Iterator concepts
 
 export import :input_iterator;
 export import :iterator_facade;

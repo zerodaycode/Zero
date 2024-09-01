@@ -76,11 +76,11 @@ export {
         Matrix() = delete;
 
         /// Row Matrix constructor
-        constexpr Matrix<Rows, Cols, T>(
+        constexpr Matrix(
             std::initializer_list<DataRow> rows
         ) requires RowMatrix<Orientation> : data {rows} {}
         /// Column Matrix constructor
-        constexpr Matrix<Cols, Rows, T>(
+        constexpr Matrix(
             std::initializer_list<DataCol> columns
         ) requires ColumnMatrix<Orientation> : data {columns} {}
 

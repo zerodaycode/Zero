@@ -2,11 +2,6 @@
  * @brief Partition for holding the implementation
  * details that won't contribute to the external API of the
  * units module.
- *
- * Due to the recursive function template for
- * formatting the `derived magnitude symbols`, we can't use
- * this as an internal partition, due to the linker is not able
- * to resolve the template in order to link it at call site
  */
 
 export module physics.quantities:quantities.detail;
@@ -16,7 +11,7 @@ import std;
 import type_info;
 import str_manip;
 
-export namespace quantities::__detail {
+namespace quantities::__detail {
     template<typename T>
     struct dimensions_exponents;
 

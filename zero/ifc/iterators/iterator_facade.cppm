@@ -8,15 +8,15 @@ import :detail;
 import std;
 
 export namespace zero::iterator {
-/**
- * @brief CRTP base class for provide an iterator facade that quickly
- * allows the user to build any kind of iterator
- */
-template <typename Derived>
+    /**
+     * @brief CRTP base class for provide an iterator facade that quickly
+     * allows the user to build any kind of iterator
+     */
+    template <typename Derived>
     class iterator_facade {
         private:
             friend Derived;
-            iterator_facade() {}
+            iterator_facade() = default;
             
             auto _self() -> Derived& {
                 return static_cast<Derived&>(*this);
@@ -147,7 +147,7 @@ template <typename Derived>
  * the things on the standard that expects some properties from an iterator,
  * we must specialize `std::iterator_traits` for our facade.
  * 
- * Why? For example, when some algorythm will request for 
+ * Why? For example, when some algorithm will request for
  * `iterator_implementation::value_type`, the implementor will get errors,
  * because there's no `value_type` type member.
  * 
@@ -157,7 +157,7 @@ template <typename Derived>
  * `self_type::value_type`, and we can't know it until after the full definition
  * of `self_type`.
  * 
- * This is a classical know issue with the `CRTP` idiom, the derived types are uncomplete
+ * This is a classical know issue with the `CRTP` idiom, the derived types are uncompleted
  * types until is full definition. Luckily, the standard allows to specialize 
  * `std::iterator_traits` for user defined types, so the specialization below is a
  * partial specialization for any class that is derived from our facade and specialized

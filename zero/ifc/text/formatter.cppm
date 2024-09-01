@@ -21,7 +21,7 @@ export namespace zero::fmt {
         std::string result;
         bool escape_next = false;
 
-        for (size_t i = 0; i < format.size(); ++i) {
+        for (std::size_t i = 0; i < format.size(); ++i) {
             if (format[i] == '\\' && !escape_next) {
                 escape_next = true;
             } else if (format[i] == '{' && i + 1 < format.size() && format[i + 1] == '}' && !escape_next) {
