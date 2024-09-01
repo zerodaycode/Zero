@@ -3,14 +3,14 @@ export module math:numbers.naturals;
 import std;
 import math.symbols;
 
+import :general;
 import :numbers.general;
-import :numbers.concepts;
 
 export namespace zero::math {
     /// A positive integer number
     class Natural: public NumberBase<Natural> {
     private:
-        // TODO. shouldn't be unsigned. we may decide what kind of thing we do
+        // TODO: shouldn't be unsigned. we may decide what kind of thing we do
         // with signedness
         unsigned int _number;
     public:
@@ -21,6 +21,13 @@ export namespace zero::math {
         /// @returns an {@link unsigned int}, which is the value stored in the type, being only a positive integer number
         [[nodiscard]] constexpr unsigned int number() const noexcept { return _number; }
 
+        /// TODO: should we do something about the values < 1?
+        /// Definetly yes, and now that we have a common base via CRTP,
+        /// we can override the impl on naturals to provide custom behaviour
+        ///
+        /* [[nodiscard]] Natural Natural::operator-(const Natural rhs) const noexcept  {
+            return Natural(_number - rhs.number());
+        } */
         /// @overload
         [[nodiscard]] bool operator==(unsigned int rhs) const noexcept {
             return _number == rhs;

@@ -5,8 +5,7 @@ import math.ops;
 import math.symbols;
 
 import :general;
-import :numbers.concepts;
-
+import :numbers.general;
 import :numbers.naturals;
 import :numbers.integers;
 

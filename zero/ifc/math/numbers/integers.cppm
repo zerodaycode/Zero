@@ -5,7 +5,7 @@ import math.ops;
 import math.symbols;
 
 import :general;
-import :numbers.concepts;
+import :numbers.general;
 import :numbers.naturals;
 
 export namespace zero::math {
@@ -16,7 +16,9 @@ export namespace zero::math {
     public:
         constexpr static MathSymbol symbol { MathSymbol::Integers };
 
-        [[nodiscard]] constexpr explicit Integer(signed int value) noexcept : _number(value) {}
+        // TODO: explicit templated constructor constrained by Numerical?
+        // TODO: document in the public API that any decimal number will be truncated
+        [[nodiscard]] constexpr explicit Integer(const signed int value) noexcept : _number(value) {}
         [[nodiscard]] explicit Integer(const Natural value) noexcept
             : _number(static_cast<signed int>(value.number())) {}
 

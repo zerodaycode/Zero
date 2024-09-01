@@ -12,34 +12,6 @@ import :numbers.rationals;
 using namespace zero::math;
 
             /*++++++++ Operator overloads implementations ++++++++++*/
-
-/*+++++++++++++++++ Naturals +++++++++++++++++*/
-// Arithmetic
-/* [[nodiscard]] Natural Natural::operator+(const Natural rhs) const noexcept {
-    return Natural(_number + rhs.number());
-}
-/// TODO: should we do something about the values < 1?
-/// Definetly yes, and now that we have a common base via CRTP,
-/// we can override the impl on naturals to provide custom behaviour
-///
-[[nodiscard]] Natural Natural::operator-(const Natural rhs) const noexcept  {
-    return Natural(_number - rhs.number());
-}
-
-[[nodiscard]] Natural Natural::operator*(const Natural rhs) const noexcept {
-    return Natural(_number * rhs.number());
-}
-[[nodiscard]] Rational Natural::operator/(const Natural rhs) const noexcept {
-    return {static_cast<signed int>(_number), static_cast<signed int>(rhs.number())};
-} */
-// Equality
-/* [[nodiscard]] bool Natural::operator==(const Natural rhs) const noexcept {
-    return _number == rhs.number();
-}
-[[nodiscard]] bool Natural::operator==(const unsigned int rhs) const noexcept {
-    return _number == rhs;
-} */
-
 /*+++++++++++++++++ Integers +++++++++++++++++*/
 
 // Arithmetic

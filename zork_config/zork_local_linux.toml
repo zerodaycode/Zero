@@ -79,7 +79,6 @@ interfaces = [
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
         # Numbers - Core
         { file = 'math/numbers/general.cppm', partition = { module = 'math', partition_name = 'numbers.general' } },
-        { file = 'math/numbers/numbers_concepts.cppm', partition = { module = 'math', partition_name = 'numbers.concepts' } },
         { file = 'math/numbers/naturals.cppm', partition = { module = 'math', partition_name = 'numbers.naturals' } },
         { file = 'math/numbers/integers.cppm', partition = { module = 'math', partition_name = 'numbers.integers' } },
         { file = 'math/numbers/rationals.cppm', partition = { module = 'math', partition_name = 'numbers.rationals' } },

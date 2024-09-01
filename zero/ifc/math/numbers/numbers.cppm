@@ -5,10 +5,6 @@ export module math:numbers;
 import std;
 import math.symbols;
 
-export import :numbers.concepts;
-import :numbers.general;
-import :numbers.detail;
-
 export import :numbers.naturals;
 export import :numbers.integers;
 export import :numbers.rationals;

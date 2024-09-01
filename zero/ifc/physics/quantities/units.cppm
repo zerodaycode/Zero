@@ -19,7 +19,7 @@ using namespace zero::math;
 
 export namespace zero::physics {
     /* Base units */
-    template<Ratio r, Symbol s>
+template<Ratio r, Symbol s>
     struct base_unit {
         using ratio = r;
         using symbol = s;
