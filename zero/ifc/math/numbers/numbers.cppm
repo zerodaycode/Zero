@@ -8,20 +8,53 @@ import math.symbols;
 export import :numbers.naturals;
 export import :numbers.integers;
 export import :numbers.rationals;
+export import :general;
 
 export namespace zero::math {
-    // TODO: Create individual concepts per Number type that allows to check more complex behaviour,
-    // like overflows (is this possible with a concept??!), that they can be constructible from certain types
-    // which allows us to reduce to only one template constructor per type instead of having lots of them
+// Primary template for multiplying two Numbers
+template <Number N, Number O>
+constexpr auto operator*(const N& lhs, const O& rhs) noexcept {
+    if constexpr (std::is_same_v<N, Rational> && std::is_same_v<O, Rational>) {
+        // Both are Rationals
+        return Rational(lhs.numerator() * rhs.numerator(), lhs.denominator() * rhs.denominator());
+    } else if constexpr (std::is_same_v<N, Rational>) {
+        // LHS is Rational, RHS is a different Number type
+        return Rational(lhs.numerator() * rhs.number(), lhs.denominator());
+    } else if constexpr (std::is_same_v<O, Rational>) {
+        // RHS is Rational, LHS is a different Number type
+        return Rational(lhs.number() * rhs.numerator(), rhs.denominator());
+    } else {
+        // Both are non-Rational Numbers
+        return N(lhs.number() * rhs.number());
+    }
+}
 
-//    class Real {
-//        double number; // TODO handle rationals and irrationals with std::variant?
-//    };
-//
-//    class Complex {
-//        Real real;
-//        Real imaginary;
-//    };
+// Overload for Rational and arithmetic types
+template <typename T>
+constexpr auto operator*(const Rational& lhs, const T& rhs) noexcept
+    requires std::is_arithmetic_v<T> {
+    return Rational(lhs.numerator() * rhs, lhs.denominator());
+}
 
+// Overload for arithmetic types and Rational
+template <typename T>
+constexpr auto operator*(const T& lhs, const Rational& rhs) noexcept
+    requires std::is_arithmetic_v<T> {
+    return Rational(lhs * rhs.numerator(), rhs.denominator());
+}
+
+// Overload for Number and arithmetic types (covers Integer * int, etc.)
+template <Number N, typename T>
+constexpr auto operator*(const N& lhs, const T& rhs) noexcept
+    requires std::is_arithmetic_v<T> {
+    return N(lhs.number() * rhs);
+}
+
+// Overload for arithmetic types and Number
+template <typename T, Number O>
+constexpr auto operator*(const T& lhs, const O& rhs) noexcept
+    requires std::is_arithmetic_v<T> {
+    return O(lhs * rhs.number());
+}
 }
 

@@ -44,18 +44,23 @@ export namespace zero::math {
         [[nodiscard]] Rational(Integer numerator, Integer denominator) noexcept
             : _numerator(numerator), _denominator(denominator) {}
 
+        /* [[nodiscard]] Rational(Natural numerator) noexcept
+            : _numerator(numerator), _denominator(1) {}
+        
+        [[nodiscard]] Rational(Integer numerator) noexcept
+            : _numerator(numerator), _denominator(1) {} */
+
         /// @return a {@link Integer} with the value of the numerator for this rational
-        [[nodiscard]] Integer numerator() const noexcept { return _numerator; }
+        [[nodiscard]] constexpr Integer numerator() const noexcept { return _numerator; }
 
         /// @return a {@link Integer} with the value of the denominator for this rational
-        [[nodiscard]] Integer denominator() const noexcept { return _denominator; }
+        [[nodiscard]] constexpr Integer denominator() const noexcept { return _denominator; }
 
         // TODO Add a method to reduce fractions
 
         // Arithmetic operator overloads
         [[nodiscard]] Rational operator+(const Rational rhs) const;
         [[nodiscard]] Rational operator-(const Rational rhs) const;
-        [[nodiscard]] Rational operator*(const Integer rhs) const;
         [[nodiscard]] Rational operator*(const Rational rhs) const;
 
         // TODO complete arithmetic overloads
@@ -69,8 +74,5 @@ export namespace zero::math {
             os << rhs._denominator;
             return os;
         }
-
-    private: // TODO: move to an standalone helper
-        [[nodiscard]] Rational sum_or_subtract(const Rational &rhs, int sign) const;
     };
 }

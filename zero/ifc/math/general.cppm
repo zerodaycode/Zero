@@ -22,7 +22,7 @@ export namespace zero::math {
     /// In particular, this interface represents a kind of number that belongs to a concrete set of numbers,
     /// for example, the naturals, the integers, the reals, the complex numbers...
     template <typename T>
-    concept Number = (
+    concept Number = ((
         std::is_same_v<T, Natural> ||
         std::is_same_v<T, Integer> ||
         std::is_same_v<T, Rational> ||
@@ -32,5 +32,7 @@ export namespace zero::math {
     ) && requires {
         T::symbol;  /* Check if 'T' has a static member named 'symbol' */
         { T::symbol } -> std::same_as<const MathSymbol&>;  // Check if 'T::symbol' has the type MathSymbol
-    };
+    } ) 
+    // || std::is_arithmetic_v<T>
+        ;
 }

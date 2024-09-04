@@ -25,6 +25,10 @@ export namespace zero::math {
             return static_cast<const Derived&>(*this);
         }
     public:
+
+        [[nodiscard]] constexpr auto number() const noexcept -> int {
+            return _self().number();
+        }
         // Addition
         [[nodiscard]] constexpr auto operator+(const Derived& rhs) const noexcept -> Derived {
             return Derived(_self().number() + rhs.number());
@@ -46,9 +50,18 @@ export namespace zero::math {
             return Derived(_self().number() / rhs.number());
         }
 
-        [[nodiscard]] constexpr auto operator==(const Derived& rhs) const noexcept -> Derived {
+        // Basic equality
+        [[nodiscard]] constexpr auto operator==(const Derived& rhs) noexcept -> bool {
             return _self().number() == rhs.number();
+        }
+
+        [[nodiscard]] constexpr auto operator==(const int rhs) const noexcept -> bool {
+            return _self().number() == rhs;
         }
     };
 
+    /* [[nodiscard]] constexpr auto operator==(const Derived& rhs) noexcept -> bool {
+        return _self().number() == rhs.number();
+    } */
 }
+
