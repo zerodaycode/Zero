@@ -10,7 +10,7 @@ import :numbers.naturals;
 
 export namespace zero::math {
     /// A whole (non decimal nor fraction) real number
-    class Integer: public NumberBase<Integer> {
+    class Integer {
     private:
         signed int _number;
     public:
@@ -25,14 +25,6 @@ export namespace zero::math {
         /// @return a {@link signed int}, which is the value stored in the type, being a whole number (integer)
         [[nodiscard]] constexpr signed int number() const noexcept { return _number; }
 
-        // Arithmetic operator overloads
-        /* [[nodiscard]] Rational operator*(Rational rhs) const noexcept;
-        [[nodiscard]] Rational operator/(Integer rhs) const noexcept; // TODO: this can't be noexcept */
-        // Comparison operator overloads
-
-        /* [[nodiscard]] constexpr bool operator==(const int rhs) const noexcept {
-            return _number == rhs;
-        } */
         // Explicit conversion operators
         [[nodiscard]] constexpr explicit operator int() const { return _number; }
         // Printable
