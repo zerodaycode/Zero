@@ -35,20 +35,17 @@ export namespace zero::math {
     public:
         constexpr static MathSymbol symbol = MathSymbol::Rationals;
 
-        [[nodiscard]] constexpr Rational(int numerator, int denominator) noexcept
-            : _numerator(numerator), _denominator(denominator) {}
+        /* template<Numerical L, Numerical R>
+        [[nodiscard]] constexpr Rational(L&& numerator, R&& denominator) noexcept
+            : _numerator(static_cast<Integer>(std::forward<L>(numerator))),
+            _denominator(static_cast<Integer>(std::forward<R>(denominator))) {}
+*/
+        template<Numerical L, Numerical R>
+        [[nodiscard]] constexpr Rational(const L& numerator, const R& denominator) noexcept
+            : _numerator(static_cast<Integer>(numerator)), _denominator(static_cast<Integer>(denominator)) {}
 
-        [[nodiscard]] Rational(Natural numerator, Natural denominator) noexcept
-            : _numerator(static_cast<Natural>(numerator)), _denominator(static_cast<Natural>(denominator)) {}
-
-        [[nodiscard]] Rational(Integer numerator, Integer denominator) noexcept
-            : _numerator(numerator), _denominator(denominator) {}
-
-        /* [[nodiscard]] Rational(Natural numerator) noexcept
-            : _numerator(numerator), _denominator(1) {}
-        
-        [[nodiscard]] Rational(Integer numerator) noexcept
-            : _numerator(numerator), _denominator(1) {} */
+        [[nodiscard]] constexpr Rational(const Rational& other) noexcept = default;
+        [[nodiscard]] constexpr Rational(Rational&& other) noexcept = default; 
 
         /// @return a {@link Integer} with the value of the numerator for this rational
         [[nodiscard]] constexpr Integer numerator() const noexcept { return _numerator; }

@@ -12,7 +12,7 @@ export import :general;
 
 export namespace zero::math {
 // Primary template for multiplying two Numbers
-template <Number N, Number O>
+/* template <Number N, Number O>
 constexpr auto operator*(const N& lhs, const O& rhs) noexcept {
     if constexpr (std::is_same_v<N, Rational> && std::is_same_v<O, Rational>) {
         // Both are Rationals
@@ -55,6 +55,43 @@ template <typename T, Number O>
 constexpr auto operator*(const T& lhs, const O& rhs) noexcept
     requires std::is_arithmetic_v<T> {
     return O(lhs * rhs.number());
+} */
+
+// Helper to normalize non-Rational types
+template <typename T>
+constexpr auto normalize(const T& value) noexcept {
+    if constexpr (std::is_arithmetic_v<T>) {
+        return value; // Return primitive arithmetic types as-is
+    } else if constexpr (!std::is_same_v<T, Rational>) {
+        return value.number(); // For custom types like Integer, Natural, etc.
+    } else {
+        // For Rational, don't normalize to preserve exact values
+        return value; 
+    }
+}
+
+template <typename L, typename R>
+constexpr auto operator*(const L& lhs, const R& rhs) noexcept {
+    return arithmetic_op(lhs, rhs, [](auto a, auto b) { return a * b; });
+}
+
+// Generalized arithmetic operation helper
+template <typename L, typename R, typename Op>
+constexpr auto arithmetic_op(const L& lhs, const R& rhs, Op op) noexcept {
+    if constexpr (std::is_same_v<L, Rational> && std::is_same_v<R, Rational>) {
+        // Special handling for Rational types to preserve precision
+        return Rational(op(lhs.numerator(), rhs.numerator()), 
+                        op(lhs.denominator(), rhs.denominator()));
+    } else if constexpr (std::is_same_v<L, Rational>) {
+        // Left operand is Rational, handle accordingly
+        return Rational(op(lhs.numerator(), normalize(rhs)), lhs.denominator());
+    } else if constexpr (std::is_same_v<R, Rational>) {
+        // Right operand is Rational, handle accordingly
+        return Rational(op(normalize(lhs), rhs.numerator()), rhs.denominator());
+    } else {
+        // Handle all other cases
+        return op(normalize(lhs), normalize(rhs));
+    }
 }
 }
 

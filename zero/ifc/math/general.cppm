@@ -32,7 +32,7 @@ export namespace zero::math {
     ) && requires {
         T::symbol;  /* Check if 'T' has a static member named 'symbol' */
         { T::symbol } -> std::same_as<const MathSymbol&>;  // Check if 'T::symbol' has the type MathSymbol
-    } ) 
-    // || std::is_arithmetic_v<T>
-        ;
+    } );
+
+    template <typename T> concept Numerical = Number<T> || std::is_arithmetic_v<T>;
 }
