@@ -8,7 +8,7 @@ import :numbers.general;
 
 export namespace zero::math {
     /// A positive integer number
-    class Natural: public NumberBase<Natural> {
+    class Natural {
     private:
         // TODO: shouldn't be unsigned. we may decide what kind of thing we do
         // with signedness
@@ -29,9 +29,9 @@ export namespace zero::math {
             return Natural(_number - rhs.number());
         } */
         /// @overload
-        [[nodiscard]] bool operator==(unsigned int rhs) const noexcept {
-            return _number == rhs;
-        }
+        /* [[nodiscard]] bool operator==(unsigned int rhs) const noexcept {
+            return _number == rhs; // TODO: I think that we don't need this one
+        } */
         // Printable // TODO: please, add a concept for this operators
         friend std::ostream& operator<<(std::ostream& os, const Natural& rhs) {
             os << rhs._number;

@@ -29,6 +29,11 @@ export namespace zero::math {
         return arithmetic_op(lhs, rhs, [](auto a, auto b) { return a * b; });
     }
 
+    template <Numerical L, Numerical R>
+    constexpr bool operator==(const L& lhs, const R& rhs) noexcept {
+        return arithmetic_op(lhs, rhs, [](auto a, auto b) { return a == b; });
+    }
+
     // Helper to extract the inner value of a Number type or avoid the method
     // call if it's a primitive (std::is_arithmetic_v).
     template <typename T>
