@@ -10,11 +10,53 @@ export import :numbers.integers;
 export import :numbers.rationals;
 export import :general;
 
+import math.ops;
+
 export namespace zero::math {
+
+
+/// Private helper function to perform the common logic for addition and subtraction
+/// @param rhs The rational number to be added or subtracted.
+/// \param sign
+/// @return The sum of the two rational numbers.
+///
+/// This method handles both like and unlike fractions. If the denominators of
+/// the two fractions are equal, it directly adds the numerators. Otherwise, it
+/// finds the least common multiple (LCM) of the denominators and scales the
+/// numerators to have the LCM as the common denominator before adding.
+// TODO: move to the future impl module
+[[nodiscard]] Rational sum_or_subtract(const Rational& lhs, const Rational& rhs, int sign) {
+    if (lhs == rhs) {  // Like fractions
+        return {static_cast<int>(lhs.numerator()) + sign * static_cast<int>(rhs.numerator()),
+            static_cast<int>(lhs.denominator())
+        };
+    } else {  // Unlike fractions
+        const int lhs_numerator     = static_cast<int>(lhs.numerator());
+        const int rhs_numerator     = sign * static_cast<int>(rhs.numerator());
+        const int lhs_denominator   = static_cast<int>(lhs.denominator());
+        const int rhs_denominator   = static_cast<int>(rhs.denominator());
+
+        // Get their lcd by finding their lcm
+        const auto lcd = zero::math::lcm(lhs_denominator, rhs_denominator);
+
+        // Scale numerators to have the common denominator (lcm)
+        const int numerator = (lhs_numerator * (lcd / lhs_denominator)) + (rhs_numerator * (lcd / rhs_denominator));
+
+        return {numerator, lcd};
+    }
+}
+
 
     template <Numerical L, Numerical R>
     constexpr auto operator+(const L& lhs, const R& rhs) noexcept {
-        return arithmetic_op(lhs, rhs, [](auto a, auto b) { return a + b; });
+        if constexpr (std::is_same_v<L, Rational> || std::is_same_v<R, Rational>) {
+            const Rational _lhs = static_cast<Rational>(lhs);
+            const Rational _rhs = static_cast<Rational>(rhs);
+            const auto op = [&](auto a, auto b) { return sum_or_subtract(a, b, 1) ; };
+            return arithmetic_op(lhs, rhs, op);
+        }
+        else
+            return arithmetic_op(lhs, rhs, [](auto a, auto b) { return a + b; });
     }
 
     template <Numerical L, Numerical R>
