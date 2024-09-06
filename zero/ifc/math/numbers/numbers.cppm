@@ -15,14 +15,13 @@ import :numbers.detail;
 import math.ops;
 
 export namespace zero::math {
-// Operator overloads for mixed-type arithmetic involving Rational
 template <Numerical L, Numerical R>
 constexpr auto operator+(const L &lhs, const R &rhs) noexcept {
   auto op = [](const auto &a, const auto &b) {
     if constexpr (EitherRational<L, R>) {
       return rational_add_or_subtract(a, b, 1); // Special logic for Rational addition
     } else {
-      return a + b; // Generic addition
+      return a + b;
     }
   };
   return arithmetic_op(lhs, rhs, op);
@@ -32,9 +31,9 @@ template <Numerical L, Numerical R>
 constexpr auto operator-(const L &lhs, const R &rhs) noexcept {
   auto op = [](const auto &a, const auto &b) {
     if constexpr (EitherRational<L, R>) {
-      return rational_add_or_subtract(a, b, -1); // Special logic for Rational subtraction
+      return rational_add_or_subtract(a, b, -1);
     } else {
-      return a - b; // Generic subtraction
+      return a - b;
     }
   };
   return arithmetic_op(lhs, rhs, op);
@@ -43,17 +42,10 @@ constexpr auto operator-(const L &lhs, const R &rhs) noexcept {
 template <Numerical L, Numerical R>
 constexpr auto operator*(const L &lhs, const R &rhs) noexcept {
   auto op = [](const auto &a, const auto &b) {
-    if constexpr (std::is_same_v<std::decay_t<decltype(a)>, Rational> &&
-                  std::is_same_v<std::decay_t<decltype(b)>, Rational>) {
-      // Multiplication for Rational types
-      return Rational(a.numerator() * b.numerator(),
-                      a.denominator() * b.denominator());
-    } else if constexpr (std::is_same_v<std::decay_t<decltype(a)>, Rational>) {
-      return Rational(a.numerator() * normalize(b), a.denominator());
-    } else if constexpr (std::is_same_v<std::decay_t<decltype(b)>, Rational>) {
-      return Rational(normalize(a) * b.numerator(), b.denominator());
+    if constexpr (EitherRational<L, R>) {
+      return rational_mult(a, b);
     } else {
-      return normalize(a) * normalize(b); // Generic multiplication
+      return normalize(a) * normalize(b);
     }
   };
   return arithmetic_op(lhs, rhs, op);
@@ -62,7 +54,8 @@ constexpr auto operator*(const L &lhs, const R &rhs) noexcept {
 template <Numerical L, Numerical R>
 constexpr bool operator==(const L &lhs, const R &rhs) noexcept {
   auto op = [](const auto &a, const auto &b) {
-    if constexpr (EitherRational<L, R>) {
+    if constexpr (std::is_same_v<std::decay_t<decltype(a)>, Rational> &&
+                  std::is_same_v<std::decay_t<decltype(b)>, Rational>) {
       // Equality check for Rational types
       return a.numerator() == b.numerator() &&
              a.denominator() == b.denominator();

@@ -36,28 +36,35 @@ template <typename T> constexpr auto normalize(const T &value) noexcept {
 // Generalized arithmetic operation helper using lambdas
 template <typename L, typename R, typename Op>
 constexpr auto arithmetic_op(const L &lhs, const R &rhs, Op op) noexcept {
-  // Handle Rational cases separately by calling the specialized logic
   if constexpr (EitherRational<L, R>)
     return op(lhs, rhs);
-  // Handle all other cases
   else
     return op(normalize(lhs), normalize(rhs));
 }
 
 // Specialized addition and subtraction for Rational types
 template <typename L, typename R>
-constexpr auto rational_add_or_subtract(const L &lhs, const R &rhs,
-                                        int sign) noexcept {
-  // Ensure one of them is a Rational
+constexpr auto rational_add_or_subtract(const L &lhs, const R &rhs, int sign) noexcept {
   if constexpr (std::is_same_v<L, Rational> && std::is_same_v<R, Rational>) {
     return sum_or_subtract(lhs, rhs, sign);
   } else if constexpr (std::is_same_v<L, Rational>) {
-    // LHS is Rational, RHS is a different numeric type
     return sum_or_subtract(lhs, Rational(rhs), sign);
   } else if constexpr (std::is_same_v<R, Rational>) {
-    // RHS is Rational, LHS is a different numeric type
     return sum_or_subtract(Rational(lhs), rhs, sign);
   }
+}
+
+template <typename L, typename R>
+constexpr auto rational_mult(const L &lhs, const R &rhs) noexcept {
+    if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational> &&
+                  std::is_same_v<std::decay_t<decltype(rhs)>, Rational>) {
+      return Rational(lhs.numerator() * rhs.numerator(),
+                      lhs.denominator() * rhs.denominator());
+    } else if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational>) {
+      return Rational(lhs.numerator() * normalize(rhs), lhs.denominator());
+    } else if constexpr (std::is_same_v<std::decay_t<decltype(rhs)>, Rational>) {
+      return Rational(normalize(lhs) * rhs.numerator(), rhs.denominator());
+    } 
 }
 
 // Helper function to sum or subtract two Rationals
@@ -69,7 +76,7 @@ sum_or_subtract(const Rational &lhs, const Rational &rhs, int sign) noexcept {
   const int rhs_denominator = rhs.denominator().number();
 
   if (lhs_denominator == rhs_denominator) { // Like fractions
-    return {lhs_numerator + sign * rhs_numerator, lhs_denominator};
+    return {lhs_numerator + rhs_numerator, lhs_denominator};
   } else { // Unlike fractions
     // Get their LCD by finding their LCM
     const auto lcd = zero::math::lcm(lhs_denominator, rhs_denominator);

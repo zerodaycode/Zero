@@ -50,7 +50,7 @@ void numbers_tests() {
         auto other_rational = Rational(4, 2);
 
         auto rational_addition = one_rational + other_rational;
-        assertEquals(Rational(12, 2), rational_addition) ;
+        assertEquals(Rational(12, 2), rational_addition);
 
         auto rational_subtraction = one_rational - other_rational;
         assertEquals(Rational(4, 2), rational_subtraction);
