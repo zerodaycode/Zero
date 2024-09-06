@@ -15,7 +15,7 @@ export namespace zero::math {
     class Integer;
     class Rational;
     class Irrational;
-    class Real;
+    template<typename T = double> class Real;
     class Complex;
 
     /// Concept to act as an interface for the abstract concept of 'number' in mathematics.
@@ -27,7 +27,7 @@ export namespace zero::math {
         std::is_same_v<T, Integer> ||
         std::is_same_v<T, Rational> ||
         std::is_same_v<T, Irrational> ||
-        std::is_same_v<T, Real> ||
+        std::is_same_v<T, Real<>> ||
         std::is_same_v<T, Complex>
     ) && requires {
         T::symbol;  /* Check if 'T' has a static member named 'symbol' */

@@ -8,6 +8,7 @@ TestSuite numbers_suite {"Numbers TS"};
 static_assert(Number<Natural>);
 static_assert(Number<Integer>);
 static_assert(Number<Rational>);
+static_assert(Number<Real<>>);
 static_assert(!Number<std::string>);
 
 void numbers_tests() {
@@ -23,6 +24,18 @@ void numbers_tests() {
         auto rational = Rational(5, 2);
         assertEquals(5, rational.numerator());
         assertEquals(2, rational.denominator());
+
+        auto real = Real(10.);
+        assertEquals(10., real.number());
+
+        auto real_from_integer = Real(integer);
+        assertEquals(8, real_from_integer.number());
+
+        auto real_from_rational = Real(rational);
+        assertEquals(rational, real_from_rational.number());
+    });
+    
+    TEST_CASE(numbers_suite, "Testing the Numbers types equalities", [] {
     });
 
     TEST_CASE(numbers_suite, "Arithmetic operations with Naturals", [] {
