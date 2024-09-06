@@ -55,9 +55,7 @@ interfaces = [
     { file = 'text/print_utils.cppm' },
     { file = 'types/type_info.cppm' },
     { file = 'types/type_traits.cppm' },
-    { file = 'commons/concepts.cppm', dependencies = [
-        'typedefs',
-    ] },
+    { file = 'commons/concepts.cppm', dependencies = [ 'typedefs', ] },
 
     ### The testing suite
     { file = 'test-suite/assertions.cppm', partition = { module = 'tsuite' } },
@@ -78,20 +76,20 @@ interfaces = [
     { file = 'iterators/iterator.cppm' },
 
     # The collections/containers librar
-    { file = 'collections/container.cppm', dependencies = [
-        'type_info',
-    ] },
+    { file = 'collections/container.cppm', dependencies = [ 'type_info', ] },
     { file = 'collections/array.cppm', dependencies = [
         'typedefs',
         'concepts',
         'iterator',
         'container',
     ] },
-    { file = 'collections/collections.cppm', dependencies = [
-        'array',
-    ] },
+    { file = 'collections/collections.cppm', dependencies = [ 'array', ] },
 
     ### Math library
+    # Symbols
+    { file = 'math/symbols.cppm', module_name = 'math.symbols' },
+    # Numbers - shared
+    { file = 'math/general.cppm', partition = { module = 'math', partition_name = 'general' } },
     # The operations library
     { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
     { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
@@ -99,11 +97,13 @@ interfaces = [
     # The linear algebra library
     { file = 'math/linear_algebra/matrix.cppm', partition = { module = 'math.linear_algebra', partition_name = 'matrix' } },
     { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
-    # General
-    { file = 'math/symbols.cppm', module_name = 'math.symbols' },
-    { file = 'math/numbers.cppm', module_name = 'math.numbers' },
-    # Root
-    { file = 'math/math.cppm' },
+    # Numbers - Core
+    { file = 'math/numbers/naturals.cppm', partition = { module = 'math', partition_name = 'numbers.naturals' } },
+    { file = 'math/numbers/integers.cppm', partition = { module = 'math', partition_name = 'numbers.integers' } },
+    { file = 'math/numbers/rationals.cppm', partition = { module = 'math', partition_name = 'numbers.rationals' } },
+    { file = 'math/numbers/reals.cppm', partition = { module = 'math', partition_name = 'numbers.reals' } },
+    { file = 'math/numbers/detail.cpp', partition = { module = 'math', partition_name = 'numbers.detail', is_internal_partition = true } },
+    { file = 'math/numbers/numbers.cppm', partition = { module = 'math', partition_name = 'numbers' } },
 
     ### The physics library
     # The quantities library

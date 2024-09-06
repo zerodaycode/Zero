@@ -8,7 +8,7 @@ import :numbers.naturals;
 import :numbers.integers;
 import :numbers.rationals;
 
-#if defined(__clang__) // TODO: clang18 seems to be unable to resolve templates
+#if defined(__clang__) // TODO: clang seems to be unable to resolve templates
                        // declared on internal partitions, so they must be
                        // 'exported' (even tho the module itself isn't being
                        // exported (module :numbers.detail), so this macro
