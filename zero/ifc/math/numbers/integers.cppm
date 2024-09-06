@@ -5,7 +5,6 @@ import math.ops;
 import math.symbols;
 
 import :general;
-import :numbers.general;
 import :numbers.naturals;
 
 export namespace zero::math {

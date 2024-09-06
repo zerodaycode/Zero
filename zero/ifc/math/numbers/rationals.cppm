@@ -5,7 +5,6 @@ import math.ops;
 import math.symbols;
 
 import :general;
-import :numbers.general;
 import :numbers.naturals;
 import :numbers.integers;
 
@@ -35,7 +34,7 @@ export namespace zero::math {
     public:
         constexpr static MathSymbol symbol = MathSymbol::Rationals;
 
-        /* template<Numerical L, Numerical R>
+        /* template<Numerical L, Numerical R> // TODO: don't think that's work to have universal references over const l-value references
         [[nodiscard]] constexpr Rational(L&& numerator, R&& denominator) noexcept
             : _numerator(static_cast<Integer>(std::forward<L>(numerator))),
             _denominator(static_cast<Integer>(std::forward<R>(denominator))) {}
@@ -72,8 +71,3 @@ export namespace zero::math {
         }
     };
 }
-
-// Equality
-
-
-

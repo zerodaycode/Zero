@@ -4,7 +4,6 @@ import std;
 import math.symbols;
 
 import :general;
-import :numbers.general;
 
 export namespace zero::math {
     /// A positive integer number
