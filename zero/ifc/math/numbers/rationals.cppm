@@ -53,21 +53,15 @@ export namespace zero::math {
         /// @return a {@link Integer} with the value of the denominator for this rational
         [[nodiscard]] constexpr Integer denominator() const noexcept { return _denominator; }
 
-        // TODO Add a method to reduce fractions
+        // TODO: Add a method to reduce fractions
 
-        // Arithmetic operator overloads
-        [[nodiscard]] Rational operator+(const Rational rhs) const;
-        [[nodiscard]] Rational operator-(const Rational rhs) const;
-        [[nodiscard]] Rational operator*(const Rational rhs) const;
-
-        // TODO complete arithmetic overloads
         // Comparison operator overloads
-// TODO should we check that 4/2 is the same as 2/1 right? Or we should maintain the difference and explicitly
-// say that 4/2 aren't the same Rational number as 2/1?
-[[nodiscard]] bool operator==(const Rational rhs) const noexcept {
-    // return _numerator == rhs.numerator() && _denominator == rhs.denominator();
-    return _numerator.number() == rhs.numerator().number() && _denominator.number() == rhs.denominator().number();
-}
+        // TODO should we check that 4/2 is the same as 2/1 right? Or we should maintain the difference and explicitly
+        // say that 4/2 aren't the same Rational number as 2/1?
+        [[nodiscard]] bool operator==(const Rational rhs) const noexcept {
+            // return _numerator == rhs.numerator() && _denominator == rhs.denominator();
+            return _numerator.number() == rhs.numerator().number() && _denominator.number() == rhs.denominator().number();
+        }
 
         // Printable
         friend std::ostream &operator<<(std::ostream& os, const Rational& rhs) {
