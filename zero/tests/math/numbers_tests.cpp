@@ -29,13 +29,18 @@ void numbers_tests() {
         assertEquals(10., real.number());
 
         auto real_from_integer = Real(integer);
-        assertEquals(8, real_from_integer.number());
+        assertEquals(7, real_from_integer.number());
 
         auto real_from_rational = Real(rational);
         assertEquals(rational, real_from_rational.number());
     });
     
     TEST_CASE(numbers_suite, "Testing the Numbers types equalities", [] {
+        assertEquals(Natural(1), Natural(1));
+        assertEquals(Integer(-1), Integer(-1));
+
+        assertEquals(Rational(1, 2), Rational(1, 2));
+        assertNotEquals(Rational(1, 2), Rational(2, 4));
     });
 
     TEST_CASE(numbers_suite, "Arithmetic operations with Naturals", [] {

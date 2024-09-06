@@ -73,6 +73,7 @@ interfaces = [
         { file = 'math/numbers/naturals.cppm', partition = { module = 'math', partition_name = 'numbers.naturals' } },
         { file = 'math/numbers/integers.cppm', partition = { module = 'math', partition_name = 'numbers.integers' } },
         { file = 'math/numbers/rationals.cppm', partition = { module = 'math', partition_name = 'numbers.rationals' } },
+        { file = 'math/numbers/reals.cppm', partition = { module = 'math', partition_name = 'numbers.reals' } },
         { file = 'math/numbers/detail.cpp', partition = { module = 'math', partition_name = 'numbers.detail', is_internal_partition = true } },
         { file = 'math/numbers/numbers.cppm', partition = { module = 'math', partition_name = 'numbers' } },
    # Root

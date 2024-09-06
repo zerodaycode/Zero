@@ -5,8 +5,8 @@ import concepts;
 
 using namespace zero::concepts;
 
-template <Printable T, Printable U>
-constexpr inline void throw_on_failed_test(const T& expected, const U& actual);
+template <Printable T, Printable U, typename Op>
+constexpr inline void throw_on_failed_test(const T& expected, const U& actual, const Op& comp);
 
 export {
     /// @brief Compares two values. Generates a test failed if values are non-equal.
@@ -15,7 +15,7 @@ export {
     template<typename T, typename U>
         requires (!std::is_pointer_v<T> && !std::is_pointer_v<U>)
     constexpr void assertEquals(const T& expected, const U& actual) {
-        ::throw_on_failed_test(expected, actual);
+        ::throw_on_failed_test(expected, actual, [](auto expected, auto actual){ return expected == actual; });
     }
 
     ///  @brief Compares two values being T pointer types.
@@ -25,7 +25,7 @@ export {
         const auto expected   = *expected_ptr;
         const auto actual     = *actual_ptr;
 
-        ::throw_on_failed_test(expected, actual);
+        ::throw_on_failed_test(expected, actual, [](auto expected, auto actual){ return expected == actual; });
     }
 
 
@@ -33,7 +33,7 @@ export {
     template<typename T>
         requires (!std::is_pointer_v<T>)
     constexpr void assertNotEquals(const T& expected, const T& actual) {
-        ::throw_on_failed_test(expected, actual);
+        ::throw_on_failed_test(expected, actual, [](auto expected, auto actual){ return expected != actual; });
     }
 
 
@@ -45,7 +45,7 @@ export {
         const auto expected   = *expected_ptr;
         const auto actual     = *actual_ptr;
 
-        ::throw_on_failed_test(expected, actual);
+        ::throw_on_failed_test(expected, actual, [](auto expected, auto actual){ return expected != actual; });
     }
 }
 
@@ -67,9 +67,9 @@ public:
 
 /// \brief helper to reduce cognitive complexity,
 /// \enabled when the concept {\link @StringConvertible} is satisfied
-template<typename T, typename U>
-constexpr inline void throw_on_failed_test_str_impl(const T& expected, const U& actual) {
-    if (expected != actual) {
+template<typename T, typename U, typename Op>
+constexpr inline void throw_on_failed_test_str_impl(const T& expected, const U& actual, const Op& comp) {
+    if (!comp(expected, actual)) {
         const auto expected_str   = std::to_string(expected);
         const auto actual_str     = std::to_string(actual);
 
@@ -87,9 +87,9 @@ constexpr inline void throw_on_failed_test_str_impl(const T& expected, const U& 
 
 /// \brief helper to reduce cognitive complexity,
 /// \enabled when the concept {\link @Ostreamable} is satisfied
-template<typename T, typename U>
-constexpr inline void throw_on_failed_test_oss_impl(const T& expected, const U& actual) {
-    if (expected != actual) {
+template<typename T, typename U, typename Op>
+constexpr inline void throw_on_failed_test_oss_impl(const T& expected, const U& actual, const Op& comp) {
+    if (!comp(expected, actual)) {
         std::ostringstream oss;
         oss << "Assertion failed: expected = ";
         oss << expected;
@@ -100,10 +100,10 @@ constexpr inline void throw_on_failed_test_oss_impl(const T& expected, const U& 
     }
 }
 
-template <Printable T, Printable U>
-constexpr inline void throw_on_failed_test(const T& expected, const U& actual) {
+template <Printable T, Printable U, typename Op>
+constexpr inline void throw_on_failed_test(const T& expected, const U& actual, const Op& comp) {
     if constexpr (StringConvertible<T> && StringConvertible<U>)
-        throw_on_failed_test_str_impl(expected, actual);
+        throw_on_failed_test_str_impl(expected, actual, comp);
     else
-        throw_on_failed_test_oss_impl(expected, actual);
+        throw_on_failed_test_oss_impl(expected, actual, comp);
 }
