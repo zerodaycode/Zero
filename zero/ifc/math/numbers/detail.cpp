@@ -4,6 +4,7 @@ import std;
 import math.ops;
 import math.symbols;
 
+import :general;
 import :numbers.naturals;
 import :numbers.integers;
 import :numbers.rationals;
@@ -44,32 +45,58 @@ constexpr auto arithmetic_op(const L &lhs, const R &rhs, Op op) noexcept {
 
 // Specialized addition and subtraction for Rational types
 template <typename L, typename R>
-constexpr auto rational_add_or_subtract(const L &lhs, const R &rhs, int sign) noexcept {
-  if constexpr (std::is_same_v<L, Rational> && std::is_same_v<R, Rational>) {
-    return sum_or_subtract(lhs, rhs, sign);
-  } else if constexpr (std::is_same_v<L, Rational>) {
-    return sum_or_subtract(lhs, Rational(rhs), sign);
-  } else if constexpr (std::is_same_v<R, Rational>) {
-    return sum_or_subtract(Rational(lhs), rhs, sign);
-  }
+constexpr auto rational_add(const L &lhs, const R &rhs) noexcept {
+  const auto op = ArithmeticOperation::Add;
+  if constexpr (std::is_same_v<L, Rational> && std::is_same_v<R, Rational>)
+    return sum_or_subtract(lhs, rhs, op);
+  else if constexpr (std::is_same_v<L, Rational>)
+    return sum_or_subtract(lhs, Rational(rhs), op);
+  else if constexpr (std::is_same_v<R, Rational>)
+    return sum_or_subtract(Rational(lhs), rhs, op);
+}
+
+template <typename L, typename R>
+constexpr auto rational_subtract(const L &lhs, const R &rhs) noexcept {
+  const auto op = ArithmeticOperation::Subtract;
+  if constexpr (std::is_same_v<L, Rational> && std::is_same_v<R, Rational>)
+    return sum_or_subtract(lhs, rhs, op);
+  else if constexpr (std::is_same_v<L, Rational>)
+    return sum_or_subtract(lhs, Rational(rhs), op);
+  else if constexpr (std::is_same_v<R, Rational>)
+    return sum_or_subtract(Rational(lhs), rhs, op);
 }
 
 template <typename L, typename R>
 constexpr auto rational_mult(const L &lhs, const R &rhs) noexcept {
-    if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational> &&
-                  std::is_same_v<std::decay_t<decltype(rhs)>, Rational>) {
-      return Rational(lhs.numerator() * rhs.numerator(),
-                      lhs.denominator() * rhs.denominator());
-    } else if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational>) {
-      return Rational(lhs.numerator() * normalize(rhs), lhs.denominator());
-    } else if constexpr (std::is_same_v<std::decay_t<decltype(rhs)>, Rational>) {
-      return Rational(normalize(lhs) * rhs.numerator(), rhs.denominator());
-    } 
+  if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational> &&
+                std::is_same_v<std::decay_t<decltype(rhs)>, Rational>)
+    return Rational(lhs.numerator() * rhs.numerator(),
+                    lhs.denominator() * rhs.denominator());
+  else if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational>)
+    return Rational(lhs.numerator() * normalize(rhs), lhs.denominator());
+  else if constexpr (std::is_same_v<std::decay_t<decltype(rhs)>, Rational>)
+    return Rational(normalize(lhs) * rhs.numerator(), rhs.denominator());
+}
+
+// Equality check for Rational types
+template <typename L, typename R>
+constexpr auto rational_equality(const L &lhs, const R &rhs) noexcept {
+  if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational> &&
+                std::is_same_v<std::decay_t<decltype(rhs)>, Rational>)
+    return lhs.numerator() == rhs.numerator() &&
+           lhs.denominator() == rhs.denominator();
+  else if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational>)
+    return lhs == Rational(rhs);
+  else if constexpr (std::is_same_v<std::decay_t<decltype(rhs)>, Rational>)
+    return Rational(lhs) == rhs;
 }
 
 // Helper function to sum or subtract two Rationals
 [[nodiscard]] constexpr Rational
-sum_or_subtract(const Rational &lhs, const Rational &rhs, int sign) noexcept {
+sum_or_subtract(const Rational &lhs, const Rational &rhs,
+                const ArithmeticOperation op) noexcept {
+  const int sign = op == ArithmeticOperation::Add ? 1 : -1;
+
   const int lhs_numerator = lhs.numerator().number();
   const int rhs_numerator = sign * rhs.numerator().number();
   const int lhs_denominator = lhs.denominator().number();

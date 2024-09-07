@@ -9,8 +9,8 @@ cpp_compiler = "clang"
 driver_path = "clang++" # This binary is soft linked and included in our local path
 cpp_standard = "23"
 std_lib = "LIBCPP"
-# std_lib_installed_dir = "/usr/local/share/libc++/v1"
-std_lib_installed_dir = "C:/msys64/clang64/share/libc++/v1"
+std_lib_installed_dir = "/usr/local/share/libc++/v1"
+# std_lib_installed_dir = "C:/msys64/clang64/share/libc++/v1"
 extra_args = [
     '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
     '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',

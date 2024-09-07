@@ -8,9 +8,17 @@ export module math:general;
 import std;
 import math.symbols;
 
-/// Forward declarations of the 'Numbers types', so they can be shared across different
-/// module partitions of 'math'
 export namespace zero::math {
+    /// Compile time constants for represent an arithmetic operation via literal constants
+    enum class ArithmeticOperation {
+        Add,
+        Subtract,
+        Multiply,
+        Divide
+    };
+
+    /// Forward declarations of the 'Numbers types', so they can be shared across different
+    /// module partitions of 'math'
     class Natural;
     class Integer;
     class Rational;
