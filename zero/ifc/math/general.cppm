@@ -42,5 +42,6 @@ export namespace zero::math {
         { T::symbol } -> std::same_as<const MathSymbol&>;  // Check if 'T::symbol' has the type MathSymbol
     } );
 
-    template <typename T> concept Numerical = Number<T> || std::is_arithmetic_v<T>;
+    template <typename T>
+    concept Numerical = Number<std::remove_cvref_t<T>> || std::is_arithmetic_v<std::remove_cvref_t<T>>;
 }

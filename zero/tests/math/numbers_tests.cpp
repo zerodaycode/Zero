@@ -14,7 +14,7 @@ static_assert(!Number<std::string>);
 void numbers_tests() {
     TEST_CASE(numbers_suite, "Testing the Numbers types construction", [] {
         auto natural = Natural(1);
-        assertEquals(1u, natural.number());
+        assertEquals(1, natural.number());
 
         auto integer = Integer(7);
         assertEquals(7, integer);
@@ -40,6 +40,8 @@ void numbers_tests() {
         assertEquals(Integer(-1), Integer(-1));
 
         assertEquals(Rational(1, 2), Rational(1, 2));
+        // Equality check for equal ratio values returns false if they aren't the exact
+        // same rational number
         assertNotEquals(Rational(1, 2), Rational(2, 4));
     });
 
@@ -47,20 +49,23 @@ void numbers_tests() {
         auto one_natural = Natural(5);
         auto other_natural = Natural(2);
 
-        assertEquals(7u, one_natural + other_natural);
-        assertEquals(3u, one_natural - other_natural);
-        assertEquals(10u, one_natural * other_natural);
-        // TODO division
+        assertEquals(7, one_natural + other_natural);
+        assertEquals(3, one_natural - other_natural);
+        assertEquals(10, one_natural * other_natural);
+        assertEquals(2, one_natural / other_natural); // int division. By default, this operator is the same as the 
+                                                      // language defined, so it will truncate the integer division
+                                                      // towards zero. This is the same for any non-rational Number type
     });
 
     TEST_CASE(numbers_suite, "Arithmetic operations with Integers", [] {
-        auto one_integer = Integer(10);
-        auto other_integer = Integer(20);
+        auto one_integer = Integer(20);
+        auto other_integer = Integer(10);
 
         assertEquals(30, one_integer + other_integer);
-        assertEquals(-10, one_integer - other_integer);
+        assertEquals(10, one_integer - other_integer);
+        assertEquals(-10, other_integer - one_integer);
         assertEquals(200, one_integer * other_integer);
-        // TODO division
+        assertEquals(2, one_integer / other_integer);
     });
 
     TEST_CASE(numbers_suite, "Arithmetic operations with Rationals (like fractions)", [] {
@@ -75,6 +80,9 @@ void numbers_tests() {
 
         auto rational_multiplication = one_rational * other_rational;
         assertEquals(Rational(32, 4), rational_multiplication);
+
+        auto rational_division = one_rational / other_rational;
+        assertEquals(Rational(16, 8), rational_division);
     });
 
     TEST_CASE(numbers_suite, "Arithmetic operations with Rationals (unlike fractions)", [] {
@@ -95,5 +103,8 @@ void numbers_tests() {
         
         auto rational_times_integer = one_rational * Integer(7);
         assertEquals(Rational(21, 2), rational_times_integer);
+
+        auto rational_divided_by_integer = one_rational / Integer(7);
+        assertEquals(Rational(3, 14), rational_divided_by_integer);
     });
 }

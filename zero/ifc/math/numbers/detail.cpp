@@ -43,10 +43,37 @@ constexpr auto arithmetic_op(const L &lhs, const R &rhs, Op op) noexcept {
     return op(normalize(lhs), normalize(rhs));
 }
 
+/** @brief Helper function to sum or subtract two Rationals
+ * @details it should be placed **before** the `rational_add` and rational_subtract` functions for being
+ * compilable with MSVC, as it has stricter name lookup resolution rules
+ */
+[[nodiscard]] constexpr Rational
+sum_or_subtract(const Rational &lhs, const Rational &rhs,
+                const ArithmeticOperation op) noexcept {
+    const int sign = op == ArithmeticOperation::Add ? 1 : -1;
+
+    const int lhs_numerator = lhs.numerator().number();
+    const int rhs_numerator = sign * rhs.numerator().number();
+    const int lhs_denominator = lhs.denominator().number();
+    const int rhs_denominator = rhs.denominator().number();
+
+    if (lhs_denominator == rhs_denominator) { // Like fractions
+        return {lhs_numerator + rhs_numerator, lhs_denominator};
+    } else { // Unlike fractions
+        // Get their LCD by finding their LCM
+        const auto lcd = zero::math::lcm(lhs_denominator, rhs_denominator);
+
+        // Scale numerators to have the common denominator (LCM)
+        const int numerator = (lhs_numerator * (lcd / lhs_denominator)) +
+                              (rhs_numerator * (lcd / rhs_denominator));
+
+        return {numerator, lcd};
+    }
+}
+
 // Specialized addition and subtraction for Rational types
-template <typename L, typename R>
-constexpr auto rational_add(const L &lhs, const R &rhs) noexcept {
-  const auto op = ArithmeticOperation::Add;
+template <typename L, typename R, typename Op>
+constexpr auto rational_add_or_subtract(const L &lhs, const R &rhs, Op op) noexcept {
   if constexpr (std::is_same_v<L, Rational> && std::is_same_v<R, Rational>)
     return sum_or_subtract(lhs, rhs, op);
   else if constexpr (std::is_same_v<L, Rational>)
@@ -56,64 +83,31 @@ constexpr auto rational_add(const L &lhs, const R &rhs) noexcept {
 }
 
 template <typename L, typename R>
-constexpr auto rational_subtract(const L &lhs, const R &rhs) noexcept {
-  const auto op = ArithmeticOperation::Subtract;
-  if constexpr (std::is_same_v<L, Rational> && std::is_same_v<R, Rational>)
-    return sum_or_subtract(lhs, rhs, op);
-  else if constexpr (std::is_same_v<L, Rational>)
-    return sum_or_subtract(lhs, Rational(rhs), op);
-  else if constexpr (std::is_same_v<R, Rational>)
-    return sum_or_subtract(Rational(lhs), rhs, op);
+constexpr auto rational_multiplication(const L &lhs, const R &rhs) noexcept {
+    const Rational _lhs = Rational(lhs);
+    const Rational _rhs = Rational(rhs);
+
+    return Rational(_lhs.numerator().number() * _rhs.numerator().number(),
+                    _lhs.denominator().number() * _rhs.denominator().number());
 }
 
 template <typename L, typename R>
-constexpr auto rational_mult(const L &lhs, const R &rhs) noexcept {
-  if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational> &&
-                std::is_same_v<std::decay_t<decltype(rhs)>, Rational>)
-    return Rational(lhs.numerator() * rhs.numerator(),
-                    lhs.denominator() * rhs.denominator());
-  else if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational>)
-    return Rational(lhs.numerator() * normalize(rhs), lhs.denominator());
-  else if constexpr (std::is_same_v<std::decay_t<decltype(rhs)>, Rational>)
-    return Rational(normalize(lhs) * rhs.numerator(), rhs.denominator());
+constexpr auto rational_division(const L &lhs, const R &rhs) noexcept {
+    const Rational _lhs = Rational(lhs);
+    const Rational _rhs = Rational(rhs);
+
+    return Rational(_lhs.numerator().number() * _rhs.denominator().number(),
+                    _lhs.denominator().number() * _rhs.numerator().number());
 }
 
 // Equality check for Rational types
 template <typename L, typename R>
 constexpr auto rational_equality(const L &lhs, const R &rhs) noexcept {
-  if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational> &&
-                std::is_same_v<std::decay_t<decltype(rhs)>, Rational>)
-    return lhs.numerator() == rhs.numerator() &&
-           lhs.denominator() == rhs.denominator();
-  else if constexpr (std::is_same_v<std::decay_t<decltype(lhs)>, Rational>)
-    return lhs == Rational(rhs);
-  else if constexpr (std::is_same_v<std::decay_t<decltype(rhs)>, Rational>)
-    return Rational(lhs) == rhs;
-}
+    const Rational _lhs = Rational(lhs);
+    const Rational _rhs = Rational(rhs);
 
-// Helper function to sum or subtract two Rationals
-[[nodiscard]] constexpr Rational
-sum_or_subtract(const Rational &lhs, const Rational &rhs,
-                const ArithmeticOperation op) noexcept {
-  const int sign = op == ArithmeticOperation::Add ? 1 : -1;
-
-  const int lhs_numerator = lhs.numerator().number();
-  const int rhs_numerator = sign * rhs.numerator().number();
-  const int lhs_denominator = lhs.denominator().number();
-  const int rhs_denominator = rhs.denominator().number();
-
-  if (lhs_denominator == rhs_denominator) { // Like fractions
-    return {lhs_numerator + rhs_numerator, lhs_denominator};
-  } else { // Unlike fractions
-    // Get their LCD by finding their LCM
-    const auto lcd = zero::math::lcm(lhs_denominator, rhs_denominator);
-
-    // Scale numerators to have the common denominator (LCM)
-    const int numerator = (lhs_numerator * (lcd / lhs_denominator)) +
-                          (rhs_numerator * (lcd / rhs_denominator));
-
-    return {numerator, lcd};
-  }
+    return _lhs.numerator().number() == _rhs.numerator().number() &&
+           _lhs.denominator().number() == _rhs.denominator().number();
 }
 
 #if defined(__clang__)
