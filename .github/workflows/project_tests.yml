@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest }
+          - { os: ubuntu-latest, clang_version: 19 }
 #          - { os: macos-latest }
 #          - { os: windows-latest }
 
@@ -22,16 +22,32 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Clone Zork++
-        uses: GuillaumeFalourd/clone-github-repo-action@v2
+        uses: GuillaumeFalourd/clone-github-repo-action@v2.3
         with:
           owner: 'ZeroDayCode'
           repository: 'Zork'
+          branch: 'feature/GH-127-clang-upgrades'
 
-      - name: Download the latest possible version of Clang
+      - name: Installing LLVM ${{ matrix.clang_version }}
         run: |
-          sudo apt update
-          sudo apt install clang-15 --install-suggests
-          sudo apt install libc++-15-dev libc++abi-15-dev
+          # Exit on error
+          set -e
+          # Download and execute the LLVM installation script for the specified Clang version
+          echo "-----> Downloading and executing the LLVM installation script for Clang ${{ matrix.clang_version }}"
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh ${{ matrix.clang_version }}
+
+          echo "-----> Installing libc++"
+          sudo apt-get install -y libc++-${{ matrix.clang_version }}-dev libc++abi-${{ matrix.clang_version }}-dev libunwind-${{ matrix.clang_version }} libunwind-${{ matrix.clang_version }}-dev libc6 libzstd1
+
+          # Update the symbolic link to point to the newly installed Clang version
+          echo "-----> Updating the symbolic link to point to Clang ${{ matrix.clang_version }}"
+          sudo rm -f /usr/bin/clang++
+          sudo ln -s /usr/bin/clang++-${{ matrix.clang_version }} /usr/bin/clang++
+        
+          # Find the system libc++ installations
+          find /usr -type f \( -name 'std.cppm' -o -name 'std.compat.cppm' \) -exec echo "Found: {}" \;
 
       - name: Generate a Zork++ release build
         run: |
@@ -42,4 +58,4 @@ jobs:
           cp ./Zork/zork++/target/release/zork++ .
 
       - name: Running the tests for ${{ matrix.os }} with Zork++
-        run: ./zork++ --match-files gh_linux -vv -c run
+        run: ./zork++ --match-files gh_linux -vv -c test

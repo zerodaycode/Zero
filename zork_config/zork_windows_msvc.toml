@@ -1,30 +1,24 @@
 [project]
 name = "Zero"
 authors = [ "Zero Day Code" ]
-compilation_db = true
-project_root = "zero"
+compilation_db = false 
+code_root = "zero"
 
 [compiler]
-cpp_compiler = "clang"
-cpp_standard = "2b"
-std_lib = "LIBCPP" # Care, you must have installed LIBC++, which doesn't come by default with mingw
-# Consider to use STDLIBCPP if you don't plan to use LLVM's STD library implementation
-extra_args = [
-    '-Werror', '-Wall', '-Wpedantic', '-pedantic', '-Wextra', '-Wconversion', '-Wfloat-conversion', '-Wsign-conversion',
-    '-Wshadow', '-Wnon-virtual-dtor', '-Wold-style-cast', '-Wcast-align', '-Wunused', '-Woverloaded-virtual',
-    '-Wmisleading-indentation', '-Wnull-dereference', '-Wdouble-promotion', '-Wformat=2', '-Wimplicit-fallthrough',
-    '-Weffc++'
-]
+cpp_compiler = "msvc"
+cpp_standard = "latest"
+# extra_args = [
+# ]
 
 [build]
 output_dir = "./out"
 
-[executable]
-executable_name = "zero"
+[targets.executable]
+output_name = "zero"
 sources = [ "*.cpp" ]
 
-[tests]
-tests_executable_name = "zero_tests"
+[targets.tests]
+output_name = "zero_tests"
 sources = [ "tests/math/*.cpp", "tests/*.cpp" ]
 
 [modules]
@@ -45,7 +39,7 @@ interfaces = [
     { file = 'test-suite/suite.cppm', module_name = 'tsuite' },
 
     ### Iterator library
-        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail' } },
+        { file = 'iterators/internal/iterator_detail.cpp', partition = { module = 'iterator', partition_name = 'detail', is_internal_partition = true } },
         { file = 'iterators/iterator_concepts.cppm', partition = { module = 'iterator', partition_name = 'concepts' } },
         # Modern
         { file = 'iterators/iterator_facade.cppm', partition = { module = 'iterator' } },
@@ -64,6 +58,10 @@ interfaces = [
     { file = 'collections/collections.cppm', dependencies = ['array'] },
 
     ### Math library
+        # Symbols 
+        { file = 'math/symbols.cppm', module_name = 'math.symbols' },
+        # Numbers - shared
+        { file = 'math/general.cppm', partition = { module = 'math', partition_name = 'general' } },
         # The operations library
         { file = 'math/ops/arithmetic.cppm', partition = { module = 'math.ops', partition_name = 'arithmetic' } },
         { file = 'math/ops/algebraic.cppm', partition = { module = 'math.ops', partition_name = 'algebraic' } },
@@ -71,9 +69,14 @@ interfaces = [
         # The linear algebra library
         { file = 'math/linear_algebra/matrix.cppm', partition = { module = 'math.linear_algebra', partition_name = 'matrix' } },
         { file = 'math/linear_algebra/root.cppm', module_name = 'math.linear_algebra' },
-    #  General
-    { file = 'math/symbols.cppm', module_name = 'math.symbols' },
-    # Root
+        # Numbers - Core
+        { file = 'math/numbers/naturals.cppm', partition = { module = 'math', partition_name = 'numbers.naturals' } },
+        { file = 'math/numbers/integers.cppm', partition = { module = 'math', partition_name = 'numbers.integers' } },
+        { file = 'math/numbers/rationals.cppm', partition = { module = 'math', partition_name = 'numbers.rationals' } },
+        { file = 'math/numbers/reals.cppm', partition = { module = 'math', partition_name = 'numbers.reals' } },
+        { file = 'math/numbers/detail.cpp', partition = { module = 'math', partition_name = 'numbers.detail', is_internal_partition = true } },
+        { file = 'math/numbers/numbers.cppm', partition = { module = 'math', partition_name = 'numbers' } },
+   # Root
     { file = 'math/math.cppm' },
 
     ### The physics library

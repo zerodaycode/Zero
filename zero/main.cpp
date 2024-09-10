@@ -1,7 +1,7 @@
 import std;
 import zero;
 import collections;
-import iterator;
+// import iterator;
 import container;
 import type_info;
 import physics;
@@ -13,7 +13,7 @@ import tsuite;
 
 // Forward decls
 void run_containers_examples();
-void run_output_iterator_examples();
+// void run_output_iterator_examples();
 void run_quantities_examples();
 void run_formatter_and_stylize_examples();
 void run_print_examples();
@@ -58,8 +58,8 @@ int main() {
     // run_containers_examples();
     // run_output_iterator_examples();
     // run_quantities_examples();
-    // run_formatter_and_stylize_examples();
-    // run_print_examples();
+    run_formatter_and_stylize_examples();
+    run_print_examples();
 
     TEST_CASE("Multiplication Test", []() {
         int result = 5 * 3;
@@ -89,7 +89,7 @@ int main() {
     // Forces a warning that alerts the user that the test will be discarded, since already
     // exists one with the same identifier in the given suite
     TEST_CASE(suite, "Addition Test", testAddition);
-    // Register a test case designed to fail, useful for testing the behavior 
+    // Register a test case designed to fail, useful for testing the behavior
     // of RUN_TESTS with different failure modes.
     TEST_CASE(suite, "Subtraction Test", testSubtraction);
 
@@ -135,7 +135,7 @@ void run_containers_examples() {
         std::cout << " - [const Container<T>*] Value: " << value << std::endl;
 }
 
-void run_output_iterator_examples() {
+/* void run_output_iterator_examples() {
     std::cout << "Using output iterator with ostream: ";
     zero::iterator::legacy::output_iter<std::ostream> out1(std::cout);
     out1 = 1;
@@ -190,7 +190,7 @@ void run_output_iterator_examples() {
         std::cout << x << ' ';
 
     std::cout << '\n';
-}
+} */
 
 void run_quantities_examples() {
     using namespace zero::physics;

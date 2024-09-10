@@ -16,7 +16,7 @@ import stylizer;
 import formatter;
 import print_utils;
 
-using namespace zero::fmt;
+using namespace zero;
 
 /**
  * @struct TestResults
@@ -161,6 +161,11 @@ void runSuiteTestCases(const TestRunBehavior behavior);
  */
 void checkForTestErrors(const bool freeTestsErrors);
 
+/*
+ * Litte helper for a visual separator tab
+ */
+void print_separator(const fmt::Color color = fmt::Color::EXT_SKY_BLUE);
+
 // Top-level containers. They hold pointers to the types to avoid:
 // `arithmetic on a pointer to an incomplete type`
 std::vector<TestSuite *> testSuites;
@@ -243,17 +248,19 @@ export {
 			tsuite.cases.emplace_back(new TestCase(tname, tfunc));
 		else
 			tsuite.results.warnings.emplace_back(
-				stylize("[Warning in suite: ", Color::YELLOW, {}) +
-				stylize(tsuite.uuid, Color::EXT_PURPLE, {}) +
-				stylize("] Already exists a test case with the name: ",
-						Color::YELLOW, {}) +
-				stylize(tname, Color::EXT_SKY_BLUE, {}) +
-				stylize(". Skipping test case.", Color::YELLOW, {}));
-		/// If this is the first time that the suite is being registered
+				fmt::stylize("[Warning in suite: ", fmt::Color::YELLOW) +
+				fmt::stylize(tsuite.uuid, fmt::Color::EXT_PURPLE) +
+				fmt::stylize("] Already exists a test case with the name: ", fmt::Color::YELLOW) +
+				fmt::stylize(tname, fmt::Color::EXT_SKY_BLUE) +
+				fmt::stylize(". Skipping test case.", fmt::Color::YELLOW)
+            );
+		
+        /// If this is the first time that the suite is being registered
 		auto suites_it = std::find_if(
 			testSuites.begin(), testSuites.end(),
 			[&](const TestSuite *suite) { return suite->uuid == tsuite.uuid; });
-		if (suites_it == testSuites.end())
+		
+        if (suites_it == testSuites.end())
 			testSuites.push_back(&tsuite);
 	}
 
@@ -270,62 +277,67 @@ export {
 }
 
 void runSuiteTestCases(const TestRunBehavior behavior) {
-	println("\nRunning test suites. Total suites found: {}", testSuites.size());
+    fmt::println(
+        fmt::stylize("\n============================= ZERO TEST SUITE  =============================", fmt::Color::GREEN, fmt::Modifier::BOLD)
+    );
+	fmt::println("- Running test suites. Total suites found: {}", testSuites.size());
+    print_separator(fmt::Color::GREEN);
+    fmt::newln();
 
 	for (const auto &test_suite : testSuites) {
-		print("Running test suite:" + stylize(" {}", Color::EXT_PURPLE, {}),
-				test_suite->uuid);
+        print_separator();
+		fmt::println("- Running test suite:" + fmt::stylize(" {}", fmt::Color::EXT_PURPLE), test_suite->uuid);
 
 		for (const auto &warning : test_suite->results.warnings)
-			print("\n    {}", warning);
+			fmt::println("    {}", warning);
 		for (const auto &test_case : test_suite->cases) {
 			if (!runTest(test_case, test_suite->results)) {
 
 				if (behavior == HALT_SUITE_ON_FAIL) {
-					println(
-						stylize("\n========================================"
+					fmt::println(
+						fmt::stylize("\n========================================"
 								"\n[Halt Suite Tests] Stopping further tests "
 								"of the suite ",
-								Color::EXT_LIGHT_ORANGE, {Modifier::BOLD}) +
-							stylize("{} ", Color::EXT_PURPLE, {}) +
-							stylize(
+								fmt::Color::EXT_LIGHT_ORANGE, {fmt::Modifier::BOLD}) +
+							fmt::stylize("{} ", fmt::Color::EXT_PURPLE) +
+							fmt::stylize(
 								"due to a failure."
 								"\n========================================",
-								Color::EXT_LIGHT_ORANGE, {Modifier::BOLD}),
+								fmt::Color::EXT_LIGHT_ORANGE, {fmt::Modifier::BOLD}),
 						test_suite->uuid);
 					break;
 				}
 
 				if (behavior == ABORT_ALL_ON_FAIL) {
-					println("Test suite [{}] summary:", test_suite->uuid);
-					println(stylize("    Passed: {}", Color::GREEN, {}),
+					fmt::println("Test suite [{}] summary:", test_suite->uuid);
+					fmt::println(fmt::stylize("    Passed: {}", fmt::Color::GREEN),
 							test_suite->results.passed);
-					println(stylize("    Failed: {}", Color::RED, {}),
+					fmt::println(fmt::stylize("    Failed: {}", fmt::Color::RED),
 							test_suite->results.failed);
 
-					println(
-						stylize("\n========================================"
+					fmt::println(
+						fmt::stylize("\n========================================"
 								"\n[Abort] All further tests are aborted due "
 								"to a failure in a test in this suite."
 								"\n========================================",
-								Color::RED, {Modifier::BOLD}));
+								fmt::Color::RED, fmt::Modifier::BOLD));
 					return;
 				}
 			}
 		}
 
-		println("Test suite [{}] summary:", test_suite->uuid);
-		println(stylize("    Passed: {}", Color::GREEN, {}),
-				test_suite->results.passed);
-		println(stylize("    Failed: {}", Color::RED, {}),
-				test_suite->results.failed);
+		fmt::println("- Test suite [{}] summary:", test_suite->uuid);
+		fmt::println(fmt::stylize("\tPassed: {}", fmt::Color::GREEN), test_suite->results.passed);
+		fmt::println(fmt::stylize("\tFailed: {}", fmt::Color::RED), test_suite->results.failed); // TODO:
+                                                      // Add the names of the FAILED test cases?
+        print_separator();
 	}
 }
 
 bool runFreeTestCases(const TestRunBehavior behavior) {
 	bool anyFailed = false;
 	TestResults freeTestsResults;
-	println("Running free tests:");
+	fmt::println("Running free tests:");
 
 	for (const auto &testCase : freeTestCases) {
 		if (!runTest(testCase, freeTestsResults)) {
@@ -337,24 +349,24 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
 		}
 	}
 
-	println("\nFree tests summary:");
-	println(stylize("    Passed: {}", Color::GREEN, {}),
+	fmt::println("\nFree tests summary:");
+	fmt::println(fmt::stylize("    Passed: {}", fmt::Color::GREEN),
 			freeTestsResults.passed);
-	println(stylize("    Failed: {}", Color::RED, {}), freeTestsResults.failed);
+	fmt::println(fmt::stylize("    Failed: {}", fmt::Color::RED), freeTestsResults.failed);
 
 	if (anyFailed) {
 		if (behavior == HALT_SUITE_ON_FAIL) {
-			println(stylize("\n========================================"
+			fmt::println(fmt::stylize("\n========================================"
 							"\n[Halt Free Tests] Stopping further free tests "
 							"due to a failure."
 							"\n========================================",
-							Color::EXT_LIGHT_ORANGE, {Modifier::BOLD}));
+							fmt::Color::EXT_LIGHT_ORANGE, {fmt::Modifier::BOLD}));
 		} else if (behavior == ABORT_ALL_ON_FAIL) {
-			println(stylize("\n========================================"
+			fmt::println(fmt::stylize("\n========================================"
 							"\n[Abort] All further tests are aborted due to a "
 							"failure in free tests."
 							"\n========================================",
-							Color::RED, {Modifier::BOLD}));
+							fmt::Color::RED, {fmt::Modifier::BOLD}));
 			std::exit(1);
 		}
 	}
@@ -363,17 +375,15 @@ bool runFreeTestCases(const TestRunBehavior behavior) {
 }
 
 bool runTest(const TestCase *const testCase, TestResults &results) {
-	print("\n    Running test: {}",
-		  stylize(testCase->name, Color::EXT_SKY_BLUE, {}));
+	fmt::print("    [[Test]]: {}", fmt::stylize(testCase->name, fmt::Color::EXT_SKY_BLUE));
 	try {
 		// Call the test function
 		testCase->fn();
-		print(" ... Result => {}", stylize("Passed!", Color::GREEN, {}));
+		fmt::println(" ... => {}", fmt::stylize("Passed!", fmt::Color::GREEN));
 		results.passed++;
 		return true;
 	} catch (const std::exception &ex) {
-		print(" ... Result => {}: {}", stylize("Failed", Color::RED, {}),
-				ex.what());
+		fmt::println(" ...  => {}:\n\t{}", fmt::stylize("Failed", fmt::Color::RED), ex.what());
 		results.failed++;
 		return false;
 	}
@@ -387,4 +397,10 @@ void checkForTestErrors(const bool freeTestsErrors) {
 	std::cout << freeTestsErrors << " " << suiteTestsErrors;
 	if (suiteTestsErrors || freeTestsErrors)
 		std::exit(1);
+}
+
+void print_separator(const fmt::Color color) {
+    fmt::println(
+        fmt::stylize("============================================================================", color, {fmt::Modifier::BOLD})
+    );
 }

@@ -12,6 +12,22 @@ import type_traits;
 
 export namespace zero::concepts {
 
+    /// \brief Constrain for types that has an operator<< overload
+    template <typename T>
+    concept Ostreamable = requires(const T& t, std::ostream& os) {
+        { os << t } -> std::same_as<std::ostream&>;
+    };
+
+    /// \brief Constrain for types that has an std::to_string implementation
+    template <typename T>
+    concept StringConvertible = requires(const T& t) {
+        { std::to_string(t) } -> std::same_as<std::string>;
+    };
+
+    /// \brief Constrain for types with either operator<< or std::to_string
+    template <typename T>
+    concept Printable = Ostreamable<T> || StringConvertible<T>;
+
     /**
      * @brief checks if the type is a type with a push_back
      * member method implemented
